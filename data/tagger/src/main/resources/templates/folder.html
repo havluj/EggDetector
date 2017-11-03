@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+<p>
+    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
+         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
+    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
+         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
+    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
+         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
+    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
+         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
+    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
+         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
+    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
+         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
+    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
+         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
+    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
+         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
+</p>
+
+<span th:each="picUrl : ${pics}">
+    <img th:src="${picUrl}" style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
+</span>
 
 </body>
 </html>
