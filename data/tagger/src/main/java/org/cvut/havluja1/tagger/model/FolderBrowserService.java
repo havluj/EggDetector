@@ -30,6 +30,7 @@ public class FolderBrowserService implements IFolderBrowserService {
         } else {
             this.dataLocation = dataLocation + File.separator;
         }
+
         // todo check if folder exists, if not, throw exception
 
         this.untaggedFolders = FolderScanner.scanFolder(this.dataLocation);
