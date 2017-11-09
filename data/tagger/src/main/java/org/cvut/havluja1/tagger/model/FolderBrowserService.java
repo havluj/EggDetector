@@ -3,6 +3,7 @@ package org.cvut.havluja1.tagger.model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -67,12 +68,9 @@ public class FolderBrowserService implements IFolderBrowserService {
             throw new FileNotFoundException();
         }
 
-        ArrayList<String> result = new ArrayList<>();
-        for (File file : dir.listFiles()) {
-            if (file.isFile() && FilenameUtils.getExtension(file.getName()).equals("png")) {
-                result.add(file.getAbsolutePath());
-            }
-        }
-        return result;
+        return Arrays.asList(dir.list((file, name) -> {
+            File workingFile = new File(file.getAbsolutePath() + File.separator + name);
+            return workingFile.isFile() && FilenameUtils.getExtension(name).equals("png");
+        }));
     }
 }

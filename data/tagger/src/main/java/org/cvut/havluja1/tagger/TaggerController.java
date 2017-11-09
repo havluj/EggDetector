@@ -31,7 +31,7 @@ public class TaggerController {
     }
 
     @RequestMapping("/folder/{folderId}")
-    public String folder(@PathVariable("folderId") String folderId, Model model) {
+    public String folder(Model model, @PathVariable("folderId") String folderId) {
         List<String> pics;
         try {
             pics = folderBrowser.getFolderPictureList(folderId);
@@ -39,13 +39,14 @@ public class TaggerController {
             return "redirect:/foldernotfound/" + folderId;
         }
 
-        model.addAttribute(pics);
+        model.addAttribute("folderId", folderId);
+        model.addAttribute("pics", pics);
         return "folder";
     }
 
     @RequestMapping("/foldernotfound/{folderId}")
     public String folderNotFound(@PathVariable("folderId") String folderId, Model model) {
-        model.addAttribute(folderId);
+        model.addAttribute("folderId", folderId);
 
         return "foldernotfound";
     }

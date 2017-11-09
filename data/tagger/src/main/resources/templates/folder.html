@@ -1,32 +1,14 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="'Data Tagger | Tagging pictures from ' + ${folderId}">Data Tagger</title>
 </head>
 <body>
+<p align="center"><a th:href="@{/}">Different folder</a></p>
 <p>
-    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
-         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
-    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
-         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
-    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
-         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
-    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
-         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
-    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
-         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
-    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
-         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
-    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
-         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
-    <img src="http://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg"
-         style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
+    <img th:each="picUrl : ${pics}" th:src="@{'~/data/' + ${folderId} + '/' + ${picUrl}}"
+         style="float: left; height: 20em; margin-right: 1%; margin-bottom: 0.5em;"/>
 </p>
-
-<span th:each="picUrl : ${pics}">
-    <img th:src="${picUrl}" style="float: left; height: 15em; margin-right: 1%; margin-bottom: 0.5em;">
-</span>
-
 </body>
 </html>
