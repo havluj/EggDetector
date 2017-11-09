@@ -10,4 +10,4 @@ set dataLoc=%1
 @if errorlevel 1 echo No Java found. Please put Java bin directory into your PATH environment or set JAVA_HOME environment variable to valid Java installation. && exit /b 1
 
 :: Run the app
-@"%JAVA_BIN%" -jar target\tagger-1.0-SNAPSHOT.jar --data.location=%dataLoc%
+@"%JAVA_BIN%" -jar tagger-1.0-SNAPSHOT.jar --data.location=%dataLoc%
