@@ -54,11 +54,11 @@
                     <execution>
                         <phase>package</phase>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <echo>Copying run scripts to targer dir</echo>
                                 <copy file="${basedir}/src/bin/run.bat" tofile="${basedir}/target/run.bat"/>
                                 <copy file="${basedir}/src/bin/run.sh" tofile="${basedir}/target/run.sh"/>
-                            </tasks>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>

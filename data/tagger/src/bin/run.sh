@@ -1,7 +1,5 @@
 #!/bin/bash
 
-DATALOC="$1"
-
 # find JAVA binary
 if [ -n "$JAVA_HOME" ]; then
     JAVA_BIN="$JAVA_HOME/bin/java"
@@ -16,4 +14,4 @@ if [ -z "$JAVA_BIN" ] || [ ! -x "$JAVA_BIN" ]; then
     exit 1
 fi
 
-${JAVA_BIN} -jar tagger-1.0-SNAPSHOT.jar --data.location=$DATALOC
+${JAVA_BIN} -jar tagger-1.0-SNAPSHOT.jar --data.location="$1"
