@@ -24,14 +24,16 @@ public class FolderBrowserService implements IFolderBrowserService {
      * @param dataLocation Absolute path to a folder containing a structure of folders with raw data in them.
      */
     @Autowired
-    public FolderBrowserService(@Value("$data.location") String dataLocation) {
+    public FolderBrowserService(@Value("$data.location") String dataLocation) throws FileNotFoundException {
         if (dataLocation.substring(dataLocation.length() - 1).equals(File.separator)) {
             this.dataLocation = dataLocation;
         } else {
             this.dataLocation = dataLocation + File.separator;
         }
 
-        // todo check if folder exists, if not, throw exception
+        if(!(new File(dataLocation)).exists()) {
+            throw new FileNotFoundException("Provided directory does not exist or is inaccessible");
+        }
 
         this.untaggedFolders = FolderScanner.scanFolder(this.dataLocation);
     }
