@@ -24,7 +24,7 @@ public class FolderBrowserService implements IFolderBrowserService {
      * @param dataLocation Absolute path to a folder containing a structure of folders with raw data in them.
      */
     @Autowired
-    public FolderBrowserService(@Value("$data.location") String dataLocation) throws FileNotFoundException {
+    public FolderBrowserService(@Value("${data.location}") String dataLocation) throws FileNotFoundException {
         if (dataLocation.substring(dataLocation.length() - 1).equals(File.separator)) {
             this.dataLocation = dataLocation;
         } else {
