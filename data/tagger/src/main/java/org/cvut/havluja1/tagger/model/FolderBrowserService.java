@@ -1,8 +1,11 @@
 package org.cvut.havluja1.tagger.model;
 
+import java.beans.ExceptionListener;
+import java.beans.XMLEncoder;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -72,5 +75,18 @@ public class FolderBrowserService implements IFolderBrowserService {
             File workingFile = new File(file.getAbsolutePath() + File.separator + name);
             return workingFile.isFile() && FilenameUtils.getExtension(name).equals("png");
         }));
+    }
+
+    @Override
+    public void writeData(String folderId, FolderData folderData) {
+        try(FileOutputStream fos = new FileOutputStream(dataLocation + folderId + "/imgdata.xml")) {
+            XMLEncoder encoder = new XMLEncoder(fos);
+            encoder.setExceptionListener(e -> e.printStackTrace());
+            encoder.writeObject(folderData);
+            encoder.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

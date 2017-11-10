@@ -8,4 +8,6 @@ public interface IFolderBrowserService {
     String getNextUntaggedFolder();
 
     List<String> getFolderPictureList(String folderId) throws FileNotFoundException;
+
+    void writeData(String folderId, FolderData folderData);
 }
