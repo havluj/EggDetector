@@ -63,10 +63,12 @@ public class TaggerController {
     }
 
     @PostMapping("/folder/{folderId}")
-    public String folderSubmit(Model model, @ModelAttribute FolderData folderData) {
+    public String folderSubmit(Model model, @PathVariable("folderId") String folderId,
+                               @ModelAttribute FolderData folderData) {
+        // todo save and remove folder from available ones
         int i = 0;
         i++;
-        return "folder";
+        return index();
     }
 
     @RequestMapping("/foldernotfound/{folderId}")
