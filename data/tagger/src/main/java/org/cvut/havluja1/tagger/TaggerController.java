@@ -1,15 +1,24 @@
 package org.cvut.havluja1.tagger;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.cvut.havluja1.tagger.model.FolderData;
 import org.cvut.havluja1.tagger.model.IFolderBrowserService;
+import org.cvut.havluja1.tagger.model.ImgData;
 import org.cvut.havluja1.tagger.model.exceptions.NoMoreDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.WebRequest;
+
+import com.sun.scenario.effect.ImageData;
 
 @Controller
 public class TaggerController {
@@ -30,7 +39,7 @@ public class TaggerController {
         }
     }
 
-    @RequestMapping("/folder/{folderId}")
+    @GetMapping("/folder/{folderId}")
     public String folder(Model model, @PathVariable("folderId") String folderId) {
         List<String> pics;
         try {
@@ -39,8 +48,24 @@ public class TaggerController {
             return "redirect:/foldernotfound/" + folderId;
         }
 
+        List<ImgData> imgs = new ArrayList<>();
+        for(String pic : pics) {
+            ImgData workingImg = new ImgData();
+            workingImg.setName(pic);
+            imgs.add(workingImg);
+        }
+        FolderData workingData = new FolderData();
+        workingData.setImgData(imgs);
+
         model.addAttribute("folderId", folderId);
-        model.addAttribute("pics", pics);
+        model.addAttribute("folderData", workingData);
+        return "folder";
+    }
+
+    @PostMapping("/folder/{folderId}")
+    public String folderSubmit(Model model, @ModelAttribute FolderData folderData) {
+        int i = 0;
+        i++;
         return "folder";
     }
 

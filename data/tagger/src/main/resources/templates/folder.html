@@ -5,10 +5,52 @@
     <title th:text="'Data Tagger | Tagging pictures from ' + ${folderId}">Data Tagger</title>
 </head>
 <body>
-<p align="center"><a th:href="@{/}">Different folder</a></p>
-<p>
-    <img th:each="picUrl : ${pics}" th:src="@{'~/data/' + ${folderId} + '/' + ${picUrl}}"
-         style="float: left; height: 20em; margin-right: 1%; margin-bottom: 0.5em;"/>
-</p>
+<p><a th:href="@{/}">Different folder</a></p>
+<p>Prefill the form: <input type="number" id="prefill"/></p>
+<br/>
+<form action="#" th:action="@{/folder}" th:object="${folderData}" method="post">
+    <table border="1px">
+        <tr th:each="img, imgStat : *{imgData}">
+            <td th:text="*{imgData[__${imgStat.index}__].name}"></td>
+            <td>
+                <img th:src="@{'~/data/' + ${folderId} + '/' + *{imgData[__${imgStat.index}__].name}}"
+                     style="height: 15em;"/>
+            </td>
+            <td>
+                <input type="number" class="eggCnt" th:field="*{imgData[__${imgStat.index}__].eggCount}"/>
+            </td>
+        </tr>
+    </table>
+    <p><input type="submit" value="Submit"/></p>
+</form>
 </body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    function isInt(value) {
+        var x;
+        if (isNaN(value)) {
+            return false;
+        }
+        x = parseFloat(value);
+        return (x | 0) === x;
+    }
+
+    var currentVal = document.getElementById('prefill').value;
+    var onChange = function (evt) {
+        if (isInt(evt.target.value)) {
+            currentVal = evt.target.value;
+            var inputFields = document.getElementsByClassName('eggCnt');
+            var inputFiledsCnt = inputFields.length;
+            for (var i = 0; i < inputFiledsCnt; i++) {
+                inputFields[i].value = evt.target.value;
+            }
+            console.info("populating form with " + evt.target.value);
+        }
+    };
+    var input = document.getElementById('prefill');
+    input.addEventListener('input', onChange, false);
+
+    /*]]>*/
+</script>
 </html>
