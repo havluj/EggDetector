@@ -1,7 +1,6 @@
 package org.cvut.havluja1.tagger.model;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +15,7 @@ public class FolderScanner {
      * @param location root folder location.
      * @return list of folder names (no paths)
      */
-    public static List<String> scanFolder(String location) {
+    public static ArrayList<String> scanFolder(String location) {
         File locFile = new File(location);
 
         if (!locFile.exists()) {
@@ -25,7 +24,7 @@ public class FolderScanner {
 
         // example folder name: 20160430_073822_526_D
         final Pattern pattern = Pattern.compile("\\d{8}_\\d{6}_\\d{3}_D");
-        return Arrays.asList(locFile.list((File file, String name) -> {
+        List arr = Arrays.asList(locFile.list((File file, String name) -> {
             File workingDir = new File(file.getAbsolutePath() + File.separator + name);
             // needs to be a dir in a correct format
             if (!workingDir.isDirectory() && !pattern.matcher(name).matches()) {
@@ -45,5 +44,7 @@ public class FolderScanner {
 
             return true;
         }));
+
+        return new ArrayList<>(arr);
     }
 }

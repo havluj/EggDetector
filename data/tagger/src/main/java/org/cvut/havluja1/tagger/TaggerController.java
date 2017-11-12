@@ -1,6 +1,7 @@
 package org.cvut.havluja1.tagger;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.WebRequest;
-
-import com.sun.scenario.effect.ImageData;
 
 @Controller
 public class TaggerController {
@@ -33,7 +31,7 @@ public class TaggerController {
     @RequestMapping("/")
     public String index() {
         try {
-            return "redirect:/folder/" + getNextFolderId();
+            return "redirect:/folder/" + folderBrowser.getNextUntaggedFolder();
         } catch (NoMoreDataException e) {
             return "index";
         }
@@ -49,7 +47,7 @@ public class TaggerController {
         }
 
         List<ImgData> imgs = new ArrayList<>();
-        for(String pic : pics) {
+        for (String pic : pics) {
             ImgData workingImg = new ImgData();
             workingImg.setName(pic);
             imgs.add(workingImg);
@@ -65,9 +63,12 @@ public class TaggerController {
     @PostMapping("/folder/{folderId}")
     public String folderSubmit(Model model, @PathVariable("folderId") String folderId,
                                @ModelAttribute FolderData folderData) {
-        // todo save and remove folder from available ones
-        int i = 0;
-        i++;
+        try {
+            folderBrowser.writeData(folderId, folderData);
+            folderBrowser.removeFromList(folderId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return index();
     }
 
@@ -76,9 +77,5 @@ public class TaggerController {
         model.addAttribute("folderId", folderId);
 
         return "foldernotfound";
-    }
-
-    private String getNextFolderId() throws NoMoreDataException {
-        return folderBrowser.getNextUntaggedFolder();
     }
 }

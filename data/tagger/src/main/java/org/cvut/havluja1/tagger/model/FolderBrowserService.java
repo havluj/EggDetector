@@ -1,11 +1,11 @@
 package org.cvut.havluja1.tagger.model;
 
-import java.beans.ExceptionListener;
 import java.beans.XMLEncoder;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class FolderBrowserService implements IFolderBrowserService {
 
     private final String dataLocation;
-    private final List<String> untaggedFolders;
+    private final ArrayList<String> untaggedFolders;
 
     /**
      * Constructor.
@@ -35,7 +35,7 @@ public class FolderBrowserService implements IFolderBrowserService {
             this.dataLocation = dataLocation + File.separator;
         }
 
-        if(!(new File(dataLocation)).exists()) {
+        if (!(new File(dataLocation)).exists()) {
             throw new FileNotFoundException("Provided directory does not exist or is inaccessible");
         }
 
@@ -78,15 +78,20 @@ public class FolderBrowserService implements IFolderBrowserService {
     }
 
     @Override
-    public void writeData(String folderId, FolderData folderData) {
-        try(FileOutputStream fos = new FileOutputStream(dataLocation + folderId + "/imgdata.xml")) {
+    public void writeData(String folderId, FolderData folderData) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(dataLocation + folderId + "/imgdata.xml")) {
             XMLEncoder encoder = new XMLEncoder(fos);
             encoder.setExceptionListener(e -> e.printStackTrace());
             encoder.writeObject(folderData);
             encoder.close();
             fos.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw e;
         }
+    }
+
+    @Override
+    public void removeFromList(String folderId) {
+        untaggedFolders.remove(folderId);
     }
 }

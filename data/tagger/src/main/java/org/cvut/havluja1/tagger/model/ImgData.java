@@ -2,7 +2,7 @@ package org.cvut.havluja1.tagger.model;
 
 public class ImgData {
     private String name;
-    private int eggCount;
+    private int eggCount = -1;
 
     public String getName() {
         return name;
