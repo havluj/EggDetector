@@ -12,6 +12,7 @@ public class FolderScanner {
 
     /**
      * Creates a list of folder names in a given folder.
+     *
      * @param location root folder location.
      * @return list of folder names (no paths)
      */
@@ -31,8 +32,11 @@ public class FolderScanner {
                 return false;
             }
 
-            // if already tagged
-            // todo check the db
+            // if already tagged (contains imgdata.xml file)
+            File imgDataFile = new File(workingDir, "imgdata.xml");
+            if (imgDataFile.exists()) {
+                return false;
+            }
 
             // contains any pictures
             if (workingDir.list((f, n) -> {
