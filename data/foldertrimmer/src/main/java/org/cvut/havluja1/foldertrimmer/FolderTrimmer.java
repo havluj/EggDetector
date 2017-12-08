@@ -2,44 +2,74 @@ package org.cvut.havluja1.foldertrimmer;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 public class FolderTrimmer {
     public static void main(String[] args) throws IOException {
         File rootDir = new File(args[0]);
 
-        if (!rootDir.exists() || rootDir.isDirectory()) {
+        if (!rootDir.exists() || !rootDir.isDirectory()) {
             throw new IllegalArgumentException("root dir does not exist");
         }
 
-        List<String> emptyDirs = findAndDeleteEmptyDirs(rootDir);
-        emptyDirs.forEach(x -> System.out.println(x));
+        System.out.println("finding useless data...");
+        findAndDeleteEmptyDirs(rootDir);
+        System.out.println("done");
     }
 
-    private static List<String> findAndDeleteEmptyDirs(File dir) {
-        List<String> deletedFolders = new ArrayList<String>();
-        boolean shouldBeDeleted = false;
+    private static void findAndDeleteEmptyDirs(File dir) {
+        final boolean[] shouldBeDeleted = {true};
 
-        File[] toBeProcessed = dir.listFiles();
-        // list everything
-        // if file and is not xml, txt or png return, if it is, tag this folder not to be deleted
-        // if dir -> return and tag this folder not to be deleted
+        File[] toBeProcessed = dir.listFiles((file, s) -> {
+            File workingFile = new File(file, s);
 
-        if(shouldBeDeleted) {
+            // if dir -> return true and tag this folder not to be deleted
+            if (workingFile.isDirectory()) {
+                shouldBeDeleted[0] = false;
+                return true;
+            }
+
+            // If file and is not xml, txt or png return true. If it is, tag this folder not to be deleted.
+            if (workingFile.isFile()) {
+                if (FilenameUtils.getExtension(s).equals("xml")
+                        || FilenameUtils.getExtension(s).equals("png")
+                        || FilenameUtils.getExtension(s).equals("txt")) {
+                    shouldBeDeleted[0] = false;
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            return true;
+        });
+
+        if (shouldBeDeleted[0]) {
             try {
                 FileUtils.deleteDirectory(dir);
+                System.out.println("[D] deleting dir: " + dir.getAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            // foreach on all results
-            // if dir -> recursive call
-            // if file -> delete
-        }
+            if (toBeProcessed.length > 0) {
+                for (File currFile : toBeProcessed) {
+                    // if file -> delete
+                    if (currFile.isFile()) {
+                        if (currFile.delete()) {
+                            System.out.println("[F] deleting file: " + currFile.getAbsolutePath());
+                        }
+                        continue;
+                    }
 
-        return deletedFolders;
+                    // if dir -> recursive call
+                    if (currFile.isDirectory()) {
+                        findAndDeleteEmptyDirs(currFile);
+                    }
+                }
+            }
+        }
     }
 }
