@@ -14,4 +14,4 @@ if [ -z "$JAVA_BIN" ] || [ ! -x "$JAVA_BIN" ]; then
     exit 1
 fi
 
-${JAVA_BIN} -jar foldertrimmer-1.0-SNAPSHOT.jar --data.location="$1"
+${JAVA_BIN} -Dleaveonlytagged="$1" -jar foldertrimmer-1.0-SNAPSHOT.jar --data.location="$2"

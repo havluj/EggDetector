@@ -21,6 +21,7 @@ public class FolderTrimmer {
 
     private static void findAndDeleteEmptyDirs(File dir) {
         final boolean[] shouldBeDeleted = {true};
+        final boolean leaveOnlyTaggedData = System.getProperty("leaveonlytagged").equalsIgnoreCase("true");
 
         File[] toBeProcessed = dir.listFiles((file, s) -> {
             File workingFile = new File(file, s);
@@ -31,15 +32,27 @@ public class FolderTrimmer {
                 return true;
             }
 
-            // If file and is not xml, txt or png return true. If it is, tag this folder not to be deleted.
+
             if (workingFile.isFile()) {
-                if (FilenameUtils.getExtension(s).equals("xml")
-                        || FilenameUtils.getExtension(s).equals("png")
-                        || FilenameUtils.getExtension(s).equals("txt")) {
-                    shouldBeDeleted[0] = false;
-                    return false;
-                } else {
-                    return true;
+                if (leaveOnlyTaggedData) { // if we want to keep only tagged data
+                    if (s.equals("imgdata.xml")) {
+                        shouldBeDeleted[0] = false;
+                        return false;
+                    } else {
+                        if (FilenameUtils.getExtension(s).equals("png")) {
+                            return false;
+                        }
+                        return true;
+                    }
+                } else { // If file and is not xml, txt or png return true. If it is, tag this folder not to be deleted.
+                    if (FilenameUtils.getExtension(s).equals("xml")
+                            || FilenameUtils.getExtension(s).equals("png")
+                            || FilenameUtils.getExtension(s).equals("txt")) {
+                        shouldBeDeleted[0] = false;
+                        return false;
+                    } else {
+                        return true;
+                    }
                 }
             }
 
