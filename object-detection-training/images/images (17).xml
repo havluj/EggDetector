@@ -1,0 +1,38 @@
+<annotation>
+	<folder>imgs</folder>
+	<filename>images (17).jpg</filename>
+	<path>/home/jan/Dropbox/imgs/images (17).jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>194</width>
+		<height>259</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>egg</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>60</xmin>
+			<ymin>111</ymin>
+			<xmax>110</xmax>
+			<ymax>174</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>egg</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>102</xmin>
+			<ymin>88</ymin>
+			<xmax>149</xmax>
+			<ymax>148</ymax>
+		</bndbox>
+	</object>
+</annotation>
