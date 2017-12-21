@@ -27,6 +27,6 @@ export inference graph
 python3.5 export_inference_graph.py \
     --input_type image_tensor \
     --pipeline_config_path training/ssd_mobilenet_v1_coco.config \
-    --trained_checkpoint_prefix training/model.ckpt-6033 \
+    --trained_checkpoint_prefix training/model.ckpt-7918 \
     --output_directory frozen_graph
 ```
