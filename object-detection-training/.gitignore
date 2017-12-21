@@ -2,3 +2,7 @@ images/**/*.png
 images/**/*.jpg
 data/*.record
 data/*.csv
+.ipynb_checkpoints/
+training/
+!training/graph.pbtxt
+!training/*.config
