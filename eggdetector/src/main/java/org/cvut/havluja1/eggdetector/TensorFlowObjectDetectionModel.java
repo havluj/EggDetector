@@ -1,13 +1,10 @@
 package org.cvut.havluja1.eggdetector;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -16,12 +13,95 @@ import java.util.logging.Logger;
 import org.tensorflow.Graph;
 import org.tensorflow.Operation;
 
-class TensorFlowObjectDetectionModel implements Classifier {
+class TensorFlowObjectDetectionModel {
     private static final Logger LOGGER = Logger.getLogger(TensorFlowObjectDetectionModel.class.getName());
     private static final int MAX_RESULTS = 100;
     private static final String INPUT_NAME = "image_tensor";
     private static final int INPUT_SIZE = 300; // nn is trained on 300x300 images
     private static final String LABEL = "egg";
+
+    class RectF {
+        float left;
+        float top;
+        float right;
+        float bottom;
+
+        RectF(float left, float top, float right, float bottom) {
+            this.left = left;
+            this.top = top;
+            this.right = right;
+            this.bottom = bottom;
+        }
+
+        RectF(RectF r) {
+            if (r == null) {
+                left = top = right = bottom = 0.0f;
+            } else {
+                left = r.left;
+                top = r.top;
+                right = r.right;
+                bottom = r.bottom;
+            }
+        }
+
+        public String toString() {
+            return "RectF(" + left + ", " + top + ", "
+                    + right + ", " + bottom + ")";
+        }
+
+        final float width() {
+            return right - left;
+        }
+
+        final float height() {
+            return bottom - top;
+        }
+    }
+
+    class Recognition {
+        private final int id;
+        private final String title;
+        private final Float confidence;
+        private RectF location;
+
+        Recognition(
+                final int id, final String title, final Float confidence, final RectF location) {
+            this.id = id;
+            this.title = title;
+            this.confidence = confidence;
+            this.location = location;
+        }
+
+        int getId() {
+            return id;
+        }
+
+        String getTitle() {
+            return title;
+        }
+
+        Float getConfidence() {
+            return confidence;
+        }
+
+        RectF getLocation() {
+            return new RectF(location);
+        }
+
+        void setLocation(RectF location) {
+            this.location = location;
+        }
+
+        @Override
+        public String toString() {
+            return "Recognition{" +
+                    "id=" + id +
+                    ", title='" + title + '\'' +
+                    ", confidence=" + confidence +
+                    ", location=" + location +
+                    '}';
+        }
+    }
 
     // Pre-allocated buffers.
     private int[] intValues;
@@ -39,7 +119,7 @@ class TensorFlowObjectDetectionModel implements Classifier {
     /**
      * Initializes a native TensorFlow session for classifying images.
      */
-    public TensorFlowObjectDetectionModel() {
+    TensorFlowObjectDetectionModel() {
         final Graph g = inferenceInterface.graph();
 
         // The inputName node has a shape of [N, H, W, C], where
@@ -76,7 +156,7 @@ class TensorFlowObjectDetectionModel implements Classifier {
         outputNumDetections = new float[1];
     }
 
-    public List<Recognition> recognizeImage(final BufferedImage image, Float minScore) {
+    List<Recognition> recognizeImage(final BufferedImage image, Float minScore, boolean debugMode) {
         // create a new, resized image
         BufferedImage thumbnail = new BufferedImage(INPUT_SIZE, INPUT_SIZE, BufferedImage.TYPE_INT_RGB);
         Graphics2D tGraphics2D = thumbnail.createGraphics(); //create a graphics object to paint to
@@ -142,34 +222,31 @@ class TensorFlowObjectDetectionModel implements Classifier {
             recognitions.add(pq.poll());
         }
 
-        Graphics2D graphics = convertedImg.createGraphics();
-        for (Recognition recognition : recognitions) {
-            RectF rectF = recognition.getLocation();
-            Stroke stroke = graphics.getStroke();
-            graphics.setStroke(new BasicStroke(3));
-            graphics.setColor(Color.green);
-            graphics.drawRoundRect((int) rectF.left, (int) rectF.top, (int) rectF.width(), (int) rectF.height(), 5, 5);
-            graphics.setStroke(stroke);
-        }
+        if (debugMode) {
+            Graphics2D graphics = convertedImg.createGraphics();
+            for (Recognition recognition : recognitions) {
+                RectF rectF = recognition.getLocation();
+                Stroke stroke = graphics.getStroke();
+                graphics.setStroke(new BasicStroke(3));
+                graphics.setColor(Color.green);
+                graphics.drawRoundRect((int) rectF.left, (int) rectF.top, (int) rectF.width(), (int) rectF.height(), 5, 5);
+                graphics.setStroke(stroke);
+            }
 
-        graphics.dispose();
-        ImageIcon icon=new ImageIcon(convertedImg);
-        JFrame frame=new JFrame();
-        frame.setLayout(new FlowLayout());
-        frame.setSize(convertedImg.getWidth(),convertedImg.getHeight());
-        JLabel lbl=new JLabel();
-        frame.setTitle("Java (Win/Ubuntu), Tensorflow");
-        lbl.setIcon(icon);
-        frame.add(lbl);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            graphics.dispose();
+            ImageIcon icon = new ImageIcon(convertedImg);
+            JFrame frame = new JFrame();
+            frame.setLayout(new FlowLayout());
+            frame.setSize(convertedImg.getWidth(), convertedImg.getHeight());
+            JLabel lbl = new JLabel();
+            frame.setTitle("Java (Win/Ubuntu), Tensorflow");
+            lbl.setIcon(icon);
+            frame.add(lbl);
+            frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
 
 
         return recognitions;
-    }
-
-    @Override
-    public void close() {
-        inferenceInterface.close();
     }
 }

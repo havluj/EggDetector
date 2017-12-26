@@ -32,7 +32,7 @@ final class TensorFlowInferenceInterface {
 
     private static TensorFlowInferenceInterface instance;
 
-    public static synchronized TensorFlowInferenceInterface getInstance() {
+    static synchronized TensorFlowInferenceInterface getInstance() {
         if (instance == null) {
             instance = new TensorFlowInferenceInterface();
         }
@@ -53,11 +53,11 @@ final class TensorFlowInferenceInterface {
         }
     }
 
-    public void run(String[] var1) {
+    void run(String[] var1) {
         this.run(var1, false);
     }
 
-    public void run(String[] var1, boolean var2) {
+    void run(String[] var1, boolean var2) {
         this.closeFetches();
         String[] var3 = var1;
         int var4 = var1.length;
@@ -93,11 +93,11 @@ final class TensorFlowInferenceInterface {
 
     }
 
-    public Graph graph() {
+    Graph graph() {
         return this.g;
     }
 
-    public Operation graphOperation(String var1) {
+    Operation graphOperation(String var1) {
         Operation var2 = this.g.operation(var1);
         if (var2 == null) {
             throw new RuntimeException("Node '" + var1 + "' does not exist in model '");
@@ -106,11 +106,11 @@ final class TensorFlowInferenceInterface {
         }
     }
 
-    public String getStatString() {
+    String getStatString() {
         return this.runStats == null ? "" : this.runStats.summary();
     }
 
-    public void close() {
+    void close() {
         this.closeFeeds();
         this.closeFetches();
         this.sess.close();
@@ -131,91 +131,91 @@ final class TensorFlowInferenceInterface {
 
     }
 
-    public void feed(String var1, float[] var2, long... var3) {
+    void feed(String var1, float[] var2, long... var3) {
         this.addFeed(var1, Tensor.create(var3, FloatBuffer.wrap(var2)));
     }
 
-    public void feed(String var1, int[] var2, long... var3) {
+    void feed(String var1, int[] var2, long... var3) {
         this.addFeed(var1, Tensor.create(var3, IntBuffer.wrap(var2)));
     }
 
-    public void feed(String var1, long[] var2, long... var3) {
+    void feed(String var1, long[] var2, long... var3) {
         this.addFeed(var1, Tensor.create(var3, LongBuffer.wrap(var2)));
     }
 
-    public void feed(String var1, double[] var2, long... var3) {
+    void feed(String var1, double[] var2, long... var3) {
         this.addFeed(var1, Tensor.create(var3, DoubleBuffer.wrap(var2)));
     }
 
-    public void feed(String var1, byte[] var2, long... var3) {
+    void feed(String var1, byte[] var2, long... var3) {
         this.addFeed(var1, Tensor.create(UInt8.class, var3, ByteBuffer.wrap(var2)));
     }
 
-    public void feedString(String var1, byte[] var2) {
+    void feedString(String var1, byte[] var2) {
         this.addFeed(var1, Tensors.create(var2));
     }
 
-    public void feedString(String var1, byte[][] var2) {
+    void feedString(String var1, byte[][] var2) {
         this.addFeed(var1, Tensors.create(var2));
     }
 
-    public void feed(String var1, FloatBuffer var2, long... var3) {
+    void feed(String var1, FloatBuffer var2, long... var3) {
         this.addFeed(var1, Tensor.create(var3, var2));
     }
 
-    public void feed(String var1, IntBuffer var2, long... var3) {
+    void feed(String var1, IntBuffer var2, long... var3) {
         this.addFeed(var1, Tensor.create(var3, var2));
     }
 
-    public void feed(String var1, LongBuffer var2, long... var3) {
+    void feed(String var1, LongBuffer var2, long... var3) {
         this.addFeed(var1, Tensor.create(var3, var2));
     }
 
-    public void feed(String var1, DoubleBuffer var2, long... var3) {
+    void feed(String var1, DoubleBuffer var2, long... var3) {
         this.addFeed(var1, Tensor.create(var3, var2));
     }
 
-    public void feed(String var1, ByteBuffer var2, long... var3) {
+    void feed(String var1, ByteBuffer var2, long... var3) {
         this.addFeed(var1, Tensor.create(UInt8.class, var3, var2));
     }
 
-    public void fetch(String var1, float[] var2) {
+    void fetch(String var1, float[] var2) {
         this.fetch(var1, FloatBuffer.wrap(var2));
     }
 
-    public void fetch(String var1, int[] var2) {
+    void fetch(String var1, int[] var2) {
         this.fetch(var1, IntBuffer.wrap(var2));
     }
 
-    public void fetch(String var1, long[] var2) {
+    void fetch(String var1, long[] var2) {
         this.fetch(var1, LongBuffer.wrap(var2));
     }
 
-    public void fetch(String var1, double[] var2) {
+    void fetch(String var1, double[] var2) {
         this.fetch(var1, DoubleBuffer.wrap(var2));
     }
 
-    public void fetch(String var1, byte[] var2) {
+    void fetch(String var1, byte[] var2) {
         this.fetch(var1, ByteBuffer.wrap(var2));
     }
 
-    public void fetch(String var1, FloatBuffer var2) {
+    void fetch(String var1, FloatBuffer var2) {
         this.getTensor(var1).writeTo(var2);
     }
 
-    public void fetch(String var1, IntBuffer var2) {
+    void fetch(String var1, IntBuffer var2) {
         this.getTensor(var1).writeTo(var2);
     }
 
-    public void fetch(String var1, LongBuffer var2) {
+    void fetch(String var1, LongBuffer var2) {
         this.getTensor(var1).writeTo(var2);
     }
 
-    public void fetch(String var1, DoubleBuffer var2) {
+    void fetch(String var1, DoubleBuffer var2) {
         this.getTensor(var1).writeTo(var2);
     }
 
-    public void fetch(String var1, ByteBuffer var2) {
+    void fetch(String var1, ByteBuffer var2) {
         this.getTensor(var1).writeTo(var2);
     }
 
@@ -302,7 +302,7 @@ final class TensorFlowInferenceInterface {
         private TensorId() {
         }
 
-        public static TensorFlowInferenceInterface.TensorId parse(String var0) {
+        static TensorFlowInferenceInterface.TensorId parse(String var0) {
             TensorFlowInferenceInterface.TensorId var1 = new TensorFlowInferenceInterface.TensorId();
             int var2 = var0.lastIndexOf(58);
             if (var2 < 0) {

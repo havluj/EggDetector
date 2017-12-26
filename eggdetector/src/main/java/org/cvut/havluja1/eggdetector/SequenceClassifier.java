@@ -14,10 +14,10 @@ public class SequenceClassifier {
     private Map<String, Integer> imageScores;
     private final TensorFlowObjectDetectionModel tensorFlowObjectDetectionModel = new TensorFlowObjectDetectionModel();
 
-    SequenceClassifier(List<File> images, float minimalConfidence) {
+    SequenceClassifier(List<File> images, float minimalConfidence, boolean debugMode) {
         this.imageScores = new HashMap<>();
         for (File f : images) {
-            imageScores.put(f.getName(), getImgScore(f, minimalConfidence));
+            imageScores.put(f.getName(), getImgScore(f, minimalConfidence, debugMode));
         }
     }
 
@@ -36,7 +36,7 @@ public class SequenceClassifier {
         while (!scores.isEmpty()) {
             Map.Entry<Integer, Integer> e = scores.pollLastEntry();
             if (e.getValue() > 1) {
-                return e.getValue();
+                return e.getKey();
             } else if (e.getValue() == 1) {
                 bestGuess = e.getValue();
             }
@@ -50,10 +50,10 @@ public class SequenceClassifier {
         return new HashMap<>(imageScores);
     }
 
-    private int getImgScore(File imageFile, float minimalConfidence) {
+    private int getImgScore(File imageFile, float minimalConfidence, boolean debugMode) {
         try {
-            List<Classifier.Recognition> recognitions = tensorFlowObjectDetectionModel.recognizeImage(ImageIO.read(imageFile),
-                                                                                                      minimalConfidence);
+            List<TensorFlowObjectDetectionModel.Recognition> recognitions =
+                    tensorFlowObjectDetectionModel.recognizeImage(ImageIO.read(imageFile), minimalConfidence, debugMode);
             return recognitions.size();
         } catch (IOException e) {
             e.printStackTrace();
