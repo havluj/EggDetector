@@ -7,42 +7,53 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class SequenceClassifier {
-
-    private static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.4f;
 
     private Map<String, Integer> imageScores;
     private final TensorFlowObjectDetectionModel tensorFlowObjectDetectionModel = new TensorFlowObjectDetectionModel();
 
-    SequenceClassifier(List<File> images) {
+    SequenceClassifier(List<File> images, float minimalConfidence) {
         this.imageScores = new HashMap<>();
-
-        String imageLoc = "/home/jan/bachelor_thesis/object-detection-training/test_images/image4.png"; // 1280x720 test image
-//        floatValues = new float[1280 * 720 * 3];
-        System.out.println(getImgScore(new File(imageLoc)));
+        for (File f : images) {
+            imageScores.put(f.getName(), getImgScore(f, minimalConfidence));
+        }
     }
 
     public Integer getFinalCount() {
-        int maxEggCount = 0;
+        TreeMap<Integer, Integer> scores = new TreeMap<>();
 
         for (Integer val : imageScores.values()) {
-            if (val > maxEggCount) {
-                maxEggCount = val;
+            if (scores.containsKey(val)) {
+                scores.replace(val, scores.get(val) + 1); // increment
+            } else {
+                scores.put(val, 1);
             }
         }
 
-        return maxEggCount;
+        int bestGuess = 0;
+        while (!scores.isEmpty()) {
+            Map.Entry<Integer, Integer> e = scores.pollLastEntry();
+            if (e.getValue() > 1) {
+                return e.getValue();
+            } else if (e.getValue() == 1) {
+                bestGuess = e.getValue();
+            }
+
+        }
+
+        return bestGuess;
     }
 
     public Map<String, Integer> getIndividualCounts() {
         return new HashMap<>(imageScores);
     }
 
-    private int getImgScore(File imageFile) {
+    private int getImgScore(File imageFile, float minimalConfidence) {
         try {
-            List<Classifier.Recognition> recognitions = tensorFlowObjectDetectionModel.recognizeImage(ImageIO.read(imageFile));
-            System.out.println(recognitions);
+            List<Classifier.Recognition> recognitions = tensorFlowObjectDetectionModel.recognizeImage(ImageIO.read(imageFile),
+                                                                                                      minimalConfidence);
             return recognitions.size();
         } catch (IOException e) {
             e.printStackTrace();

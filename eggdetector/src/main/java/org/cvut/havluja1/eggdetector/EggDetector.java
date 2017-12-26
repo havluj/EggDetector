@@ -10,14 +10,25 @@ import org.apache.commons.io.FilenameUtils;
 public class EggDetector {
 
     private final static Logger LOGGER = Logger.getLogger(EggDetector.class.getName());
+    private float minimalConfidence = 0.2f;
 
     public EggDetector() {
-        LOGGER.info("feeding TensorFlow graph into memory...");
+        LOGGER.info("loading TensorFlow graph into memory...");
         TensorFlowInferenceInterface.getInstance();
         LOGGER.info("TensorFlow NN graph ready");
     }
 
+    public float getMinimalConfidence() {
+        return minimalConfidence;
+    }
+
+    public void setMinimalConfidence(float minimalConfidence) {
+        LOGGER.info("setting minimum confidence to: " + minimalConfidence);
+        this.minimalConfidence = minimalConfidence;
+    }
+
     public SequenceClassifier evaluate(File dir) throws IllegalArgumentException {
+        LOGGER.info("evaluating dir: " + dir.getAbsolutePath());
         if (!dir.isDirectory()) {
             throw new IllegalArgumentException(dir.getAbsolutePath() + " is not a directory.");
         }
@@ -32,8 +43,8 @@ public class EggDetector {
         if (imageList.isEmpty()) {
             throw new IllegalArgumentException(dir.getAbsolutePath() + " does not contain any pictures.");
         }
+        LOGGER.info(imageList.size() + " pictures found");
 
-
-        return new SequenceClassifier(imageList);
+        return new SequenceClassifier(imageList, minimalConfidence);
     }
 }

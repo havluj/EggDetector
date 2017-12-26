@@ -2,34 +2,12 @@ package org.cvut.havluja1.eggdetector;
 
 import java.io.File;
 
-import org.tensorflow.Graph;
-import org.tensorflow.Session;
-import org.tensorflow.Tensor;
-import org.tensorflow.TensorFlow;
-
 public class Test {
     public static void main(String[] args) throws Exception {
-        try (Graph g = new Graph()) {
-                EggDetector eggDetector = new EggDetector();
-                eggDetector.evaluate(new File("/home/jan/bachelor_thesis/object-detection-training/test_images"));
+        EggDetector eggDetector = new EggDetector();
+        SequenceClassifier seq = eggDetector.evaluate(new File("/run/media/jan/data/bachelor_thesis_data/data/egg_count_images/20160420_165438_913_D"));
 
-
-
-//            final String value = "Hello from " + TensorFlow.version();
-//
-//            // Construct the computation graph with a single operation, a constant
-//            // named "MyConst" with a value "value".
-//            try (Tensor t = Tensor.create(value.getBytes("UTF-8"))) {
-//                // The Java API doesn't yet include convenience functions for adding operations.
-//                g.opBuilder("Const", "MyConst").setAttr("dtype", t.dataType()).setAttr("value", t).build();
-//            }
-//
-//            // Execute the "MyConst" operation in a Session.
-//            try (Session s = new Session(g);
-//                 Tensor output = s.runner().fetch("MyConst").run().get(0)) {
-//                System.out.println(new String(output.bytesValue(), "UTF-8"));
-//            }
-        }
+        System.out.println(seq.getFinalCount());
     }
 }
 

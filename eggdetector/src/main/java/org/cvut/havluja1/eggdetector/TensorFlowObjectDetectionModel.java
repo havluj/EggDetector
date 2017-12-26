@@ -1,12 +1,16 @@
 package org.cvut.havluja1.eggdetector;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.tensorflow.Graph;
@@ -72,7 +76,7 @@ class TensorFlowObjectDetectionModel implements Classifier {
         outputNumDetections = new float[1];
     }
 
-    public List<Recognition> recognizeImage(final BufferedImage image) {
+    public List<Recognition> recognizeImage(final BufferedImage image, Float minScore) {
         // create a new, resized image
         BufferedImage thumbnail = new BufferedImage(INPUT_SIZE, INPUT_SIZE, BufferedImage.TYPE_INT_RGB);
         Graphics2D tGraphics2D = thumbnail.createGraphics(); //create a graphics object to paint to
@@ -121,19 +125,46 @@ class TensorFlowObjectDetectionModel implements Classifier {
 
         // Scale them back to the input size.
         for (int i = 0; i < outputScores.length; ++i) {
-            final RectF detection =
-                    new RectF(
-                            outputLocations[4 * i + 1] * INPUT_SIZE,
-                            outputLocations[4 * i] * INPUT_SIZE,
-                            outputLocations[4 * i + 3] * INPUT_SIZE,
-                            outputLocations[4 * i + 2] * INPUT_SIZE);
-            pq.add(new Recognition(i, LABEL, outputScores[i], detection));
+            if (outputScores[i] >= minScore) {
+                final RectF detection =
+                        new RectF(
+                                outputLocations[4 * i + 1] * INPUT_SIZE,
+                                outputLocations[4 * i] * INPUT_SIZE,
+                                outputLocations[4 * i + 3] * INPUT_SIZE,
+                                outputLocations[4 * i + 2] * INPUT_SIZE);
+                pq.add(new Recognition(i, LABEL, outputScores[i], detection));
+            }
         }
 
         final ArrayList<Recognition> recognitions = new ArrayList<>();
-        for (int i = 0; i < Math.min(pq.size(), MAX_RESULTS); ++i) {
+        int limit = Math.min(pq.size(), MAX_RESULTS);
+        for (int i = 0; i < limit; ++i) {
             recognitions.add(pq.poll());
         }
+
+        Graphics2D graphics = convertedImg.createGraphics();
+        for (Recognition recognition : recognitions) {
+            RectF rectF = recognition.getLocation();
+            Stroke stroke = graphics.getStroke();
+            graphics.setStroke(new BasicStroke(3));
+            graphics.setColor(Color.green);
+            graphics.drawRoundRect((int) rectF.left, (int) rectF.top, (int) rectF.width(), (int) rectF.height(), 5, 5);
+            graphics.setStroke(stroke);
+        }
+
+        graphics.dispose();
+        ImageIcon icon=new ImageIcon(convertedImg);
+        JFrame frame=new JFrame();
+        frame.setLayout(new FlowLayout());
+        frame.setSize(convertedImg.getWidth(),convertedImg.getHeight());
+        JLabel lbl=new JLabel();
+        frame.setTitle("Java (Win/Ubuntu), Tensorflow");
+        lbl.setIcon(icon);
+        frame.add(lbl);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
         return recognitions;
     }
 
