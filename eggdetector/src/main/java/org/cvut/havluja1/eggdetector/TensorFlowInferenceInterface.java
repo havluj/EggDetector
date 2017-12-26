@@ -6,12 +6,11 @@ import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.tensorflow.Graph;
 import org.tensorflow.Operation;
 import org.tensorflow.Session;
@@ -20,7 +19,8 @@ import org.tensorflow.TensorFlow;
 import org.tensorflow.Tensors;
 import org.tensorflow.types.UInt8;
 
-public class TensorFlowInferenceInterface {
+final class TensorFlowInferenceInterface {
+    private final static String FROZEN_GRAPH = "frozen_inference_graph.pb";
     private final Graph g;
     private final Session sess;
     private Session.Runner runner;
@@ -30,27 +30,27 @@ public class TensorFlowInferenceInterface {
     private List<Tensor<?>> fetchTensors = new ArrayList();
     private RunStats runStats;
 
-    public TensorFlowInferenceInterface(Path path) {
+    private static TensorFlowInferenceInterface instance;
+
+    public static synchronized TensorFlowInferenceInterface getInstance() {
+        if (instance == null) {
+            instance = new TensorFlowInferenceInterface();
+        }
+        return instance;
+    }
+
+    private TensorFlowInferenceInterface() {
         this.prepareNativeRuntime();
         this.g = new Graph();
         this.sess = new Session(this.g);
         this.runner = this.sess.runner();
 
         try {
-            this.loadGraph(readAllBytesOrExit(path), this.g);
+            this.loadGraph(IOUtils.toByteArray(getClass().getClassLoader().getResourceAsStream(FROZEN_GRAPH)), this.g);
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static byte[] readAllBytesOrExit(Path path) {
-        try {
-            return Files.readAllBytes(path);
-        } catch (IOException e) {
-            System.err.println("Failed to read [" + path + "]: " + e.getMessage());
+            System.err.println("Failed to read [" + FROZEN_GRAPH + "]: " + e.getMessage());
             System.exit(1);
         }
-        return null;
     }
 
     public void run(String[] var1) {

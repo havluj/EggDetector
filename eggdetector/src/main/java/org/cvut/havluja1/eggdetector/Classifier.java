@@ -1,8 +1,8 @@
 package org.cvut.havluja1.eggdetector;
 
-public interface Classifier {
+interface Classifier {
 
-    public class Recognition {
+    class Recognition {
 
         private final int id;
 
@@ -38,6 +38,16 @@ public interface Classifier {
 
         public void setLocation(RectF location) {
             this.location = location;
+        }
+
+        @Override
+        public String toString() {
+            return "Recognition{" +
+                    "id=" + id +
+                    ", title='" + title + '\'' +
+                    ", confidence=" + confidence +
+                    ", location=" + location +
+                    '}';
         }
     }
 

@@ -6,7 +6,8 @@ class RectF {
     public float right;
     public float bottom;
 
-    RectF() {}
+    RectF() {
+    }
 
     RectF(float left, float top, float right, float bottom) {
         this.left = left;

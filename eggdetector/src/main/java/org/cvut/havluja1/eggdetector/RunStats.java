@@ -12,7 +12,7 @@ class RunStats implements AutoCloseable {
     }
 
     public void close() {
-        if(this.nativeHandle != 0L) {
+        if (this.nativeHandle != 0L) {
             delete(this.nativeHandle);
         }
 
