@@ -15,7 +15,7 @@ public class BasicTest {
         SequenceClassifier seq = eggDetector.evaluate(new File(DIR));
         System.out.println("Final result: " + seq.getFinalCount());
         System.out.println("Individual scores: " + seq.getIndividualCounts());
-
+        eggDetector.closeSession();
         try {
             Thread.sleep(1000 * 60 * 2); // sleep for 2 min to view the GUI
         } catch (InterruptedException e) {

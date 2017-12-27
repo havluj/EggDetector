@@ -16,7 +16,7 @@ public class EggDetector {
     public EggDetector() {
         LOGGER.info("loading TensorFlow graph into memory...");
         TensorFlowInferenceInterface.getInstance();
-        LOGGER.info("TensorFlow NN graph ready");
+        LOGGER.info("EggDetector ready: " + toString());
     }
 
     public float getMinimalConfidence() {
@@ -33,6 +33,7 @@ public class EggDetector {
     }
 
     public void setDebugMode(boolean debugMode) {
+        LOGGER.info("setting debug mode to " + debugMode);
         this.debugMode = debugMode;
     }
 
@@ -60,5 +61,13 @@ public class EggDetector {
         LOGGER.info(imageList.size() + " pictures found");
 
         return new SequenceClassifier(imageList, minimalConfidence, debugMode);
+    }
+
+    @Override
+    public String toString() {
+        return "EggDetector{" +
+                "minimalConfidence=" + minimalConfidence +
+                ", debugMode=" + debugMode +
+                '}';
     }
 }

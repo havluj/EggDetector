@@ -28,7 +28,41 @@ public class SuccessRateTest {
     }
 
     @Test
-    public void testSuccessRate() {
+    public void testHighThreshold(){
+        eggDetector.setMinimalConfidence(0.6f);
+        System.out.println(eggDetector);
+        testSuccessRate();
+    }
+
+    @Test
+    public void testMiddleHighThreshold(){
+        eggDetector.setMinimalConfidence(0.5f);
+        System.out.println(eggDetector);
+        testSuccessRate();
+    }
+
+    @Test
+    public void testMiddleThreshold(){
+        eggDetector.setMinimalConfidence(0.4f);
+        System.out.println(eggDetector);
+        testSuccessRate();
+    }
+
+    @Test
+    public void testMiddleLowThreshold(){
+        eggDetector.setMinimalConfidence(0.3f);
+        System.out.println(eggDetector);
+        testSuccessRate();
+    }
+
+    @Test
+    public void testLowThreshold(){
+        eggDetector.setMinimalConfidence(0.2f);
+        System.out.println(eggDetector);
+        testSuccessRate();
+    }
+
+    private void testSuccessRate() {
         File workingDir = new File(DIR);
         // get all directories
         File[] subdirs = workingDir.listFiles((file, name) -> {
