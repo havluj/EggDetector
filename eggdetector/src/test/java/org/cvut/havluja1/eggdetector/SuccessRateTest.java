@@ -4,6 +4,7 @@ import java.beans.XMLDecoder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Map;
 
 import org.cvut.havluja1.tagger.model.FolderData;
 import org.cvut.havluja1.tagger.model.ImgData;
@@ -43,19 +44,20 @@ public class SuccessRateTest {
         int correctCnt = 0;
 
         // distance
-        int expectedLength = 0;
-        int foundLength = 0;
+        int totalEggCount = 0;
+        int lengthDifference = 0;
 
         for (File dir : subdirs) {
             try {
                 int foundTmp = evaluateDir(dir);
                 int expectedTmp = getExpectedCount(dir);
 
-                expectedLength += expectedTmp;
-                foundLength += foundTmp;
+                totalEggCount += expectedTmp;
                 totalCnt++;
                 if (foundTmp == expectedTmp) {
                     correctCnt++;
+                } else {
+                    lengthDifference += Math.abs(foundTmp - expectedTmp);
                 }
                 System.out.println("expected: " + expectedTmp + " | found: " + foundTmp);
             } catch (IOException | IllegalArgumentException e) {
@@ -63,14 +65,11 @@ public class SuccessRateTest {
         }
 
         float cntSuccessRate = ((float) correctCnt) / ((float) totalCnt);
-        float lengthSuccessRate = ((float) foundLength) / ((float) expectedLength);
-
         System.out.println("Found " + totalCnt + " directories.");
         System.out.println("EggDetector evaluated " + correctCnt + " directories correctly.");
         System.out.println(correctCnt + "/" + totalCnt + ": " + (cntSuccessRate * 100) + "% success rate.");
-        System.out.println("Egg count of all folders added together: " + expectedLength + ".");
-        System.out.println("EggDetector found " + foundLength + " eggs.");
-        System.out.println(foundLength + "/" + expectedLength + ": " + (lengthSuccessRate * 100) + "% success rate.");
+        System.out.println("Egg count of all folders added together: " + totalEggCount + ".");
+        System.out.println("Distance (|real eggs - found eggs|): " + lengthDifference + " eggs (smaller is better).");
     }
 
     private int evaluateDir(File dir) throws IllegalArgumentException {

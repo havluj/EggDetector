@@ -35,7 +35,7 @@ public class SequenceClassifier {
         int bestGuess = 0;
         while (!scores.isEmpty()) {
             Map.Entry<Integer, Integer> e = scores.pollLastEntry();
-            if (e.getValue() > 1) {
+            if (e.getValue() > 0) { // threshold (how many times do we need the value)
                 return e.getKey();
             } else if (e.getValue() == 1) {
                 bestGuess = e.getValue();
