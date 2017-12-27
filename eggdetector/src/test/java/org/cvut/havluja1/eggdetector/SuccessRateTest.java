@@ -62,7 +62,7 @@ public class SuccessRateTest {
             }
         }
 
-        float cntSuccessRate = ((float) totalCnt) / ((float) correctCnt);
+        float cntSuccessRate = ((float) correctCnt) / ((float) totalCnt);
         float lengthSuccessRate = ((float) foundLength) / ((float) expectedLength);
 
         System.out.println("Found " + totalCnt + " directories.");
