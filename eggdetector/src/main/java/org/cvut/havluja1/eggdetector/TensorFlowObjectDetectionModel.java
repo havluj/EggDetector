@@ -19,90 +19,6 @@ class TensorFlowObjectDetectionModel {
     private static final String INPUT_NAME = "image_tensor";
     private static final int INPUT_SIZE = 300; // nn is trained on 300x300 images
     private static final String LABEL = "egg";
-
-    class RectF {
-        float left;
-        float top;
-        float right;
-        float bottom;
-
-        RectF(float left, float top, float right, float bottom) {
-            this.left = left;
-            this.top = top;
-            this.right = right;
-            this.bottom = bottom;
-        }
-
-        RectF(RectF r) {
-            if (r == null) {
-                left = top = right = bottom = 0.0f;
-            } else {
-                left = r.left;
-                top = r.top;
-                right = r.right;
-                bottom = r.bottom;
-            }
-        }
-
-        public String toString() {
-            return "RectF(" + left + ", " + top + ", "
-                    + right + ", " + bottom + ")";
-        }
-
-        final float width() {
-            return right - left;
-        }
-
-        final float height() {
-            return bottom - top;
-        }
-    }
-
-    class Recognition {
-        private final int id;
-        private final String title;
-        private final Float confidence;
-        private RectF location;
-
-        Recognition(
-                final int id, final String title, final Float confidence, final RectF location) {
-            this.id = id;
-            this.title = title;
-            this.confidence = confidence;
-            this.location = location;
-        }
-
-        int getId() {
-            return id;
-        }
-
-        String getTitle() {
-            return title;
-        }
-
-        Float getConfidence() {
-            return confidence;
-        }
-
-        RectF getLocation() {
-            return new RectF(location);
-        }
-
-        void setLocation(RectF location) {
-            this.location = location;
-        }
-
-        @Override
-        public String toString() {
-            return "Recognition{" +
-                    "id=" + id +
-                    ", title='" + title + '\'' +
-                    ", confidence=" + confidence +
-                    ", location=" + location +
-                    '}';
-        }
-    }
-
     // Pre-allocated buffers.
     private int[] intValues;
     private byte[] byteValues;
@@ -111,9 +27,7 @@ class TensorFlowObjectDetectionModel {
     private float[] outputClasses;
     private float[] outputNumDetections;
     private String[] outputNames;
-
     private boolean logStats = false;
-
     private TensorFlowInferenceInterface inferenceInterface = TensorFlowInferenceInterface.getInstance();
 
     /**
@@ -248,5 +162,88 @@ class TensorFlowObjectDetectionModel {
 
 
         return recognitions;
+    }
+
+    class RectF {
+        float left;
+        float top;
+        float right;
+        float bottom;
+
+        RectF(float left, float top, float right, float bottom) {
+            this.left = left;
+            this.top = top;
+            this.right = right;
+            this.bottom = bottom;
+        }
+
+        RectF(RectF r) {
+            if (r == null) {
+                left = top = right = bottom = 0.0f;
+            } else {
+                left = r.left;
+                top = r.top;
+                right = r.right;
+                bottom = r.bottom;
+            }
+        }
+
+        public String toString() {
+            return "RectF(" + left + ", " + top + ", "
+                    + right + ", " + bottom + ")";
+        }
+
+        final float width() {
+            return right - left;
+        }
+
+        final float height() {
+            return bottom - top;
+        }
+    }
+
+    class Recognition {
+        private final int id;
+        private final String title;
+        private final Float confidence;
+        private RectF location;
+
+        Recognition(
+                final int id, final String title, final Float confidence, final RectF location) {
+            this.id = id;
+            this.title = title;
+            this.confidence = confidence;
+            this.location = location;
+        }
+
+        int getId() {
+            return id;
+        }
+
+        String getTitle() {
+            return title;
+        }
+
+        Float getConfidence() {
+            return confidence;
+        }
+
+        RectF getLocation() {
+            return new RectF(location);
+        }
+
+        void setLocation(RectF location) {
+            this.location = location;
+        }
+
+        @Override
+        public String toString() {
+            return "Recognition{" +
+                    "id=" + id +
+                    ", title='" + title + '\'' +
+                    ", confidence=" + confidence +
+                    ", location=" + location +
+                    '}';
+        }
     }
 }

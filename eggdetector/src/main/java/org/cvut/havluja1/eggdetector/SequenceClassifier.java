@@ -9,10 +9,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * <h1>A class containing object detection results for a given directory</h1>
+ * <p>SequenceClassifier is a data class containing the results of object
+ * detection for a given directory. When constructed, object detection is performed
+ * on all images and results are stored in memory.</p>
+ * <p><b>Example usage:</b></p>
+ * <pre>
+ * {@code
+ * EggDetector eggDetector = new EggDetector();
+ * SequenceClassifier sequenceClassifier = eggDetector.evaluate(new File("image_dir"));
+ * System.out.println("final count: " + sequenceClassifier.getFinalCount());
+ * System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
+ * eggDetector.closeSession();
+ * }
+ * </pre>
+ *
+ * @author Jan Havluj {@literal <jan@havluj.eu>}
+ * @version 1.0
+ */
 public class SequenceClassifier {
 
-    private Map<String, Integer> imageScores;
     private final TensorFlowObjectDetectionModel tensorFlowObjectDetectionModel = new TensorFlowObjectDetectionModel();
+    private Map<String, Integer> imageScores;
 
     SequenceClassifier(List<File> images, float minimalConfidence, boolean debugMode) {
         this.imageScores = new HashMap<>();
@@ -21,6 +40,20 @@ public class SequenceClassifier {
         }
     }
 
+    /**
+     * <p>Get the final score for the entire directory.</p>
+     * <p>The final score is calculated as follows:</p>
+     * <ul>
+     * <li>individual scores of images are sorted and counted</li>
+     * <li>the highest egg count is returned as a result if we detected this
+     * egg count in at least two different images</li>
+     * <li>if no two images contain the same egg count, the highest detected
+     * egg count is returned</li>
+     * <li>if no eggs are detected in any of the images, 0 is returned</li>
+     * </ul>
+     *
+     * @return final egg count for this instance
+     */
     public Integer getFinalCount() {
         TreeMap<Integer, Integer> scores = new TreeMap<>();
 
@@ -46,6 +79,11 @@ public class SequenceClassifier {
         return bestGuess;
     }
 
+    /**
+     * Gets the individual egg count for every image provided.
+     *
+     * @return A map of individual scores. The key is the filename. The value is the egg count.
+     */
     public Map<String, Integer> getIndividualCounts() {
         return new HashMap<>(imageScores);
     }

@@ -21,6 +21,7 @@ import org.tensorflow.types.UInt8;
 
 final class TensorFlowInferenceInterface {
     private final static String FROZEN_GRAPH = "frozen_inference_graph.pb";
+    private static TensorFlowInferenceInterface instance;
     private final Graph g;
     private final Session sess;
     private Session.Runner runner;
@@ -29,15 +30,6 @@ final class TensorFlowInferenceInterface {
     private List<String> fetchNames = new ArrayList();
     private List<Tensor<?>> fetchTensors = new ArrayList();
     private RunStats runStats;
-
-    private static TensorFlowInferenceInterface instance;
-
-    static synchronized TensorFlowInferenceInterface getInstance() {
-        if (instance == null) {
-            instance = new TensorFlowInferenceInterface();
-        }
-        return instance;
-    }
 
     private TensorFlowInferenceInterface() {
         this.prepareNativeRuntime();
@@ -51,6 +43,13 @@ final class TensorFlowInferenceInterface {
             System.err.println("Failed to read [" + FROZEN_GRAPH + "]: " + e.getMessage());
             System.exit(1);
         }
+    }
+
+    static synchronized TensorFlowInferenceInterface getInstance() {
+        if (instance == null) {
+            instance = new TensorFlowInferenceInterface();
+        }
+        return instance;
     }
 
     void run(String[] var1) {
@@ -110,7 +109,7 @@ final class TensorFlowInferenceInterface {
         return this.runStats == null ? "" : this.runStats.summary();
     }
 
-    void close() {
+    synchronized void close() {
         this.closeFeeds();
         this.closeFetches();
         this.sess.close();
@@ -120,6 +119,9 @@ final class TensorFlowInferenceInterface {
         }
 
         this.runStats = null;
+        if (instance != null) {
+            instance = null;
+        }
     }
 
     protected void finalize() throws Throwable {
