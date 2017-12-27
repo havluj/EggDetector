@@ -9,6 +9,7 @@ import java.nio.LongBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.tensorflow.Graph;
@@ -20,6 +21,8 @@ import org.tensorflow.Tensors;
 import org.tensorflow.types.UInt8;
 
 final class TensorFlowInferenceInterface {
+
+    private final static Logger LOGGER = Logger.getLogger(TensorFlowInferenceInterface.class.getName());
     private final static String FROZEN_GRAPH = "frozen_inference_graph.pb";
     private static TensorFlowInferenceInterface instance;
     private final Graph g;
@@ -40,7 +43,7 @@ final class TensorFlowInferenceInterface {
         try {
             this.loadGraph(IOUtils.toByteArray(getClass().getClassLoader().getResourceAsStream(FROZEN_GRAPH)), this.g);
         } catch (IOException e) {
-            System.err.println("Failed to read [" + FROZEN_GRAPH + "]: " + e.getMessage());
+            LOGGER.severe("Failed to read [" + FROZEN_GRAPH + "]: " + e.getMessage());
             System.exit(1);
         }
     }
@@ -81,9 +84,9 @@ final class TensorFlowInferenceInterface {
                 this.fetchTensors = this.runner.run();
             }
         } catch (RuntimeException var11) {
-            System.out.println("Failed to run TensorFlow inference with inputs:["
-                                       + String.join(", ", this.feedNames)
-                                       + "], outputs:[" + String.join(", ", this.fetchNames) + "]");
+            LOGGER.info("Failed to run TensorFlow inference with inputs:["
+                                + String.join(", ", this.feedNames)
+                                + "], outputs:[" + String.join(", ", this.fetchNames) + "]");
             throw var11;
         } finally {
             this.closeFeeds();
@@ -222,22 +225,14 @@ final class TensorFlowInferenceInterface {
     }
 
     private void prepareNativeRuntime() {
-        System.out.println("Checking to see if TensorFlow native methods are already loaded");
+        LOGGER.info("Checking to see if TensorFlow native methods are already loaded");
 
         try {
             new RunStats();
-            System.out.println("TensorFlow native methods already loaded");
+            LOGGER.info("TensorFlow native methods already loaded");
         } catch (UnsatisfiedLinkError var4) {
-            System.out.println("TensorFlow native methods not found, attempting to load via tensorflow_inference");
-
-         /*   try {
-                System.loadLibrary("tensorflow_inference");
-                System.out.println("Successfully loaded TensorFlow native methods (RunStats error may be ignored)");
-            } catch (UnsatisfiedLinkError var3) {
-                throw new RuntimeException("Native TF methods not found; check that the correct native libraries are present in the APK.");
-            }*/
+            LOGGER.info("TensorFlow native methods not found, attempting to load via tensorflow_inference");
         }
-
     }
 
     private void loadGraph(byte[] var1, Graph var2) throws IOException {
@@ -250,7 +245,7 @@ final class TensorFlowInferenceInterface {
 
 
         long var5 = System.currentTimeMillis();
-        System.out.println("Model load took " + (var5 - var3) + "ms, TensorFlow version: " + TensorFlow.version());
+        LOGGER.info("Model load took " + (var5 - var3) + "ms, TensorFlow version: " + TensorFlow.version());
     }
 
     private void addFeed(String var1, Tensor<?> var2) {

@@ -8,13 +8,11 @@ import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.logging.Logger;
 
 import org.tensorflow.Graph;
 import org.tensorflow.Operation;
 
 class TensorFlowObjectDetectionModel {
-    private static final Logger LOGGER = Logger.getLogger(TensorFlowObjectDetectionModel.class.getName());
     private static final int MAX_RESULTS = 100;
     private static final String INPUT_NAME = "image_tensor";
     private static final int INPUT_SIZE = 300; // nn is trained on 300x300 images
