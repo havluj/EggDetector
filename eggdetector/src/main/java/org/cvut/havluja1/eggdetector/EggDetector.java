@@ -10,7 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 public class EggDetector {
 
     private final static Logger LOGGER = Logger.getLogger(EggDetector.class.getName());
-    private float minimalConfidence = 0.2f;
+    private float minimalConfidence = 0.3f;
     private boolean debugMode = false;
 
     public EggDetector() {
