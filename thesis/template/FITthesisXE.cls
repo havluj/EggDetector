@@ -14,7 +14,8 @@
 % Or choose another fonts you like and change \setmainfont and \setmonofont.
 % 
 % 
-% @author:  Ondrej Guth <ondrej.guth@fit.cvut.cz>,
+% @author:  Jan Havluj <havluja1@fit.cvut.cz>
+%           Ondrej Guth <ondrej.guth@fit.cvut.cz>,
 %           Jakub Jirutka <jakub.jirutka@fit.cvut.cz>,
 %           Miroslav Hrončok <miroslav.hroncok@fit.cvut.cz>,
 %           Mikulas Dite <ditemiku@fit.cvut.cz>

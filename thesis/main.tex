@@ -1,0 +1,112 @@
+% options:
+% thesis=B bachelor's thesis
+% thesis=M master's thesis
+% czech thesis in Czech language
+% english thesis in English language
+% hidelinks remove colour boxes around hyperlinks
+
+% arara: xelatex: { shell: yes }
+% arara: makeglossaries
+% arara: biber
+% arara: xelatex: { shell: yes }
+% arara: xelatex: { shell: yes }
+\documentclass[thesis=B,english,hidelinks]{template/FITthesisXE}
+
+\bibliography{library.bib}
+
+\usepackage{import}
+\usepackage{booktabs}
+\usepackage{dirtree}
+
+\usepackage{float}
+\floatstyle{plaintop}
+\restylefloat{table}
+
+\setcounter{tocdepth}{2}
+
+% from https://www.herout.net/blog/2017/03/pomalu-uz-pojdme-psat/
+\usepackage{xcolor} 
+\newcommand{\todo}[1]{
+    %\textcolor{red}{\textbf{[[#1]]}}
+}
+
+\usepackage{blindtext}
+\newcommand{\blind}[1][1]{
+
+}
+
+\newcommand{\importsvg}[1]{
+    \def\svgwidth{\columnwidth}
+    \import{media/svg/}{#1.pdf_tex}
+}
+
+% usage: \imagefigure{filename}{description}
+\newcommand{\imagefigurefull}[3]{
+    \begin{figure}[htbp]
+    \centering
+        \includegraphics[width=#3\linewidth]{media/#1}
+        \caption{#2 \label{pic:#1}}
+    \end{figure}
+}
+
+\newcommand{\imagefigurelarge}[2]{
+    \imagefigurefull{#1}{#2}{.99}
+}
+
+\newcommand{\imagefigure}[2]{
+    \imagefigurefull{#1}{#2}{.6}
+}
+
+\newcommand{\screenshotfigure}[2]{
+    \imagefigurefull{#1}{#2}{.4}
+}
+
+\newcommand{\idkijustwanttwotofitonapagefigure}[2]{
+    \imagefigurefull{#1}{#2}{.83}
+}
+
+\newcommand{\svgfigure}[2]{
+    \begin{figure}[htbp]
+    \centering
+        \importsvg{#1}
+        \caption{#2 \label{pic:#1}}
+    \end{figure}
+}
+
+\makeglossaries
+\input{glossary.tex}
+\glsaddall	% add even unused acronyms
+
+\acknowledgements{\input{acknowledgements.tex}}
+\abstractEN{\input{abstract_en.tex}}
+\abstractCS{\input{abstract_cs.tex}}
+
+\input{meta.tex}
+\begin{document}
+
+\begin{introduction}
+    \input{"chapters/0-introduction.tex"}
+\end{introduction}
+
+\input{"chapters/1-research.tex"}
+\input{"chapters/2-specification.tex"}
+\input{"chapters/3-possible-solutions.tex"}
+\input{"chapters/4-raspi-solution.tex"}
+\input{"chapters/5-usb-mass-storage.tex"}
+\input{"chapters/6-fedorator-tiny.tex"}
+
+\begin{conclusion}
+    \input{"chapters/9-conclusion.tex"}
+\end{conclusion}
+
+\printbibliography[]
+
+
+\appendix
+
+\chapter{List of Acronyms}
+\printglossary[type=\acronymtype,style=acronyms]
+
+\input{medium.tex}
+
+\end{document}
