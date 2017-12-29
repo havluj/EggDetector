@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{FITthesis}[2013/05/06 CTU FIT standard class for theses]
+\ProvidesClass{template/FITthesis}[2013/05/06 CTU FIT standard class for theses]
 
 % created by Ondrej Guth <ondrej.guth@fit.cvut.cz>
 
@@ -301,7 +301,7 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela (vr\'atane komer\v cn\'eho vyu\v
 					\else
 						\ClassError{FITthesis}{Department unspecified}{Specify the department using the \department command.}
 					\fi
-				} & \hfill\includegraphics[width=.16\textwidth]{cvut-logo-bw}
+				} & \hfill\includegraphics[width=.16\textwidth]{media/cvut-logo-bw}
 			\end{tabular*}
 		\end{center}
 		

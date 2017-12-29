@@ -18,8 +18,30 @@
 \usepackage[czech]{babel}
 \usepackage[T1]{fontenc}
 
-\include{documentation/out_preamble}
+\include{chapters/documentation/out_preamble}
 \renewcommand{\bf}{\textbf}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset{frame=tb,
+	language=Java,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
 
 % % list of acronyms
 % \usepackage[acronym,nonumberlist,toc,numberedsection=autolabel]{glossaries}
@@ -81,8 +103,6 @@
 	
 	
 	\chapter{Realizace}
-	
-	\include{documentation/out}
 	
 	\begin{conclusion}
 		%sem napište závìr Vaší práce
@@ -206,6 +226,8 @@
 	% \end{table}
 	% 
 	% % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+
+	\include{chapters/documentation/out}
 	
 	\chapter{Obsah pøiloženého CD}
 	
@@ -214,13 +236,16 @@
 	\begin{figure}
 		\dirtree{%
 			.1 readme.txt\DTcomment{struèný popis obsahu CD}.
-			.1 exe\DTcomment{adresáø se spustitelnou formou implementace}.
+			.1 bin\DTcomment{adresáø se spustitelnou formou implementace}.
+			.1 doc\DTcomment{adresáø s dokumentací implementace}.
 			.1 src.
 			.2 impl\DTcomment{zdrojové kódy implementace}.
+			.3 eggdetector\DTcomment{zdrojové kódy implementace knihovny}.
+			.3 \texttt{nn\_training}\DTcomment{zdrojové kódy pro trénování neuronové sítì}.
+			.3 tools\DTcomment{zdrojové kódy pomocných nástrojù k tvorbì bakaláøské práce}.
 			.2 thesis\DTcomment{zdrojová forma práce ve formátu \LaTeX{}}.
 			.1 text\DTcomment{text práce}.
 			.2 thesis.pdf\DTcomment{text práce ve formátu PDF}.
-			.2 thesis.ps\DTcomment{text práce ve formátu PS}.
 		}
 	\end{figure}
 	
