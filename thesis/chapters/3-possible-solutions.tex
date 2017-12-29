@@ -1,0 +1,211 @@
+\chapter{Analysis of Possible Solutions}
+    There are several things which should be taken in account when considering alternatives.
+    
+    \textbf{Cost}.  The device may be made by hobbyists without much funding, therefore, cheaper is better.
+    
+    \textbf{Ease of assembly}.  The people who will be building the device may not be professionals, so making it as simple to set up as possible is desirable.  However, somebody who decides to fabricate a Fedorator is likely an ethusiast with some amounts of technical expertise, so there is no need to be overboard if it hampered other factors.
+    
+    \textbf{Customizability and extensibility}.  Users with necessary skill should have the freedom to make changes to the Fedorator.  Therefore, the hardware shouldn't be locked down.  In slang, it should be ``hackable".
+    
+    \textbf{Long term maintainability}.  Fedora receives new releases approximately every six months \cite{fedora-release-life-cycle}, it is therefore necessary that the Fedorator is capable of keeping up with the times.  The hardware should not impose any tight constraints and any software needs to be possible to upgrade.
+    
+    %\todo{more?}
+    \section{Hardware Options}
+        A device such as this needs a computer at its core.  I shall go over a number of potential candidates, introducing them shortly and weighing their features.
+        \subsection{Raspberry Pi}
+            \imagefigure{raspberry-pi-3.jpg}
+                {Raspberry Pi~3 Model B  \cite{rpi-pimoroni}}
+            The \textbf{Raspberry Pi} is a small, inexpensive, and fully equipped single board computer.  It was originally developed to facilitate better teaching of computer classes by enthusiasts at Cambridge \cite{bbc-15-pound-computer}.  The original £15 computer went on to be a much bigger success than anticipated and by November 2016, the total sales have reached ten million units \cite{rpi-ten-million}.
+            
+            Today the Raspberry Pi foundation continues to develop new versions of the computer \cite{rpi-products}.  The latest model is \textbf{Raspberry Pi~3 Model B}, released in February 2016.  It boasts the following features \cite{rpi-3}.
+            
+            \begin{itemize}
+                \item 1.2GHz 64-bit quad-core ARMv8 CPU,
+                \item 802.11n Wireless LAN,
+                \item Bluetooth 4.1 and Bluetooth Low Energy (BLE),
+                \item 1GB RAM,
+                \item 4 USB ports,
+                \item 40 GPIO pins,
+                \item HDMI port,
+                \item Ethernet port,
+                \item Combined 3.5mm audio jack and composite video,
+                \item Camera interface (CSI) and Display interface (DSI),
+                \item MicroSD card slot,
+                \item VideoCore IV 3D graphics core.
+            \end{itemize}
+            
+            We can see that some of the necessary components are already included: four USB ports and a microSD slot.  This means there is less assembly involved.  For example, we may avoid the need to solder entirely.
+            
+            The dimensions of a Raspberry Pi~3 Model B are 85.6 by 56.5~mm (without connectors).  This may prevent it from being used in a more compact design.
+            
+            Raspberry Pis are widely available and there are local distributors, or resellers in most places around the world \cite{rpi-buying-guide} \cite{rpi-buying-links-by-country}.  In the Czech Republic, a Raspberry Pi 3 Model 3 may be bought for between 1~046 and 1~359~CZK \cite{rpi-rpi3-rpishop} \cite{rpi-rpi3-minidroid} \cite{rpi-rpi3-alza}.
+            
+            The Raspberry Pi is open hardware with the exception of the Broadcom SoC containing the video core.  For an operating system, many Linux distributions provide support \cite{rpi-opensource}.  Being a computer running a full operating system, support for acting as a USB host device comes naturally.
+            
+            Finally, due to the sheer popularity of Raspberry Pi, there are many compatible components and accessories available \cite{rpi-rs-components} \cite{rpi-the-pi-hut-store}, such as specially designated touchscreens \cite{rpi-official-touchscreen}.
+            
+            These features, along with the factor of familiarity between hobbyists, make the Raspberry Pi a favorable option for the Fedorator.  The disadvantages include the price, which is being raised by a number of components that are not necessary for the Fedorator, as well as potentially the dimensions.
+        \subsection{Arduino}
+            Looking for another platform for hardware development, one which may encompass a smaller form factor, we may be quickly brought to the popular \textbf{Arduino} brand.
+            
+            Arduino as a platform stems from the work of Hernando Barragán, who designed the Wiring development platform in 2003 as a Master's thesis.  His goal was to create a low cost and open platform accessible even to non-engineers\footnote{I include this bit of history especially because it is often misinterpreted.} \cite{arduino-untold-history}. 
+            
+            There is a broad variety of boards available in the Arduino family \cite{arduino-products}.  All of them come equipped with a microprocessor, usually from the AVR family, and a set of analog and digital pins.  Some include an USB interface for communication with a computer.
+            
+            Arduino boards are open source hardware available under a Creative Commons Share-Alike license \cite{arduino-faq-open-hw}.
+            
+            \subsubsection{Arduino Uno}
+                \imagefigure{arduino-uno.jpg}
+                    {Arduino Uno R3  \cite{arduino-wikimedia-uno}}
+                The Arduino Uno is the first board most will lay their eyes on.  It is the most popular Arduino board and it's popular for getting started with hardware development \cite{arduino-uno}.  It boasts the following features.
+                
+                \begin{itemize}
+                    \item ATmega328 microcontroller clocked at 16 MHz,
+                    \item 32~KiB flash memory,
+                    \item 2~KiB SRAM,
+                    \item 1~KiB EEPROM,
+                    \item 20 digital I/O pins.
+                \end{itemize}
+                
+                The dimensions of the Arduino Uno are 53.4 by 58.6~mm.  It is powered by the uncommon USB Type~B connector.
+                
+                The nominal cost of Arduino Uno is 20.00~EUR (about 530~CZK) \cite{arduino-uno-store}.  However, thanks to open source hardware, the market with clones has driven the price to as low as 3~USD for a fully compatible piece of hardware \cite{arduino-aliexpress-uno-clone}.
+            
+            \subsubsection{Arduino Nano}
+                \imagefigure{arduino-nano.jpg}
+                    {Arduino Nano  \cite{arduino-nano-robotics}}
+                The Arduino Nano is a smaller board (18 by 45~mm) which nonetheless packs almost the same capabilities as the Uno model \cite{arduino-nano}.  It is officially powered by Mini USB, but many clones provide micro USB instead.
+                    
+            
+        \subsection{ESP8266}
+            The \textbf{ESP8266} is a low-cost Wi-Fi chip \cite{espressif-esp8266}.  It is available on its own, but there are many boards putting it in a convenient package with an USB port, for example NodeMCU \cite{nodemcu}.  This is primarily a Wi-Fi module, but with a CPU frequency of 80 MHz \cite{platformio-esp8266}, faster than the Arduinos, it may be suited for our purposes.
+        \subsection{Teensy}
+            \imagefigure{teensy-36.jpg}
+                {Teensy~3.6  \cite{teensy-36-sparkfun}}
+            \textbf{Teensy} is a family of USB development boards boasting the ARM microprocessor.  It is created by Paul Stoffregen and the latest versions, Teensy~3.5 and Teensy~3.6, were funded successfully through Kickstarter \cite{teensy-35-36-kickstarter}.
+            
+            \textbf{Teensy~3.6} comes equipped with the the following.
+            
+            \begin{itemize}
+                \item 180 MHz ARM Cortex-M4 with Floating Point Unit,
+                \item 1M Flash, 256K RAM, 4K EEPROM,
+                \item USB Full Speed (12 Mbit/sec) port,
+                \item USB High Speed (480 Mbit/sec) port,
+                \item Native microSD card port,
+                \item CAN bus ports, serial, SPI, I2C, I2S, Ethernet and more.
+            \end{itemize}
+            
+            The size is stated as 2.4 by 0.7~inch (about 6 by 1.8~cm).
+            
+            Teensy~3.6 is officially available for 29.25~USD (about 715~CZK) without shipping \cite{teensy-36}, or, for instance, at local distributors in the Czech Republic for 1~198~CZK \cite{teensy-36-snailshop}.  The cost is comparable with a Raspberry Pi.  %\todo{Unlike pi, ports are not exposed?}
+            
+            The fast CPU, on-board USB host port, and MicroSD slot make the Teensy~3.6 a strong contender.
+            
+            
+        \subsection{FPGA}
+            One final option I considered is to forgo a CPU completely and design a custom chip instead.  FPGA stands for field-programmable gate array and it's a class of integrated circuits which can be reconfigured at will.  Thanks to allowing exact configuration of logic elements and memory blocks to serve a specific purpose, they're extremely efficient at signal processing \cite{sadrozinski2016applications}.
+            
+            By designing custom circuitry to handle copying of data from an SD card to a USB flash drive, the copier could be very fast, bottlenecked only by the connected devices.
+            
+            Popular FPGA manufacturers include big names such as Xilinx \cite{fpga-xilinx} and Intel \cite{fpga-intel}.  The field of open hardware FPGA tools is lacking, although there do seem to be some contenders, like Papilio \cite{fpga-papilio}. 
+            
+            However, programming FPGAs is a task significantly more difficult than software programming, requiring the management of input and output signals and careful timing.  I have deemed the task of implementing the USB protocol at such a low-level too complex and out of scope.
+            
+    \section{Display Options}
+        %\todo{those one/two-line things, lcd (very briefly connectors), oled, anything fancier?}
+        The options for displays are truly diverse.  We may choose between small and simple displays to large LCDs.  A few representatives are provided.
+        
+        \subsection{Character-based LCDs}
+            Simple single, two-, or four-line character based LCDs, typically blue in color, are a frequent sight in industrial devices.  Indeed such a LCD would be able to handle the Fedorator in terms of functionality - there is sufficient space to display the status or progress.  However, it's not a visually attractive alternative, being incapable of even displaying a logo.
+            
+            %\todo{If I want a picture I can get it here https://www.adafruit.com/product/181}
+            
+        \subsection{OLED}
+            \imagefigure{adafruit-oled.jpg}
+                {Common OLED display available on Adafruit  \cite{adafruit-oled}}
+            An interesting option are small, monochromatic OLED displays.  A very common variant is 1.3~inches and 128x64 pixels in resolution \cite{adafruit-oled}.  Despite their small size, the contents are lit well, clearly visible and sharp.  An OLED display would be a good choice for a compact design. 
+            
+        \subsection{TFT}
+            TFT are a variant on LCDs with better image quality \cite{lifewire-what-is-tft-lcd}.  The term primarily refers to small and medium sized full-color displays which can be connected to DYI devices.  Conveniently, TFT displays often come bundled with a resistive touchscreen controller attached to them.
+            
+    \section{Other Component Options}
+        Each component increases the difficulty of assembly, as it imposes the necessity of buying the component, as well as of connecting it properly and seating it in place.
+        
+        Basic components such as push-buttons and LEDs are widely available from local distributors.
+        
+        Every device needs to be powered in some way.  Because the Fedorator will be stationary, we shall let it be powered by cable, preferably a commonly available one like micro USB.  There is no need to consider a battery.
+        %\todo{Something is amiss here...}
+    \section{Casing Options}
+        Because the device will be made of several components, it's desirable to contain them in a case.  There are not many reasonable options present, but I have shortly considered alternatives.
+        \subsection{Wood}
+            A wooden build would certainly look interesting, even if not modern.  However, because it would have to be handmade, it's not a practical choice.  Few people have wood crafting skills and would invest time in building the moderately complex case.
+        
+        \subsection{Plastic with Mold}
+            The common manufacturing process for producing plastic parts is called injection molding.  As the name suggests, this method requires the production of a mold, which is an expensive proposition unless a significant amount of devices is manufactured.  It makes no sense to speak of molding when the numbers of parts produced is less than 1~000 \cite{rexplastics-mold-price}.
+            
+        \subsection{3D Printed}
+            \idkijustwanttwotofitonapagefigure{lulzbot-mini.jpg}
+                {LulzBot Mini 3D printer \cite{lulzbot-mini}}
+            The advent of 3D printing technology is a staple of today's day and age.  Also called additive manifacturing, it allows for brinigng objects designed on a computer into reality.  Because an object can be printed in the matter of hours, 3D printing is ideal for prototyping.
+            
+            In tech circles, 3D printers a common find these days.  For example, many hackerspaces have one available \cite{hackerspaces-3d-printers}. It is likely anybody wishing to build a Fedorator would be able to attain access to one.  A 3D printed case is simply the matter of getting ahold of a printer and enough printing material (plastic).
+            
+            For a technically hobby project like this, a 3D printed case is the logical choice.
+            
+            \subsubsection{3D Printing Materials}
+                A 3D printer needs to be provided with material to use.  The two most commonly used materials are \textbf{PLA} and \textbf{ABS} \cite{all3dp-best-fileament-types}.  Both are available in a variety of colors and look largely the same, but they do have a few distinctive properties \cite{all3dp-pla-abs}. 
+                
+                \textbf{PLA} has a harder surface and is more prone to break when bent.  It is well suited for objects such as household items and gadgets.  PLA is made from plant material and is biodegradable.
+                
+                \textbf{ABS} is the stronger material when printed at the correct temperature.  It is well suited for mechanical parts.  When printing, ABS is more prone to warping.  Finally, ABS is not biodegradable.
+                
+                Prices are largely the same between PLA and ABS filaments.
+                
+                PLA as a material is slightly better suited for the purpose of being a static shell.  However, ultimately, both materials should prove to work fine, so creators can choose whichever they have available.
+                
+    \section{Roundup}
+        For the core of the device, I deem two distinct categories based on form factor.
+        
+        A large device, complete with a larger display, will be served brilliantly by the Raspberry Pi computer.  The goal of being easily extensible would also be fulfilled.
+        
+        We may, however, choose to go for a smaller design with the OLED display.  That would bar the Raspberry Pi from being an option.  Over here, I see potential in the Arduino Nano device.  If it turned out to be sufficiently powerful to drive a microSD card reader and a connected USB flash drive, the size would be quite convenient and the price very attractive—when we're speaking of clones.  Should that turn out not to be the case, we may start considering stronger devices, such as the Teensy.
+        
+        Whatever the design, a 3D printed case is a reasonable decision with regard to the typical fabricator of the device.
+        
+    \section{Concepts}
+        Based on this analysis, I have created three distinct Fedorator concepts.
+        %\todo{At the end, check if there should be a pagebreak here or not for stylistic reasons.}
+        \newpage
+        
+        \subsection{Concept A}
+            \svgfigure{concept-a}{Concept A}
+            The first concept is a moderately large device which is to be fixed in place and used from a standing posture.  It provides an LCD with on-screen information on the status and progress.  The rotary knob allows for controling the menu and making a selection.  It may be replaced with three buttons if so desired.  There are four USB slots present, each with a corresponding status light.  In order to be stable, the device needs support from the back.
+            
+            Due to the size of the display and the number of USB ports, putting a Raspberry Pi computer at the core makes the most sense.
+            
+            The Fedorator needs to be plugged into a power source, so there will be a cable running from the back.
+            \newpage
+        
+        \subsection{Concept B}
+            \svgfigure{concept-b}{Concept B}
+            The second concept is similar in some ways to the first one, but with some tweaks.  The knob is removed, the sole control is a prominent touchscreen positioned vertically.  As a consequence, the device can be thinner.  There are now only two USB slots.  The device is sleek and symmetric.
+            
+            In order not to have stability issues, it may be necessary to ensure the Fedorator is heavy enough in order to keep the Fedorator in place as it's being used.
+            
+            This design is also powered by a Raspberry Pi.
+            \newpage
+        
+        \subsection{Concept C}
+            \svgfigure{concept-c}{Concept C}
+            The third and final concept is a radical departure from the first two.  Instead of standing still while being manipulated, this Fedorator is designed to be picked up and held in a hand.  The OLED screen is small yet sharp and despite providing only a binary image it works well enough for our purposes.  The three buttons allow for selecting the desired live image.
+            
+            Due to its small size, this device needs a small system at its core.  In an attempt to keep the costs low in contrast to other designs, I will attempt to use the Arduino platform.
+            
+            This design still needs to be powered by cable.  This cable will be permanently attached by the means of enclosure.  This has the positive side effect of discouraging people from attempting to leave with the Fedorator.
+            
+            Because it only has a single USB slot, it may be desirable to provide multiple instances of this Fedorator.
+            \newpage
+            
+    \section{Decision}
+        I have showed five people these concepts and asked them for their feedack.  In general, response to concept A was lukewarm.  The device looks bulky, it is not very aesthetically pleasing.  The number of ports is also excessive given the purposed use by onlookers at marketing stands.  However, people showed excitement about both concept B and C.  Because they differ significantly, I will strive to construct a prototype for each.
+
