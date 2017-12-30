@@ -63,11 +63,22 @@
 \authorWithDegrees{Jan Havlùj} %jméno autora vèetnì souèasných akademických titulù
 \supervisor{Ing. Josef Pavlíèek, Ph.D.}
 \acknowledgements{Chtìl bych podìkovat vedoucímu mé bakaláøské práce, panu Ing. Josefovi Pavlíèkovi Ph.D. za jeho èas, ochotu a pomoc pøi vedení této práce. Dìkuji svým rodièùm a pøítelkyni, kteøí mi byli po celou dobu studia velkou oporou. V~neposlední øadì bych chtìl podìkovat svým spolužákùm, kteøí mì pøi studiu nikdy neváhali podpoøit.}
-\abstractCS{V~nìkolika vìtách shròte obsah a pøínos této práce v~èeštinì. Po pøeètení abstraktu by se ètenáø mìl mít ètenáø dost informací pro rozhodnutí, zda chce Vaši práci èíst.}
-\abstractEN{Sem doplòte ekvivalent abstraktu Vaší práce v~angliètinì.}
 \placeForDeclarationOfAuthenticity{V~Praze}
 \declarationOfAuthenticityOption{4} %volba Prohlášení (èíslo 1-6)
+
+\abstractCS{Tato práce se zabývá návrhem a tvorbou softwarové knihovny pro detekci objektù v obraze použitím neuronových sítí. 
+	
+V první èásti jsme seznámeni s cílem práce a detailní specifikací požadavkù. Druhá èást se vìnuje teorii poèítaèového vidìní, strojového uèení a neuronových sítí. Následnì je na základì získaných teoretických znalostí a specifikace požadavkù vypracována analýza možného øešení. Dle analýzy jsou navržena a implementována dvì øešení. První implementace se zamìøuje na detekci objektù, druhá na rozpoznávání a klasifikaci obrazu. V poslední èásti je vybráno efektivnìjší øešení, které je øádnì ovìøeno a otestováno.
+
+Výsledkem je softwarová knihovna, která umožòuje automaticky rozpoznávat poèet vajec v daném videu. Celý program je implementován v jazyce Java a je možné ho integrovat do projektu BirdObserver.}
 \keywordsCS{neuronové sítì, poèítaèové vidìní, detekce objektù, strojové uèení, uèení s uèitelem, rozpoznávání obrazu, detekce vajec, ptaèí hnízda, Java}
+
+\abstractEN{This thesis focuses on designing and creating a software library that is able to detect objects in an image by using neural networks.
+
+In the first part of the thesis, goals are set technical parameters are specified. The second part discusses the theory behind computer vision, machine learning, and neural networks. Using the technical specification and acquired theoretical knowledge, a detailed analysis of a possible solution is presented. There are two implementations of the analysis. The first one is using object detection to meet it's goal, the second one image recognition. In the last part of the thesis, a more effective implementation is chosen, which is then properly tested and verified.
+
+The result of this thesis is a software library that is able to automatically detect the number of eggs in a given video sequence. The entire solution is written in Java and is easily intergratable with the BirdObserver project.
+}
 \keywordsEN{neural networks, computer vision, object detection, machine learning, supervised learning, image recognition, egg detection, bird nests, Java}
 
 \begin{document}
@@ -76,8 +87,14 @@
 	% \newacronym{FIT}{FIT}{Fakulta informa{\v c}n{\' i}ch technologi{\' i}}
 	
 	\begin{introduction}
-		Projekt Ptáci Online byl spuštìn Fakultou životního prostøedí Èeské zemìdìlské univerzity v Praze roku 2014. \cite{oProjektu} Hlavním cílem projektu je poskytnout vìdecká data, ve formì videa z ptaèích budek, široké veøejnosti. \cite{oProjektu} Projekt se tìší pomìrnì velké popularitì \cite{ptaciVMediich} a aktuálnì spolupracuje s více než dvìma desítkami spolupracovníkù. Mezi nì patøí lidé z akademické sféry, soukromého sektoru, ale i z Ministerstva životního prostøedí Èeské republiky. \cite{oProjektu}
+		Projekt Ptáci Online byl spuštìn Fakultou životního prostøedí Èeské zemìdìlské univerzity v Praze roku 2014~\cite{oProjektu}. Hlavním cílem projektu je poskytnout vìdecká data, ve formì videa z ptaèích budek, široké veøejnosti~\cite{oProjektu}. Projekt se tìší pomìrnì velké popularitì~\cite{ptaciVMediich} a aktuálnì spolupracuje s více než dvìma desítkami spolupracovníkù. Mezi nì patøí lidé z akademické sféry, soukromého sektoru, ale i z Ministerstva životního prostøedí Èeské republiky~\cite{oProjektu}. Vzhledem k množství poøízených záznamù je žádoucí informace extrahovat automaticky pomocí algoritmù umìlé inteligence. Pøedmìtem této práce je vytvoøit algoritmus, který je schopný rozeznat poèet vajec v hnízdì pro daný záznam. 
+		
+		Existuje hned nìkolik zpùsobù, jak nauèit poèítaè \uv{vidìt}. Témìø vždy se musíme zamìøit na pøedzpracování obrazu a jeho segmentaci. Alg		
+		
+		Práce je rozdìlena do 3 èástí. První èást obsahuje stanovení cílù a specifikace funkèních a nefunkèních požadavkù. Druhá èást je teoretická. Diskutuje problematiku poèítaèového vidìní, strojového uèení a neuronových sítí. Tøetí, analytická èást, se zamìøuje na výbìr vhodných technologií a postupù pro vypracování práce. Ètvrtou, praktickou èást, tvoøí dva rùzné zpùsoby implementace, jejich porovnání, otestování a validace. Na závìr vybereme efektivnìjší implementaci, dle které je vytvoøena softwarová knihovna v jazyce Java, která je pøedmìtem této práce.
+	\end{introduction}
 	
+	\include{chapters/1-cil}
 	\begin{lstlisting}[caption={test}]
 	EggDetector eggDetector = new EggDetector();
 	SequenceClassifier sequenceClassifier = eggDetector.evaluate(new File("image_dir"));
@@ -85,9 +102,6 @@
 	System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
 	eggDetector.closeSession();
 	\end{lstlisting}
-	\end{introduction}
-	
-	\include{chapters/1-cil}
 	\include{chapters/2-reserse}
 	\include{chapters/3-analyza}
 	\include{chapters/4-impl_detekce}
