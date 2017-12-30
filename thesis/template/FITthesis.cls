@@ -467,6 +467,10 @@ sp\^ osobom, ktor\'y nezni\v zuje hodnotu Diela (vr\'atane komer\v cn\'eho vyu\v
 
 	\cleardoublepage
 	\listoftablescond
+	
+	\renewcommand{\lstlistingname}{Algoritmus}
+	\renewcommand{\lstlistlistingname}{Seznam algoritm\r{u}}
+	\lstlistoflistings
 
 	\pagestyle{ruled}
 	\mainmatter

@@ -33,7 +33,8 @@
 	showstringspaces=false,
 	columns=flexible,
 	basicstyle={\small\ttfamily},
-	numbers=none,
+	numbers=left,
+	numbersep=-5pt,
 	numberstyle=\tiny\color{gray},
 	keywordstyle=\color{blue},
 	commentstyle=\color{dkgreen},
@@ -61,13 +62,13 @@
 \authorFN{Havlùj} %pøíjmení autora
 \authorWithDegrees{Jan Havlùj} %jméno autora vèetnì souèasných akademických titulù
 \supervisor{Ing. Josef Pavlíèek, Ph.D.}
-\acknowledgements{Chtìl bych podìkovat vedoucímu mé bakaláøské práce, panu Ing. Josefovi Pavlíèkovi Ph.D. za jeho èas, ochotu a pomoc pøi vedení této práce. Dìkuji svým rodièùm a pøítelkyni, kteøí mi byli po celou dobu studia velkou oporou. V~neposlední øadì bych chtìl podìkovat svým spolužákùm, s~kterými bylo celé studium pøíjemnìjší.}
+\acknowledgements{Chtìl bych podìkovat vedoucímu mé bakaláøské práce, panu Ing. Josefovi Pavlíèkovi Ph.D. za jeho èas, ochotu a pomoc pøi vedení této práce. Dìkuji svým rodièùm a pøítelkyni, kteøí mi byli po celou dobu studia velkou oporou. V~neposlední øadì bych chtìl podìkovat svým spolužákùm, kteøí mì pøi studiu nikdy neváhali podpoøit.}
 \abstractCS{V~nìkolika vìtách shròte obsah a pøínos této práce v~èeštinì. Po pøeètení abstraktu by se ètenáø mìl mít ètenáø dost informací pro rozhodnutí, zda chce Vaši práci èíst.}
 \abstractEN{Sem doplòte ekvivalent abstraktu Vaší práce v~angliètinì.}
 \placeForDeclarationOfAuthenticity{V~Praze}
 \declarationOfAuthenticityOption{4} %volba Prohlášení (èíslo 1-6)
-\keywordsCS{neuronové sítì, poèítaèové vidìní, detekce objektù, rozpoznávání obrazu, detekce vajec, Java knihovna}
-\keywordsEN{neural networks, computer vision, object detection, image recognition, egg detection, Java library}
+\keywordsCS{neuronové sítì, poèítaèové vidìní, detekce objektù, strojové uèení, uèení s uèitelem, rozpoznávání obrazu, detekce vajec, ptaèí hnízda, Java}
+\keywordsEN{neural networks, computer vision, object detection, machine learning, supervised learning, image recognition, egg detection, bird nests, Java}
 
 \begin{document}
 	
@@ -75,8 +76,15 @@
 	% \newacronym{FIT}{FIT}{Fakulta informa{\v c}n{\' i}ch technologi{\' i}}
 	
 	\begin{introduction}
-		%sem napište úvod Vaší práce
-		asdfasfsdf
+		Projekt Ptáci Online byl spuštìn Fakultou životního prostøedí Èeské zemìdìlské univerzity v Praze roku 2014. \cite{oProjektu} Hlavním cílem projektu je poskytnout vìdecká data, ve formì videa z ptaèích budek, široké veøejnosti. \cite{oProjektu} Projekt se tìší pomìrnì velké popularitì \cite{ptaciVMediich} a aktuálnì spolupracuje s více než dvìma desítkami spolupracovníkù. Mezi nì patøí lidé z akademické sféry, soukromého sektoru, ale i z Ministerstva životního prostøedí Èeské republiky. \cite{oProjektu}
+	
+	\begin{lstlisting}[caption={test}]
+	EggDetector eggDetector = new EggDetector();
+	SequenceClassifier sequenceClassifier = eggDetector.evaluate(new File("image_dir"));
+	System.out.println("final count: " + sequenceClassifier.getFinalCount());
+	System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
+	eggDetector.closeSession();
+	\end{lstlisting}
 	\end{introduction}
 	
 	\include{chapters/1-cil}
