@@ -118,14 +118,18 @@ Pro zpracování snímkù použijeme standartnì dostupné tøídy pro práci s grafikou v
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Návrh øešení}
+nn uceni s ucitelem
 Dvì možnosti
+Pøi použití knihovny ke zpracování obrazu pøedáme knihovnì pole hodnot o velikosti 300x300x3 (snímek bude zmenšen na velikost 300x300 bodù a zùstane barevný -- každý bod obsahuje 3 barevné složky\footnote{RGB - red, green, blue. Každý bod obrázku obsahuje informaci o koncentraci èervené, zelené a modré.}), které reprezentuje náš snímek. Knihovna nám poté vrátí požadovaný výsledek\footnote{V pøípadì rozpoznávání obrazu, knihovna vrátí seznam pravdìpodobností pro všechny známe typy. V pøípadì detekce objektù, knihovna vrátí seznam, pozici a typ objektù.}.
+recognition jako klasifikace nebo regrese
+object detection a potom klasifikace danych objektu
 
 \subsection{Rozpoznávání obrazu}
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{media/img_klasifikace.png}
 	\caption{Program urèený ke klasifikaci obrazu.}
-	\caption*{\tiny{Zdroj: dokumentace softwarové knihovny Tensorflow~\cite{tens_recognition}.}}
+	\caption*{\tiny{Zdroj: dokumentace softwarové knihovny TensorFlow~\cite{tens_recognition}.}}
 	\label{fig:ukazka_img_klasifikace}
 \end{figure}
 
@@ -134,16 +138,34 @@ Dvì možnosti
 	\centering
 	\includegraphics[width=0.8\textwidth]{media/img_detekce.png}
 	\caption{Program urèený k detekci objektù v obraze.}
-	\caption*{\tiny{Zdroj: dokumentace softwarové knihovny Tensorflow~\cite{tens_detection}.}}
+	\caption*{\tiny{Zdroj: dokumentace softwarové knihovny TensorFlow~\cite{tens_detection}.}}
 	\label{fig:ukazka_img_detekce}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Volba technologií}
-Jazyk, knihovny, trenink, oznaèování dat
+V této kapitole vybereme konkrétní platformy, programovací jazyky a nástroje potøebné k implementaci praktické èásti této práce.
+
+\subsection{Platforma}
+Vzhledem k funkèním požadavkùm je jednoznaènou volbou programovací jazyk Java. Volíme verzi Java 8 SE, která poskytuje všechny nástroje, které k doruèení výsledku potøebujeme. 
+
+\subsection{Neuronové sítì}
+Pro znaèné usnadnìní tvorby neuronových sítí použijeme softwarovou knihovnu. Mezi tøi nejznámìjší patøí TensorFlow, OpenNN a FANN\footnote{Fast Artificial Neural Network.}. Z tìchto tøí knihoven pouze TensorFlow poskytuje Java API a už jen z tohoto dùvodu je náš nejlepší kandidát.
+
+TensorFlow má skvìlou dokumentaci~\cite{tens_doc} s velkým množstvím kompletních návodù~\cite{tens_priklad}. Poskytuje API k detekci objektù, kde je možné využít již pøedtrénované modely~\cite{tens_detection}. Pomocné skripty urèené k trénování neuronové sítì, uložení její struktury a ovìøení funkènosti naimplementujeme v jazyce \texttt{Python 3}, jelikož je primárním jazykem pro práci s knihovnou TensorFlow.
+
+\subsection{Práce s daty}
+K vytrénování naší neuronové sítì je potøeba velké množství trénovacích dat. Trénovacími daty jsou myšleny snímky, ke kterým dodáme informace, jako napøíklad poèet a umístìní jednotlivých vajíèek. Abychom si získávání a oznaèování dat usnadnili, je potøeba nìkolik nástrojù, které jsou detailnì popsány v kapitole \ref{chap:nastroje}.
+\begin{itemize}
+	\item Pro hromadné stažení dat použijeme nástroje \texttt{bash} a \texttt{wget}. Hromadnì stažená data budou obsahovat i obsah, který pro nás není užiteèný. Proto použijeme nástroj, který všechna neužiteèná data smaže. Více v kapitole \ref{sec:hromadne_stazeni_dat}.
+	\item Trénovací a testovací data vytvoøíme pomocí nástrojù \texttt{LabelImg} a \texttt{Tagger}. Detailní informace obsahuje kapitola \label{sec:priprava_dat}.
+\end{itemize}
+Abychom byli schopni novì vytvoøená trénovací data použít k trénování neuronové sítì, musíme je pøevést do standardního formátu. V našem pøípadì musíme z binárních dat snímkù a textových XML souborù vytvoøit tzn. TFRecord~\cite{tfrecord}. Každy zpùsob implementace vyžaduje mírnì odlišný formát trénovacích dat. V kapitolách \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}, které se popisují konkrétní implementace, diskutujeme i o pøípravì trénovacích dat.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Shrnutí kapitoly}
+todo
+
 V této kapitole se zamìøíme na strukturu projektu Ptáci Online, problémy souèasného zpùsobu sbírání dat, rozbor funkèních a nefunkèních požadavkù a výbìr technologií. Na závìr budeme diskutovat dva rùzné zpùsoby øešení -- jejich výhody a nevýhody.
