@@ -5,7 +5,7 @@
 
 Tyto \uv{chytré ptaèí budky} slouí k monitorování hnízdícího ptactva. Kadá budka obsahuje jednu nebo dvì kamery s noèním pøísvitem. Ve vletovém otvoru budky je umístìn pohybovı senzor, kterı spustí natáèení kamer pøi detekci pohybu. Dále je do budky vestavìn venkovní a vnitøní teplotní senzor, mikrofon a senzor venkovního osvìtlení, kterı reguluji funkci pøísvitu kamer. Pøenos nasbíranıch dat z budky probíhá pøes ethernetovı PoE\footnote{Power over Ethernet.} kabel. Tento kabel zajišuje i napájení veškeré elektroniky uvnitø budky.~\cite{oProjektu} Jak vypadá záznam z budky je vidìt na obr. \ref{fig:ukazka_budka}.
 
-\begin{figure}[h!]
+\begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{media/ukazka_budka.png}
 	\caption{Ukázka neupraveného snímku z ptaèí budky.}
@@ -18,24 +18,20 @@ Ptaèí budka vyprodukuje sekvenci videa pokadé, kdy je v ní detekován pohyb. Kv
 Vısledná softwarová knihovna bude umìt pracovat s jednotlivımi slokami. Naète všechny snímky z dané sloky a následnì je zpracuje. Uivatel bude schopen získat informace o sloce jako celku i jednotlivıch snímcích.
 
 \section{Souèasnı zpùsob zpracování dat}
-V souèasném stavu neexistuje ádnı program ani algoritmus, kterı by byl schopen videa automaticky analyzovat a získávat z nich uiteèné informace. Protoe èas vìdcù nebo akademickıch pracovníkù, kteøí se snaí nasbírat velké mnoství dat pro jejich vızkum, je drahı, najímají si brigádníky. Brigádníky je nutno nejprve zaškolit, aby vìdìli, co mají ve videích hledat. Poté sledují jedno video za druhım a získané informace zapisují do tabulek v Excelu nebo v Google Docs.
+Akademiètí pracovnící potøebují nashromádit velké mnoství dat, ale taková èinnost je velmi èasovì nároèná. Proto jsou na takovou práci najímáni brigádníci. Brigádníky je nutno nejprve zaškolit, aby vìdìli, co mají ve videích hledat. Poté sledují jedno video za druhım a získané informace zapisují do tabulek v Excelu. Tento zpùsob práce je drahı a èasovì nároènı.
 
-Jedna z informací, která nás mùe zajímat, je poèet vajec v hnízdì. Brigádník musí video otevøít a najít èást, kde jsou vejce zøetelnì viditelná (viz. \figurename\space\ref{fig:eggs1}) a kde viditelná nejsou (viz. \figurename\space\ref{fig:eggs2}). Poté vejce spoèítá a vısledek zapíše do tabulky. Jeliko je nutné získat co nejvíce dat, brigádníci musí svou práci vykonávat velmi rychle. To vede k chybám, napø. chybnì spoèítanı poèet vajec nebo zapsání vısledku na špatnı øádek tabulky.
+Jedna z informací, která nás mùe zajímat, je poèet vajec v hnízdì. Brigádník musí video otevøít, shlédnout a najít èást, kde jsou vejce zøetelnì viditelná (viz obr. \ref{fig:viditelna_vejce}). Poté vejce spoèítá a vısledek zapíše do tabulky. Jeliko je nutné získat co nejvíce dat, brigádníci tento proces vykonávají co nejrychleji. To vede k chybám, napø. chybnì spoèítanı poèet vajec nebo zapsání vısledku na špatnı øádek tabulky.
 
-\begin{figure}[h!]
+Je snahou vytvoøit systémy, které by tyto úkoly mohly provádìt automaticky. Pøíkladem takového systému je napøíklad práce od Pavla Šumy, kterı se snaí automaticky zjistit poèet mláïat v hnízdì~\cite{mladata}. Dalším pøíkladem je i tato práce.
+
+\begin{figure}
 	\centering
-	\includegraphics[width=0.5\textwidth]{media/viditelna-vejce.png}
-	\caption{Vejce jsou zøetelnì viditelná v èase 0:01}
-	\label{fig:eggs1}
+	\subfloat[Vejce jsou zøetelnì viditelná v èase 0:01.]{{\includegraphics[width=0.45\textwidth]{media/viditelna-vejce.png}\label{fig:viditelna_vejce} }}%
+	\qquad
+	\subfloat[Vejce nejsou viditelná ve zbytku videa, jako je tomu napø. v èase 0:14.]{{\includegraphics[width=0.45\textwidth]{media/neviditelna-vejce.png}\label{fig:neviditelna_vejce} }}%
+	\caption{Vejce nemusí bıt vdy viditelná.}
+	\label{fig:ne_viditelna_vejce}
 \end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.5\textwidth]{media/neviditelna-vejce.png}
-	\caption{Vejce nejsou viditelná ve zbytku videa, jako je tomu napø. v èase 0:14}
-	\label{fig:eggs2}
-\end{figure}
-\subsection{problemy}
 
 \section{Technologie}
 
