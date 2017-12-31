@@ -3,11 +3,21 @@
 \section{Ptaci Online}
 \uv{Cílem projektu je popularizovat ochranu ptákù v blízkosti lidskıch sídel, jejich hnízdìní, vèetnì jeho monitoringu, s vyuitím speciálního technického zaøízení tzv. \uv{chytré ptaèí budky}.}~\cite{mzp_ptaci_online}
 
-Tyto \uv{chytré ptaèí budky} slouí pro monitorování hnízdícího ptactva. Kadá budka obsahuje jednu nebo dvì kamery s noèním pøísvitem. Ve vletovém otvoru budky je umístìn pohybovı senzor, kterı spustí natáèení kamer pøi detekci pohybu. Dále je do budky vestavìn venkovní a vnitøní teplotní senzor, mikrofon a senzor venkovního osvìtlení, kterı reguluji funkci pøísvitu kamer~\cite{oProjektu}.
-\subsection{vstupni data}
-\subsection{pouzite technologie}
+Tyto \uv{chytré ptaèí budky} slouí k monitorování hnízdícího ptactva. Kadá budka obsahuje jednu nebo dvì kamery s noèním pøísvitem. Ve vletovém otvoru budky je umístìn pohybovı senzor, kterı spustí natáèení kamer pøi detekci pohybu. Dále je do budky vestavìn venkovní a vnitøní teplotní senzor, mikrofon a senzor venkovního osvìtlení, kterı reguluji funkci pøísvitu kamer. Pøenos nasbíranıch dat z budky probíhá pøes ethernetovı PoE\footnote{Power over Ethernet.} kabel. Tento kabel zajišuje i napájení veškeré elektroniky uvnitø budky.~\cite{oProjektu} Jak vypadá záznam z budky je vidìt na obr. \ref{fig:ukazka_budka}.
 
-\section{Souèasnı stav øešení problematiky}\label{sec:current}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{media/ukazka_budka.png}
+	\caption{Ukázka neupraveného snímku z ptaèí budky.}
+	\label{fig:ukazka_budka}
+\end{figure}
+
+\section{Pøedstavení vstupních data}
+Ptaèí budka vyprodukuje sekvenci videa pokadé, kdy je v ní detekován pohyb. Kvùli energetické úspornosti kamer a mnoství pøenášenıch dat mají tyto videa niší snímkovou frekvenci\footnote{Poèet snímkù za sekundu.}. Z takového videozáznamu lze  extrahovat mnoinu jednotlivıch snímku, které jako celek tvoøí dané video. Snímky jsou ukládány do formátu PNG a zaøazeny do sloek, pøièem \textbf{jedna sloka reprezentuje jeden videozáznam}.
+
+Vısledná softwarová knihovna bude umìt pracovat s jednotlivımi slokami. Naète všechny snímky z dané sloky a následnì je zpracuje. Uivatel bude schopen získat informace o sloce jako celku i jednotlivıch snímcích.
+
+\section{Souèasnı zpùsob zpracování dat}
 V souèasném stavu neexistuje ádnı program ani algoritmus, kterı by byl schopen videa automaticky analyzovat a získávat z nich uiteèné informace. Protoe èas vìdcù nebo akademickıch pracovníkù, kteøí se snaí nasbírat velké mnoství dat pro jejich vızkum, je drahı, najímají si brigádníky. Brigádníky je nutno nejprve zaškolit, aby vìdìli, co mají ve videích hledat. Poté sledují jedno video za druhım a získané informace zapisují do tabulek v Excelu nebo v Google Docs.
 
 Jedna z informací, která nás mùe zajímat, je poèet vajec v hnízdì. Brigádník musí video otevøít a najít èást, kde jsou vejce zøetelnì viditelná (viz. \figurename\space\ref{fig:eggs1}) a kde viditelná nejsou (viz. \figurename\space\ref{fig:eggs2}). Poté vejce spoèítá a vısledek zapíše do tabulky. Jeliko je nutné získat co nejvíce dat, brigádníci musí svou práci vykonávat velmi rychle. To vede k chybám, napø. chybnì spoèítanı poèet vajec nebo zapsání vısledku na špatnı øádek tabulky.
