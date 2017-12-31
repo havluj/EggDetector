@@ -1,5 +1,5 @@
 \chapter{Analıza a návrh}
-V této kapitole se zamìøíme na strukturu projektu Ptáci Online, problémy souèasného zpùsobu sbírání dat, rozbor funkèních a nefunkèních poadavkù a vıbìr technologií. Na závìr budeme diskutovat dva rùzné zpùsoby øešení -- jejich vıhody a nevıhody.
+V této kapitole se zamìøíme na strukturu projektu Ptáci Online, problémy spojené se souèasnım zpùsobem sbírání dat, rozbor funkèních a nefunkèních poadavkù, návrh øešení a vıbìr technologií. Na závìr budeme diskutovat dva rùzné zpùsoby øešení -- jejich vıhody a nevıhody.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -118,13 +118,14 @@ Pro zpracování snímkù pouijeme standartnì dostupné tøídy pro práci s grafikou v
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Návrh øešení}
-nn uceni s ucitelem
-Dvì monosti
-Pøi pouití knihovny ke zpracování obrazu pøedáme knihovnì pole hodnot o velikosti 300x300x3 (snímek bude zmenšen na velikost 300x300 bodù a zùstane barevnı -- kadı bod obsahuje 3 barevné sloky\footnote{RGB - red, green, blue. Kadı bod obrázku obsahuje informaci o koncentraci èervené, zelené a modré.}), které reprezentuje náš snímek. Knihovna nám poté vrátí poadovanı vısledek\footnote{V pøípadì rozpoznávání obrazu, knihovna vrátí seznam pravdìpodobností pro všechny známe typy. V pøípadì detekce objektù, knihovna vrátí seznam, pozici a typ objektù.}.
-recognition jako klasifikace nebo regrese
-object detection a potom klasifikace danych objektu
+Jádro implementace bude tvoøit neuronová sí, která bude vytvoøena metodou \uv{uèení s uèitelem}\footnote{Supervised learning.}. Tvorba implementace se bude skládat ze ètyø èástí:
+\begin{itemize}
+	\item Pøíprava trénovacích a testovacích dat.
+	\item Trénování neuronové sítì.
+	\item \uv{Konzumace} vytrénované neuronové sítì knihovnou, která je vısledkem této práce.
+	\item Ovìøení funkènosti.
+\end{itemize}
 
-\subsection{Rozpoznávání obrazu}
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{media/img_klasifikace.png}
@@ -133,7 +134,8 @@ object detection a potom klasifikace danych objektu
 	\label{fig:ukazka_img_klasifikace}
 \end{figure}
 
-\subsection{Detekce objektù}
+Existuje nìkolik zpùsobù, jak neuronovou sí vytrénovat. Prvním monım øešením je neuronová sí urèená ke klasifikaci celého obrazu. Typickım vstupem je snímek, ve kterém je objekt, kterı chceme rozpoznat, nejvıraznìjší. Pokroèilejší typ této sítì je schopnı popsat komplexnìjší scény, jako napøíklad \uv{Dva lidé na plái.}. Ukázka takového programu je vidìt na obrázku \ref{fig:ukazka_img_klasifikace}. V našem pøípadì bychom klasifikovali poèet vajec v hnízdì, kde by jednotlivé vısledky reprezentovali poèet vajec na daném snímku. Tzn. vıstupem takové neuronové sítì by byla jedna z pøedem danıch kategorií, o které si s nejvìtší pravdìpodobností myslíme, e popisuje, co je na daném snímku. Kadá kategorie by reprezentovala jinı poèet vajec v hnízdì, napøíklad kategorie 0, kategorie 1, atd.
+
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{media/img_detekce.png}
@@ -141,6 +143,10 @@ object detection a potom klasifikace danych objektu
 	\caption*{\tiny{Zdroj: dokumentace softwarové knihovny TensorFlow~\cite{tens_detection}.}}
 	\label{fig:ukazka_img_detekce}
 \end{figure}
+
+Druhım monım øešením je komplexnìjší neuronová sí urèená k detekci objektù. Obraz je nejprve segmentován na èásti, o kterıch si sí myslí, e by mohly obsahovat nìjaké objekty. Následnì jsou tyto èásti klasifikovány a je rozhodnuto, zda-li se jedná o objekt a s jakou pravdìpodobností. Vısledkem je potom mnoina detekcí, která je tvoøena umístìním objektu, typem objektu a pravdìpodobností mírou, která reprezentuje jak moc je si sí jistá, e se opravdu jedná o danı objekt. Typickım vstupem je libovolnı snímek, jako je tomu vidìt na obrázku \ref{fig:ukazka_img_detekce}. V našem pøípadì bychom hledali detekci vajec s relativnì vysokou pravdìpodobností. Poèet detekcí by reprezentoval poèet vajec v hnízdì.
+
+A u zvolíme jakıkoliv zpùsob implementace, pro zpracování obrazu pøedáme neuronové síti pole hodnot o velikosti 300x300x3 (snímek bude zmenšen na velikost 300x300 bodù a zùstane barevnı -- kadı bod obsahuje 3 barevné sloky\footnote{RGB - red, green, blue. Kadı bod obrázku obsahuje informaci o koncentraci èervené, zelené a modré.}), které reprezentuje náš snímek. Knihovna nám poté vrátí poadovanı vısledek\footnote{V pøípadì rozpoznávání obrazu, knihovna vrátí seznam pravdìpodobností pro všechny známe typy. V pøípadì detekce objektù, knihovna vrátí seznam, pozici a typ objektù.}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -161,7 +167,7 @@ K vytrénování naší neuronové sítì je potøeba velké mnoství trénovacích dat. Tré
 	\item Pro hromadné staení dat pouijeme nástroje \texttt{bash} a \texttt{wget}. Hromadnì staená data budou obsahovat i obsah, kterı pro nás není uiteènı. Proto pouijeme nástroj, kterı všechna neuiteèná data smae. Více v kapitole \ref{sec:hromadne_stazeni_dat}.
 	\item Trénovací a testovací data vytvoøíme pomocí nástrojù \texttt{LabelImg} a \texttt{Tagger}. Detailní informace obsahuje kapitola \label{sec:priprava_dat}.
 \end{itemize}
-Abychom byli schopni novì vytvoøená trénovací data pouít k trénování neuronové sítì, musíme je pøevést do standardního formátu. V našem pøípadì musíme z binárních dat snímkù a textovıch XML souborù vytvoøit tzn. TFRecord~\cite{tfrecord}. Kady zpùsob implementace vyaduje mírnì odlišnı formát trénovacích dat. V kapitolách \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}, které se popisují konkrétní implementace, diskutujeme i o pøípravì trénovacích dat.
+Abychom byli schopni novì vytvoøená trénovací data pouít k trénování neuronové sítì, musíme je pøevést do standardního formátu. V našem pøípadì musíme z binárních dat snímkù a textovıch XML souborù vytvoøit tzn. \texttt{TFRecord}~\cite{tfrecord}. Kady zpùsob implementace vyaduje mírnì odlišnı formát trénovacích dat. V kapitolách \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}, které se popisují konkrétní implementace, diskutujeme i o pøípravì trénovacích dat.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
