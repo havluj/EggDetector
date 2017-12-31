@@ -271,6 +271,9 @@ FUNCTION {bbl.chapter}
 FUNCTION {bbl.techrep}
 { "Technick\'a Zpr\'ava" }
 
+FUNCTION {bbl.bthesis}
+{ "Bakal\'a\v rsk\'a pr\'ace" }
+
 FUNCTION {bbl.mthesis}
 { "Diplomov\'a pr\'ace" }
 
@@ -1273,6 +1276,24 @@ FUNCTION {manual}
   if$
   format.edition output
   format.date output
+  format.doi output
+  format.note output
+  format.eprint output
+  fin.entry
+  write.url
+}
+
+FUNCTION {bachelorsthesis}
+{ output.bibitem
+  format.authors "author" output.check
+  add.colon
+  format.btitle
+  "title" output.check
+  new.sentence
+  bbl.bthesis format.thesis.type output.nonnull
+  school "school" bibinfo.warn output
+  address "address" bibinfo.check output
+  format.date "year" output.check
   format.doi output
   format.note output
   format.eprint output

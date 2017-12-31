@@ -32,14 +32,16 @@
 \authorGN{Jan} %(křestní) jméno (jména) autora
 \authorFN{Nový} %příjmení autora
 \authorWithDegrees{Jan Nový} %jméno autora včetně akademických titulů
+\author{Jan Nový} %jméno autora bez akademických titulů
 \supervisor{doc. Ing. Marek Navrátil}
-\acknowledgements{Děkuji všem a za vše.}
+\acknowledgements{Děkuji všem a za vše. Nevíte-li, co sem napsat, příkaz odstraňte.}
 \abstractCS{V~několika větách shrňte obsah a přínos této práce v~češtině. Po přečtení abstraktu by měl mít čtenář dost informací pro rozhodnutí, zda chce Vaši práci číst.}
 \abstractEN{Sem doplňte ekvivalent abstraktu Vaší práce v~angličtině.}
 \placeForDeclarationOfAuthenticity{V~Praze}
 \declarationOfAuthenticityOption{4} %volba Prohlášení
 \keywordsCS{Závěrečná práce, \LaTeX{}.}
 \keywordsEN{Thesis, \LaTeX{}.}
+\website{http://site.example/thesis} %volitelná URL práce, objeví se v tiráži
 
 
 \begin{document}
@@ -64,6 +66,7 @@ Doplňte vhodný text.
 
 \begin{conclusion}
 	Doplňte závěr.
+	
 \end{conclusion}
 
 \bibliographystyle{csn690}
@@ -205,7 +208,7 @@ Chcete-li vkládat odkazy (funkční v~PDF), použijte příkaz \verb|href| z~ba
 
 \chapter{Obsah přiloženého CD}
 
-\paragraph{Ahoj}
+\paragraph{Ahoj} \cite{sitova-karta-s-fpga-xilinx}
 
 Vhodným způsobem vizualizujte obsah přiloženého média. Lze použít balíček \verb|dirtree| a vytvořit např. následující výstup (adresáře src a text s~příslušným obsahem jsou \emph{povinné}):
 

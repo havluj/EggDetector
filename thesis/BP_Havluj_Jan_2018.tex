@@ -14,18 +14,18 @@
 % \usepackage{amsmath} %advanced maths
 % \usepackage{amssymb} %additional math symbols
 
+%\usepackage[left=4cm,right=4cm,top=4.5cm,bottom=5cm]{geometry}
+
 \usepackage{dirtree} %directory tree visualisation
 \usepackage[czech]{babel}
 \usepackage[T1]{fontenc}
 
 \include{chapters/documentation/out_preamble}
 \renewcommand{\bf}{\textbf}
+
 \usepackage{listings}
 \usepackage{color}
 \usepackage{enumitem}
-
-\usepackage[left=3.8cm,right=3.8cm]{geometry}
-
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -56,7 +56,7 @@
 \newcommand{\cotg}{\mathop{\mathrm{cotg}}} %cesky cotangens
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-% ODTUD DAL VSE ZMENTE
+% PRÁCE
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 
 \department{Katedra softwarového inženýrství}
@@ -64,133 +64,137 @@
 \authorGN{Jan} %(køestní) jméno (jména) autora
 \authorFN{Havlùj} %pøíjmení autora
 \authorWithDegrees{Jan Havlùj} %jméno autora vèetnì souèasných akademických titulù
+\author{Jan Havlùj} %jméno autora bez akademických titulù
 \supervisor{Ing. Josef Pavlíèek, Ph.D.}
 \acknowledgements{Chtìl bych podìkovat vedoucímu mé bakaláøské práce, panu Ing. Josefovi Pavlíèkovi Ph.D. za jeho èas, ochotu a pomoc pøi vedení této práce. Dìkuji svým rodièùm a pøítelkyni, kteøí mi byli po celou dobu studia velkou oporou. V~neposlední øadì bych chtìl podìkovat svým spolužákùm, kteøí mì pøi studiu nikdy neváhali podpoøit.}
 \placeForDeclarationOfAuthenticity{V~Praze}
 \declarationOfAuthenticityOption{4} %volba Prohlášení (èíslo 1-6)
+\website{todo} %volitelná URL práce, objeví se v tiráži - úplnì odstraòte, nemáte-li URL práce
 
-\abstractCS{Tato práce se zabývá návrhem a tvorbou softwarové knihovny pro detekci objektù v obraze použitím neuronových sítí. 
+\abstractCS{
+	Tato práce se zabývá návrhem a tvorbou softwarové knihovny pro detekci objektù v obraze použitím neuronových sítí. 
 	
-V první èásti jsme seznámeni s cílem práce a detailní specifikací požadavkù. Druhá èást se vìnuje teorii poèítaèového vidìní, strojového uèení a neuronových sítí. Následnì je na základì získaných teoretických znalostí a specifikace požadavkù vypracována analýza možného øešení. Dle analýzy jsou navržena a implementována dvì øešení. První implementace se zamìøuje na detekci objektù, druhá na rozpoznávání a klasifikaci obrazu. V poslední èásti je vybráno efektivnìjší øešení, které je øádnì ovìøeno a otestováno.
-
-Výsledkem je softwarová knihovna, která umožòuje automaticky rozpoznávat poèet vajec v daném videu. Celý program je implementován v jazyce Java a je možné ho integrovat do projektu BirdObserver.}
+	V první èásti jsme seznámeni s cílem práce a detailní specifikací požadavkù. Druhá èást se vìnuje teorii poèítaèového vidìní, strojového uèení a neuronových sítí. Následnì je na základì získaných teoretických znalostí a specifikace požadavkù vypracována analýza možného øešení. Dle analýzy jsou navržena a implementována dvì øešení. První implementace se zamìøuje na detekci objektù, druhá na rozpoznávání a klasifikaci obrazu. V poslední èásti je vybráno efektivnìjší øešení, které je øádnì ovìøeno a otestováno.
+	
+	Výsledkem je softwarová knihovna, která umožòuje automaticky rozpoznávat poèet vajec v daném videu. Celý program je implementován v jazyce Java a je možné ho integrovat do projektu BirdObserver.}
 \keywordsCS{neuronové sítì, poèítaèové vidìní, detekce objektù, strojové uèení, uèení s uèitelem, rozpoznávání obrazu, detekce vajec, ptaèí hnízda, Java}
 
-\abstractEN{This thesis focuses on designing and creating a software library that is able to detect objects in an image by using neural networks.
-
-In the first part of the thesis, goals are set technical parameters are specified. The second part discusses the theory behind computer vision, machine learning, and neural networks. Using the technical specification and acquired theoretical knowledge, a detailed analysis of a possible solution is presented. There are two implementations of the analysis. The first one is using object detection to meet it's goal, the second one image recognition. In the last part of the thesis, a more effective implementation is chosen, which is then properly tested and verified.
-
-The result of this thesis is a software library that is able to automatically detect the number of eggs in a given video sequence. The entire solution is written in Java and is easily intergratable with the BirdObserver project.
+\abstractEN{
+	This thesis focuses on designing and creating a software library that is able to detect objects in an image by using neural networks.
+	
+	In the first part of the thesis, goals are set technical parameters are specified. The second part discusses the theory behind computer vision, machine learning, and neural networks. Using the technical specification and acquired theoretical knowledge, a detailed analysis of a possible solution is presented. There are two implementations of the analysis. The first one is using object detection to meet it's goal, the second one image recognition. In the last part of the thesis, a more effective implementation is chosen, which is then properly tested and verified.
+	
+	The result of this thesis is a software library that is able to automatically detect the number of eggs in a given video sequence. The entire solution is written in Java and is easily intergratable with the BirdObserver project.
 }
 \keywordsEN{neural networks, computer vision, object detection, machine learning, supervised learning, image recognition, egg detection, bird nests, Java}
 
 \begin{document}
-	
-	% \newacronym{CVUT}{{\v C}VUT}{{\v C}esk{\' e} vysok{\' e} u{\v c}en{\' i} technick{\' e} v Praze}
-	% \newacronym{FIT}{FIT}{Fakulta informa{\v c}n{\' i}ch technologi{\' i}}
-	
-	% code listing template
-	%\begin{lstlisting}[caption={test}]
-	%EggDetector eggDetector = new EggDetector();
-	%SequenceClassifier sequenceClassifier = eggDetector.evaluate(new File("image_dir"));
-	%System.out.println("final count: " + sequenceClassifier.getFinalCount());
-	%System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
-	%eggDetector.closeSession();
-	%end{lstlisting}
-	
-	% table template
-	%\begin{table}\centering
-	%	\caption[Pøíklad tabulky]{Zadávání matematiky}\label{tab:matematika}
-	%	\begin{tabular}{|l|l|c|c|}\hline
-	%		Typ		& Prostøedí		& \LaTeX{}ovská zkratka	& \TeX{}ovská zkratka	\tabularnewline \hline \hline
-	%		Text		& \verb|math|		& \verb|\(...\)|	& \verb|$...$|		\tabularnewline \hline
-	%		Displayed	& \verb|displaymath|	& \verb|\[...\]|	& \verb|$$...$$|	\tabularnewline \hline
-	%	\end{tabular}
-	%\end{table}
-	
-	%\footnote{\url{http://doclet.github.io/}}
-	
-	
-	\begin{introduction}
-		Projekt Ptáci Online byl spuštìn Fakultou životního prostøedí Èeské zemìdìlské univerzity v Praze roku 2014~\cite{oProjektu}. Hlavním cílem projektu je poskytnout vìdecká data, ve formì videa z ptaèích budek, široké veøejnosti~\cite{oProjektu}. Projekt se tìší pomìrnì velké popularitì~\cite{ptaciVMediich} a aktuálnì spolupracuje s více než dvìma desítkami spolupracovníkù. Mezi nì patøí lidé z akademické sféry, soukromého sektoru, ale i z Ministerstva životního prostøedí Èeské republiky~\cite{oProjektu}. Vzhledem k množství poøízených záznamù, by bylo žádoucí informace extrahovat automaticky pomocí algoritmù umìlé inteligence. Pøedmìtem této práce je vytvoøit algoritmus, který je schopný urèit poèet vajec v hnízdì v daném videozáznamu. 
-		
-		Existuje hned nìkolik zpùsobù, jak nauèit poèítaè \uv{vidìt}. Témìø vždy se musíme zamìøit na pøedzpracování obrazu, jeho vlastnosti a jeho segmentaci. Jako øešení pak mùžeme zvolit rùznou sadu deterministických algoritmù, napøíklad pro detekci hran nebo na samotné klasifikování segmentovaného obrazu. Všechny tyto algoritmy mají však jednu spoleènou nevýhodu. Formálnì popsat tvar nìjakého objektu a vytvoøit sadu pravidel, podle kterých poznáme, jestli se jedná o hledaný objekt, je velmi tìžké.	Svìtelné podmínky nemusí být ideální, objekty se mohou pøekrývat, mohou být rùznì barevné, vzdálené nebo otoèené. Všechny tyto problémy znemožòují vytvoøení perfektního algoritmu manuálnì.
-		Lepším øešením je manuálnì vytvoøit jeden algoritmus, který dokáže \uv{vytrénovat} druhý obecný algoritmus k vyøešení konkrétního problému. Za tímto úèelem vznikly algoritmy inspirované pøírodou, napøíklad umìlé neuronové sítì inspirované lidským uèením a mozkem nebo evoluèní algoritmy inspirované evoluèní teorií. V této práci se budeme soustøedit na použití neuronových sítí pro vyøešení problémù poèítaèového vidìní.
-		
-		\section{Struktura práce}
-		Práce je rozdìlena do 7 èástí. První èást obsahuje stanovení cílù a specifikaci funkèních i nefunkèních požadavkù. Druhá èást je teoretická. Diskutuje problematiku poèítaèového vidìní, strojového uèení a neuronových sítí. Tøetí, analytická èást, se zamìøuje na výbìr vhodných technologií a postupù pro tvorbu implementace. Ètvrtou i pátou, praktickou èást, tvoøí dva rùzné zpùsoby implementace, jejich porovnání, otestování a validace. Na závìr vybereme efektivnìjší implementaci, dle které je vytvoøena softwarová knihovna v jazyce Java.
-	\end{introduction}
-	
-	\include{chapters/1-cil}
-	\include{chapters/2-reserse}
-	\include{chapters/3-analyza}
-	\include{chapters/4-impl_detekce}
-	\include{chapters/5-impl_klasifikace}
-	\include{chapters/6-volba}
-	\include{chapters/7-overeni}
-	
-	\begin{conclusion}
-		%sem napište závìr Vaší práce
-	\end{conclusion}
-	
-	\bibliographystyle{csn690}
-	\bibliography{mybibliographyfile}
-	
-	\appendix
-	
-	\chapter{Seznam použitých zkratek}
-	% \printglossaries
-	\begin{description}
-		\item[GUI] Graphical user interface
-		\item[XML] Extensible markup language
-		\item[HTML] HyperText Markup Language
-		\item[RAM] Random-access memory
-		\item[PDF] Portable Document Format
-		\item[NN] Neural Network
-		\item[CNN] Convolutional Neural Network
-		\item[RCNN] Recursive Convolutional Neural Network
-		\item[API] Application Programming Interface
-		
-	\end{description}
 
-	\include{chapters/documentation/out}
+% \newacronym{CVUT}{{\v C}VUT}{{\v C}esk{\' e} vysok{\' e} u{\v c}en{\' i} technick{\' e} v Praze}
+% \newacronym{FIT}{FIT}{Fakulta informa{\v c}n{\' i}ch technologi{\' i}}
+
+% code listing template
+%\begin{lstlisting}[caption={test}]
+%EggDetector eggDetector = new EggDetector();
+%SequenceClassifier sequenceClassifier = eggDetector.evaluate(new File("image_dir"));
+%System.out.println("final count: " + sequenceClassifier.getFinalCount());
+%System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
+%eggDetector.closeSession();
+%end{lstlisting}
+
+% table template
+%\begin{table}\centering
+%	\caption[Pøíklad tabulky]{Zadávání matematiky}\label{tab:matematika}
+%	\begin{tabular}{|l|l|c|c|}\hline
+%		Typ		& Prostøedí		& \LaTeX{}ovská zkratka	& \TeX{}ovská zkratka	\tabularnewline \hline \hline
+%		Text		& \verb|math|		& \verb|\(...\)|	& \verb|$...$|		\tabularnewline \hline
+%		Displayed	& \verb|displaymath|	& \verb|\[...\]|	& \verb|$$...$$|	\tabularnewline \hline
+%	\end{tabular}
+%\end{table}
+
+%\footnote{\url{http://doclet.github.io/}}
+
+
+\begin{introduction}
+	Projekt Ptáci Online byl spuštìn Fakultou životního prostøedí Èeské zemìdìlské univerzity v Praze roku 2014~\cite{oProjektu}. Hlavním cílem projektu je poskytnout vìdecká data, ve formì videa z ptaèích budek, široké veøejnosti~\cite{oProjektu}. Projekt se tìší pomìrnì velké popularitì~\cite{ptaciVMediich} a aktuálnì spolupracuje s více než dvìma desítkami spolupracovníkù. Mezi nì patøí lidé z akademické sféry, soukromého sektoru, ale i z Ministerstva životního prostøedí Èeské republiky~\cite{oProjektu}. Vzhledem k množství poøízených záznamù, by bylo žádoucí informace extrahovat automaticky pomocí algoritmù umìlé inteligence. Pøedmìtem této práce je vytvoøit algoritmus, který je schopný urèit poèet vajec v hnízdì v daném videozáznamu. 
 	
-	\chapter{Použité programy}
-	% \printglossaries
-	\begin{description}
-		\item[TexStudio] psaní bakaláøské práce v \LaTeX a pøeklad do PDF
-		\item[Notepad++] úprava textových souborù
-		\item[gedit] úprava textových souborù
-		\item[IntelliJ IDEA Ultimate] psaní implementace v jazyce Java
-		\item[GIT] verzování kódu
-		\item[JDK8] kompilace, ladìní a testování Java knihovny
-		\item[Python 3] zpracování dat, trénování neuronových sítí
-		\item[Tensorflow] softwarová knihovna pro strojové uèení
-		\item[LabelImg] oznaèování trénovacích dat
-		\item[javadoc] generování dokumentace do HTML
-		\item[TexDoclet] generování dokumentace do \LaTeX
-		\item[wget] hromadné stahování dat
-		\item[bash] pomocné skripty pro zautomatizování práce
-	\end{description}
+	Existuje hned nìkolik zpùsobù, jak nauèit poèítaè \uv{vidìt}. Témìø vždy se musíme zamìøit na pøedzpracování obrazu, jeho vlastnosti a jeho segmentaci. Jako øešení pak mùžeme zvolit rùznou sadu deterministických algoritmù, napøíklad pro detekci hran nebo na samotné klasifikování segmentovaného obrazu. Všechny tyto algoritmy mají však jednu spoleènou nevýhodu. Formálnì popsat tvar nìjakého objektu a vytvoøit sadu pravidel, podle kterých poznáme, jestli se jedná o hledaný objekt, je velmi tìžké.	Svìtelné podmínky nemusí být ideální, objekty se mohou pøekrývat, mohou být rùznì barevné, vzdálené nebo otoèené. Všechny tyto problémy znemožòují vytvoøení perfektního algoritmu manuálnì.
+	Lepším øešením je manuálnì vytvoøit jeden algoritmus, který dokáže \uv{vytrénovat} druhý obecný algoritmus k vyøešení konkrétního problému. Za tímto úèelem vznikly algoritmy inspirované pøírodou, napøíklad umìlé neuronové sítì inspirované lidským uèením a mozkem nebo evoluèní algoritmy inspirované evoluèní teorií. V této práci se budeme soustøedit na použití neuronových sítí pro vyøešení problémù poèítaèového vidìní.
 	
-	\chapter{Obsah pøiloženého CD}
+	\section{Struktura práce}
+	Práce je rozdìlena do 7 èástí. První èást obsahuje stanovení cílù a specifikaci funkèních i nefunkèních požadavkù. Druhá èást je teoretická. Diskutuje problematiku poèítaèového vidìní, strojového uèení a neuronových sítí. Tøetí, analytická èást, se zamìøuje na výbìr vhodných technologií a postupù pro tvorbu implementace. Ètvrtou i pátou, praktickou èást, tvoøí dva rùzné zpùsoby implementace, jejich porovnání, otestování a validace. Na závìr vybereme efektivnìjší implementaci, dle které je vytvoøena softwarová knihovna v jazyce Java.
+\end{introduction}
+
+\include{chapters/1-cil}
+\include{chapters/2-reserse}
+\include{chapters/3-analyza}
+\include{chapters/4-impl_detekce}
+\include{chapters/5-impl_klasifikace}
+\include{chapters/6-volba}
+\include{chapters/7-overeni}
+
+\begin{conclusion}
+	%sem napište závìr Vaší práce
+\end{conclusion}
+
+\bibliographystyle{csn690}
+\bibliography{mybibliographyfile}
+
+\appendix
+
+\chapter{Seznam použitých zkratek}
+% \printglossaries
+\begin{description}
+	\item[GUI] Graphical user interface
+	\item[XML] Extensible markup language
+	\item[HTML] HyperText Markup Language
+	\item[RAM] Random-access memory
+	\item[PDF] Portable Document Format
+	\item[NN] Neural Network
+	\item[CNN] Convolutional Neural Network
+	\item[RCNN] Recursive Convolutional Neural Network
+	\item[API] Application Programming Interface
 	
-	%upravte podle skutecnosti
-	
-	\begin{figure}
-		\dirtree{%
-			.1 readme.txt\DTcomment{struèný popis obsahu CD}.
-			.1 bin\DTcomment{adresáø se spustitelnou formou implementace}.
-			.1 doc\DTcomment{adresáø s dokumentací implementace}.
-			.1 src.
-			.2 impl\DTcomment{zdrojové kódy implementace}.
-			.3 eggdetector\DTcomment{zdrojové kódy implementace knihovny}.
-			.3 \texttt{nn\_training}\DTcomment{zdrojové kódy pro trénování neuronové sítì}.
-			.3 tools\DTcomment{zdrojové kódy pomocných nástrojù k tvorbì bakaláøské práce}.
-			.2 thesis\DTcomment{zdrojová forma práce ve formátu \LaTeX{}}.
-			.1 text\DTcomment{text práce}.
-			.2 thesis.pdf\DTcomment{text práce ve formátu PDF}.
-		}
-	\end{figure}
-	
+\end{description}
+
+\include{chapters/documentation/out}
+
+\chapter{Použité programy}
+% \printglossaries
+\begin{description}
+	\item[TexStudio] psaní bakaláøské práce v \LaTeX a pøeklad do PDF
+	\item[Notepad++] úprava textových souborù
+	\item[gedit] úprava textových souborù
+	\item[IntelliJ IDEA Ultimate] psaní implementace v jazyce Java
+	\item[GIT] verzování kódu
+	\item[JDK8] kompilace, ladìní a testování Java knihovny
+	\item[Python 3] zpracování dat, trénování neuronových sítí
+	\item[Tensorflow] softwarová knihovna pro strojové uèení
+	\item[LabelImg] oznaèování trénovacích dat
+	\item[javadoc] generování dokumentace do HTML
+	\item[TexDoclet] generování dokumentace do \LaTeX
+	\item[wget] hromadné stahování dat
+	\item[bash] pomocné skripty pro zautomatizování práce
+\end{description}
+
+\chapter{Obsah pøiloženého CD}
+
+%upravte podle skutecnosti
+
+\begin{figure}
+	\dirtree{%
+		.1 readme.txt\DTcomment{struèný popis obsahu CD}.
+		.1 bin\DTcomment{adresáø se spustitelnou formou implementace}.
+		.1 doc\DTcomment{adresáø s dokumentací implementace}.
+		.1 src.
+		.2 impl\DTcomment{zdrojové kódy implementace}.
+		.3 eggdetector\DTcomment{zdrojové kódy implementace knihovny}.
+		.3 \texttt{nn\_training}\DTcomment{zdrojové kódy pro trénování neuronové sítì}.
+		.3 tools\DTcomment{zdrojové kódy pomocných nástrojù k tvorbì bakaláøské práce}.
+		.2 thesis\DTcomment{zdrojová forma práce ve formátu \LaTeX{}}.
+		.1 text\DTcomment{text práce}.
+		.2 thesis.pdf\DTcomment{text práce ve formátu PDF}.
+	}
+\end{figure}
+
 \end{document}
