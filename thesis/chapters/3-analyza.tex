@@ -113,18 +113,37 @@ Výsledná knihovna bude uživateli umìt poskytnout informace o složce jako celku -
 \textit{Snímky mohou být ve formátu JPEG a PNG.}
 
 \vspace{0.5cm}
-Pro zpracování snímkù použijeme standartnì dostupné tøídy pro práci s grafikou v programovacím jazyce Java. Napøíklad \texttt{BufferedImage} a \texttt{Graphics2D}. Tato abstrakce nám umožní zpracovat oba dva formáty -- JPEG i PNG.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Volba technologií}
+Pro zpracování snímkù použijeme standartnì dostupné tøídy pro práci s grafikou v programovacím jazyce Java. Konkrétnì \texttt{BufferedImage} a \texttt{Graphics2D} nám umožní zpracovat oba dva formáty -- JPEG i PNG.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Návrh øešení}
+Dvì možnosti
+
 \subsection{Rozpoznávání obrazu}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{media/img_klasifikace.png}
+	\caption{Program urèený ke klasifikaci obrazu.}
+	\caption*{\tiny{Zdroj: dokumentace softwarové knihovny Tensorflow~\cite{tens_recognition}.}}
+	\label{fig:ukazka_img_klasifikace}
+\end{figure}
+
 \subsection{Detekce objektù}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{media/img_detekce.png}
+	\caption{Program urèený k detekci objektù v obraze.}
+	\caption*{\tiny{Zdroj: dokumentace softwarové knihovny Tensorflow~\cite{tens_detection}.}}
+	\label{fig:ukazka_img_detekce}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Volba technologií}
+Jazyk, knihovny, trenink, oznaèování dat
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Shrnutí kapitoly}
+V této kapitole se zamìøíme na strukturu projektu Ptáci Online, problémy souèasného zpùsobu sbírání dat, rozbor funkèních a nefunkèních požadavkù a výbìr technologií. Na závìr budeme diskutovat dva rùzné zpùsoby øešení -- jejich výhody a nevýhody.
