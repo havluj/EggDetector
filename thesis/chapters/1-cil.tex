@@ -12,7 +12,7 @@ Následující seznam funkèních a nefunkèních požadavkù slouží k pøesné definici po
 \section{Funkèní požadavky}
 \begin{description}[labelindent=1cm,leftmargin=2cm,style=nextline]
 	\item[F1] Systém bude distribuovaný formou Java knihovny v archivu JAR\footnote{Zkratka pro Java ARchive. \uv{JAR je kompresní souborový formát, používaný platformou Java, založený na ZIP kompresi.}\cite{javajar}}.
-	\item[F2] Knihovna bude distribuována ve dvou verzích. 
+	\item[F2] Knihovna bude distribuována ve dvou verzích:
 	\begin{itemize}
 		\item JAR archiv obsahující jak pøeložený zdrojový kód knihovny, tak i všechny závislosti\footnote{Zdrojový kód mùže používat funkce poskytované jinými softwarovými knihovnami.}, které jsou knihovnou vyžadovány.
 		\item JAR archiv obsahující pouze pøeložený zdrojový kód knihovny bez externích závislostí. Do archivu bude pøibalen konfiguraèní soubor pro systém Maven\cite{maven} s definicí závislostí.

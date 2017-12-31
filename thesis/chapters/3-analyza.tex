@@ -1,6 +1,9 @@
 \chapter{Analıza a návrh}
+V této kapitole se zamìøíme na strukturu projektu Ptáci Online, problémy souèasného zpùsobu sbírání dat, rozbor funkèních a nefunkèních poadavkù a vıbìr technologií. Na závìr budeme diskutovat dva rùzné zpùsoby øešení -- jejich vıhody a nevıhody.
 
-\section{Ptaci Online}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Ptáci Online}
 \uv{Cílem projektu je popularizovat ochranu ptákù v blízkosti lidskıch sídel, jejich hnízdìní, vèetnì jeho monitoringu, s vyuitím speciálního technického zaøízení tzv. \uv{chytré ptaèí budky}.}~\cite{mzp_ptaci_online}
 
 Tyto \uv{chytré ptaèí budky} slouí k monitorování hnízdícího ptactva. Kadá budka obsahuje jednu nebo dvì kamery s noèním pøísvitem. Ve vletovém otvoru budky je umístìn pohybovı senzor, kterı spustí natáèení kamer pøi detekci pohybu. Dále je do budky vestavìn venkovní a vnitøní teplotní senzor, mikrofon a senzor venkovního osvìtlení, kterı reguluji funkci pøísvitu kamer. Pøenos nasbíranıch dat z budky probíhá pøes ethernetovı PoE\footnote{Power over Ethernet.} kabel. Tento kabel zajišuje i napájení veškeré elektroniky uvnitø budky.~\cite{oProjektu} Jak vypadá záznam z budky je vidìt na obr. \ref{fig:ukazka_budka}.
@@ -12,10 +15,14 @@ Tyto \uv{chytré ptaèí budky} slouí k monitorování hnízdícího ptactva. Kadá bud
 	\label{fig:ukazka_budka}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Pøedstavení vstupních data}
 Ptaèí budka vyprodukuje sekvenci videa pokadé, kdy je v ní detekován pohyb. Kvùli energetické úspornosti kamer a mnoství pøenášenıch dat mají tyto videa niší snímkovou frekvenci\footnote{Poèet snímkù za sekundu.}. Z takového videozáznamu lze  extrahovat mnoinu jednotlivıch snímku, které jako celek tvoøí dané video. Snímky jsou ukládány do formátu PNG a zaøazeny do sloek, pøièem \textbf{jedna sloka reprezentuje jeden videozáznam}.
 
 Vısledná softwarová knihovna bude umìt pracovat s jednotlivımi slokami. Naète všechny snímky z dané sloky a následnì je zpracuje. Uivatel bude schopen získat informace o sloce jako celku i jednotlivıch snímcích.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Souèasnı zpùsob zpracování dat}
 Akademiètí pracovnící potøebují nashromádit velké mnoství dat, ale taková èinnost je velmi èasovì nároèná. Proto jsou na takovou práci najímáni brigádníci. Brigádníky je nutno nejprve zaškolit, aby vìdìli, co mají ve videích hledat. Poté sledují jedno video za druhım a získané informace zapisují do tabulek v Excelu. Tento zpùsob práce je drahı a èasovì nároènı.
@@ -33,14 +40,68 @@ Je snahou vytvoøit systémy, které by tyto úkoly mohly provádìt automaticky. Pøík
 	\label{fig:ne_viditelna_vejce}
 \end{figure}
 
-\section{Technologie}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Nefunkèní poadavky}
-\section{Funkèní poadavky}
+\subsection{N1}
+\textit{Knihovna musí pracovat v reálném èase. Po zadání vstupních dat je vısledek oèekáván maximálnì v jednotkách sekund.}
 
-\section{Rozpoznávání obrazu}
-\section{Detekce objektù}
+\vspace{0.5cm}
+Z vlastnosti neuronovıch sítí vyplıvá, e tento poadavek nebude problém splnit. Samotnı prùchod snímku grafem, resp. prùchod snímku neuronovou sítí není pøíliš èasovì nároènı. Nutnou podmínkou však je dostupnı soubor obsahující popis struktury neuronové sítì. Trénování, nebo-li hledání optimální struktury neuronové sítì je velmi vıpoèetnì nároèná èinnost, která musí bıt dokonèena \textbf{pøed} pouitím knihovny.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Funkèní poadavky}
+\subsection{F1}
+\textit{Systém bude distribuovanı formou Java knihovny v archivu JAR.}
+
+\vspace{0.5cm}
+Neuronové sítì mùeme naprogramovat v libovolném programovacím jazyce. Tato podmínka mùe bıt tedy bez problému splnìna. Vısledná softwarová knihovna pro detekci poètu vajec v hnízdì bude implementována v jazyce Java.
+
+\subsection{F2}
+\textit{Knihovna bude distribuována ve dvou verzích: 
+\begin{itemize}
+	\item JAR archiv obsahující jak pøeloenı zdrojovı kód knihovny, tak i všechny závislosti, které jsou knihovnou vyadovány.
+	\item JAR archiv obsahující pouze pøeloenı zdrojovı kód knihovny bez externích závislostí. Do archivu bude pøibalen konfiguraèní soubor pro systém Maven\cite{maven} s definicí závislostí.
+\end{itemize}}
+
+\vspace{0.5cm}
+Reseni
+
+\subsection{F3}
+\textit{Knihovna musí umìt pracovat se strukturou dat na serveru \url{http://athena.pef.czu.cz/ptacionline/}.}
+
+\vspace{0.5cm}
+Reseni
+
+\subsection{F4}
+\textit{Knihovna musí umìt urèit poèet vajec v hnízdì pro kady jednotlivı snímek.}
+
+\vspace{0.5cm}
+Reseni
+
+\subsection{F5}
+\textit{Knihovna musí umìt urèit poèet vajec v hnízdì pro sloku jako celek. Sloka se skládá ze sekvence obázkù, které reprezentují jednu videosekvenci.}
+
+\vspace{0.5cm}
+Reseni
+
+\subsection{F6}
+\textit{Snímky mohou bıt ve formátu JPEG a PNG.}
+
+\vspace{0.5cm}
+Reseni
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Volba technologií}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Návrh øešení}
+\subsection{Rozpoznávání obrazu}
+\subsection{Detekce objektù}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Shrnutí kapitoly}
-
-Text
