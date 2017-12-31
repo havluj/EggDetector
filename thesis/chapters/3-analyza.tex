@@ -17,7 +17,7 @@ Tyto \uv{chytré ptaèí budky} slouží k monitorování hnízdícího ptactva. Každá bud
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Pøedstavení vstupních data}
+\section{Pøedstavení vstupních data}\label{sec:vstupni_data}
 Ptaèí budka vyprodukuje sekvenci videa pokaždé, když je v ní detekován pohyb. Kvùli energetické úspornosti kamer a množství pøenášených dat mají tyto videa nižší snímkovou frekvenci\footnote{Poèet snímkù za sekundu.}. Z takového videozáznamu lze  extrahovat množinu jednotlivých snímku, které jako celek tvoøí dané video. Snímky jsou ukládány do formátu PNG a zaøazeny do složek, pøièemž \textbf{jedna složka reprezentuje jeden videozáznam}.
 
 Výsledná softwarová knihovna bude umìt pracovat s jednotlivými složkami. Naète všechny snímky z dané složky a následnì je zpracuje. Uživatel bude schopen získat informace o složce jako celku i jednotlivých snímcích.
@@ -66,31 +66,54 @@ Neuronové sítì mùžeme naprogramovat v libovolném programovacím jazyce. Tato podm
 \end{itemize}}
 
 \vspace{0.5cm}
-Reseni
+Distribuci pøeloženého zdrojového kódu vyøešíme pomocí nástroje pro správu, øízení a automatizaci buildù aplikací. Maven je pro nás nejvhodnìjší volba, vzhledem k druhé èásti podmínky -- Do archivu bude pøibalen konfiguraèní soubor pro systém Maven s definicí závislostí.
 
 \subsection{F3}
 \textit{Knihovna musí umìt pracovat se strukturou dat na serveru \url{http://athena.pef.czu.cz/ptacionline/}.}
 
 \vspace{0.5cm}
-Reseni
+Knihovna bude schopna pracovat se strukturou dat popsanou v kapitole \ref{sec:vstupni_data}. Uživateli bude schopen interagovat s knihovnou, která bude reflektovat strukturu dat projektu:\newline
+\begin{minipage}{\linewidth}
+\noindent\begin{lstlisting}[caption={Prvotní návrh uživatelského rozhraní knihovny.},label={alg:prvni_navrh}]
+// Inicializujeme EggDetector. Knihovna se pøipraví pro 
+// zpracovávání sekvencí.
+EggDetector eggDetector = new EggDetector();
+
+// EggDetectoru pøedáme absolutní cestu k složce, kterou
+// chceme vyhodnotit. EggDetector nám vrátí tøídu 
+// SequenceClassifier, která obsahuje veškeré informace 
+// k dané složce.
+SequenceClassifier sequenceClassifier = eggDetector.evaluate(new File("image_dir"));
+
+// Zjistíme finální poèet vajec v hnízdì pro danou složku.
+System.out.println("final count: " + sequenceClassifier.getFinalCount());
+
+// Mùžeme zjistit poèet vajec v jednotlivých snímcích.
+System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
+
+// Ukonèíme EggDetector - uvolníme informace o neuronové
+// sítì z pamìti. Instance EggDetectoru se stane nepoužitelná.
+eggDetector.closeSession();
+\end{lstlisting}
+\end{minipage}
 
 \subsection{F4}
 \textit{Knihovna musí umìt urèit poèet vajec v hnízdì pro každy jednotlivý snímek.}
 
 \vspace{0.5cm}
-Reseni
+Výsledná knihovna bude uživateli umìt poskytnout informace o jednotlivých snímcích -- viz algoritmus \ref{alg:prvni_navrh}.
 
 \subsection{F5}
 \textit{Knihovna musí umìt urèit poèet vajec v hnízdì pro složku jako celek. Složka se skládá ze sekvence obázkù, které reprezentují jednu videosekvenci.}
 
 \vspace{0.5cm}
-Reseni
+Výsledná knihovna bude uživateli umìt poskytnout informace o složce jako celku -- viz algoritmus \ref{alg:prvni_navrh}.
 
 \subsection{F6}
 \textit{Snímky mohou být ve formátu JPEG a PNG.}
 
 \vspace{0.5cm}
-Reseni
+Pro zpracování snímkù použijeme standartnì dostupné tøídy pro práci s grafikou v programovacím jazyce Java. Napøíklad \texttt{BufferedImage} a \texttt{Graphics2D}. Tato abstrakce nám umožní zpracovat oba dva formáty -- JPEG i PNG.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
