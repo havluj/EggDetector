@@ -22,6 +22,9 @@
 \renewcommand{\bf}{\textbf}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{enumitem}
+
+\usepackage[left=3.8cm,right=3.8cm]{geometry}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -86,6 +89,28 @@ The result of this thesis is a software library that is able to automatically de
 	% \newacronym{CVUT}{{\v C}VUT}{{\v C}esk{\' e} vysok{\' e} u{\v c}en{\' i} technick{\' e} v Praze}
 	% \newacronym{FIT}{FIT}{Fakulta informa{\v c}n{\' i}ch technologi{\' i}}
 	
+	% code listing template
+	%\begin{lstlisting}[caption={test}]
+	%EggDetector eggDetector = new EggDetector();
+	%SequenceClassifier sequenceClassifier = eggDetector.evaluate(new File("image_dir"));
+	%System.out.println("final count: " + sequenceClassifier.getFinalCount());
+	%System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
+	%eggDetector.closeSession();
+	%end{lstlisting}
+	
+	% table template
+	%\begin{table}\centering
+	%	\caption[Pøíklad tabulky]{Zadávání matematiky}\label{tab:matematika}
+	%	\begin{tabular}{|l|l|c|c|}\hline
+	%		Typ		& Prostøedí		& \LaTeX{}ovská zkratka	& \TeX{}ovská zkratka	\tabularnewline \hline \hline
+	%		Text		& \verb|math|		& \verb|\(...\)|	& \verb|$...$|		\tabularnewline \hline
+	%		Displayed	& \verb|displaymath|	& \verb|\[...\]|	& \verb|$$...$$|	\tabularnewline \hline
+	%	\end{tabular}
+	%\end{table}
+	
+	%\footnote{\url{http://doclet.github.io/}}
+	
+	
 	\begin{introduction}
 		Projekt Ptáci Online byl spuštìn Fakultou životního prostøedí Èeské zemìdìlské univerzity v Praze roku 2014~\cite{oProjektu}. Hlavním cílem projektu je poskytnout vìdecká data, ve formì videa z ptaèích budek, široké veøejnosti~\cite{oProjektu}. Projekt se tìší pomìrnì velké popularitì~\cite{ptaciVMediich} a aktuálnì spolupracuje s více než dvìma desítkami spolupracovníkù. Mezi nì patøí lidé z akademické sféry, soukromého sektoru, ale i z Ministerstva životního prostøedí Èeské republiky~\cite{oProjektu}. Vzhledem k množství poøízených záznamù, by bylo žádoucí informace extrahovat automaticky pomocí algoritmù umìlé inteligence. Pøedmìtem této práce je vytvoøit algoritmus, který je schopný urèit poèet vajec v hnízdì v daném videozáznamu. 
 		
@@ -97,13 +122,6 @@ The result of this thesis is a software library that is able to automatically de
 	\end{introduction}
 	
 	\include{chapters/1-cil}
-	\begin{lstlisting}[caption={test}]
-	EggDetector eggDetector = new EggDetector();
-	SequenceClassifier sequenceClassifier = eggDetector.evaluate(new File("image_dir"));
-	System.out.println("final count: " + sequenceClassifier.getFinalCount());
-	System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
-	eggDetector.closeSession();
-	\end{lstlisting}
 	\include{chapters/2-reserse}
 	\include{chapters/3-analyza}
 	\include{chapters/4-impl_detekce}
