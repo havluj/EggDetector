@@ -36,11 +36,66 @@ Zdrojový kód a dokumentace nástroje \textbf{FolderTrimmer} je k nalezení v pøílo
 FolderTrimmer funguje ve dvou režimech. První, základní režim, smaže všechny soubory jiného typu než PNG, TXT a XML. V pøípadì, že složka neobsahuje další složku nebo alespoò jeden soubor typu PNG, TXT nebo XML, bude také smazána. Druhý režim funguje stejnì jako první, ale smaže všechny složky, které neobsahují soubor \textbf{imgdata.xml}. To umožní vymazání všech dat, které nejsou relevantní pro trénování neuronové sítì. První øežim spustíme pøíkazem \texttt{run.sh false "cesta\textunderscore ke\textunderscore slozce"}. Druhý režim spustíme pøíkazem \texttt{run.sh true "cesta\textunderscore ke\textunderscore slozce"}.
 
 \section{Pøíprava trénovacích a testovacích dat}\label{sec:priprava_dat}
-Když máme všechna potøebná data stažená, je potøeba je pøipravit tak, abychom je mohli použít k trénování neuronové sítì. Pøíprava dat se liší podle typu implementace, který zvolíme.
-\subsection{Tagger}
-ukazka
-\subsection{LabelImg}
-ukazka
+Když máme všechna potøebná data stažená, je potøeba je pøipravit tak, abychom je mohli použít k trénování neuronové sítì. Pøíprava dat se liší podle typu implementace, který zvolíme. V pøípadì trénování neuronové sítì k detekci objektù, chceme k jednotlivým snímkùm pøidat informaci \textbf{kde}, \textbf{jaké velikosti} a \textbf{kolik} vajec se v nich nachází. V pøípadì trénování neuronové sítì pro rozpoznávání (klasifikaci) obrazu, je potøeba ke snímkùm pøidat informaci o \textbf{celkovém poètu vajec}.
 
-\section{Zpracování trénovacích a testovacích dat}\label{sec:trenovani}
-todo ve vysledku pujde do impelemtaci
+\subsection{Tagger}
+Nástroj \texttt{Tagger} slouží k manuálnímu oznaèování snímkù. Pracuji na úrovni složek, kde jednotlivé složky a snímky reprezentují jednu videosekvenci. Uživatel pak mùže program spustit a pomìrnì rychle oznaèit, kolik vajec se na daných snímcích nachází. Tagger je webovou aplikací s jednoduchým uživatelským rozhraním. Uživatel je prezentován všemi snímky dané složky a má možnost u každého snímku specifikovat poèet vajec. Uživateli je složka vybrána automaticky. Po odeslání dat je uživatel vyzván k oznaèení další složky. Tento proces se opakuje do té doby, než jsou oznaèené všechny složky. Ukázka uživatelského rozhraní je vidìt na obrázku \ref{fig:tagger}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{media/tagger.png}
+	\caption{Tagger -- hromadné urèování poètu vajec.}
+	\label{fig:tagger}
+\end{figure}
+
+Výstupem programu jsou soubory \texttt{imgdata.xml}, které obsahují informace o poètu vajec na jednotlivých snímcích. Tyto data jsou pak používána pro trénování neuronové sítì k rozpoznávání obrazu, kde poèet vajec reprezentuje možné výstupy neuronové sítì. Takto oznaèené snímky se dají použít i pro validaci jakéholiv øešení -- finální softwarové knihovnì pøedáme složku se snímky, knihovna vyhodnotí výsledky a my je poté mùžeme porovnat s výsledky, které jsme manuálnì nasbírali. Pøíklad výstupu je pøiložen v pøíloze \ref{list:imgdata}.
+
+Program je napsán v programovacím jazyce Java. Detailní popis nástroje se nachází v pøíloze \ref{chap:tagger}. Jedná se o webovou aplikaci, která je postavená na technologii Spring~Boot~\cite{springboot}. Výpis \ref{alg:scan_folder} ukazuje algoritmus pro selekci vhodných složek.
+
+\begin{lstlisting}[caption={Výbìr vhodných složek pro trénování nástrojem Tagger.},label={alg:scan_folder}]
+public static ArrayList<String> scanFolder(String location) {
+	File locFile = new File(location);
+	
+	if (!locFile.exists()) {
+		return new ArrayList<>();
+	}
+	
+	// example folder name: 20160430_073822_526_D
+	final Pattern pattern = Pattern.compile("\\d{8}_\\d{6}_\\d{3}_D");
+	List arr = Arrays.asList(locFile.list((File file, String name) -> {
+		File workingDir = new File(file.getAbsolutePath() + File.separator + name);
+		// needs to be a dir in a correct format
+		if (!workingDir.isDirectory() && !pattern.matcher(name).matches()) {
+			return false;
+		}
+		
+		// if already tagged (contains imgdata.xml file)
+		File imgDataFile = new File(workingDir, "imgdata.xml");
+		if (imgDataFile.exists()) {
+			return false;
+		}
+		
+		// contains any pictures
+		if (workingDir.list((f, n) -> {
+			File workingFile = new File(f.getAbsolutePath() + File.separator + n);
+			return workingFile.isFile() && FilenameUtils.getExtension(n).equals("png");
+		}).length <= 0) {
+			return false;
+		}
+		
+		return true;
+	}));
+	
+	return new ArrayList<>(arr);
+}
+\end{lstlisting}
+
+\subsection{LabelImg~\cite{labelimg}}
+Trénovací data pro detekci objektù vyžadují jiný formát než data pro rozpoznávání obrazu. Je potøeba na jednotlivých snímcích oznaèit pozici jednotlivých vajec. Pøesnì za tímto úèelem byl vytvoøen nástroj LabelImg~\cite{labelimg}. Uživatel si pøi spuštìní programu zvolí složku, ve které má data pøipravená na oznaèení. Uživatel má možnost zadat typy objektù, které chce na snímcích oznaèovat. V našem pøípadì se jedná pouze o jeden typ objektu -- vejce\footnote{Ve skuteènosti se náš objekt (label) jmenuje \texttt{egg}.}. Poté je uživatel prezentován se snímkem, kde má možnost objekty manuálnì ohranièit (viz obrázek \ref{fig:labelimg}).
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{media/labelimg.png}
+	\caption{Uživatelské rozhraní nástroje LabelImg.}
+	\label{fig:labelimg}
+\end{figure}
