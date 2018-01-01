@@ -165,13 +165,13 @@ TensorFlow má skvìlou dokumentaci~\cite{tens_doc} s velkým množstvím kompletních
 K vytrénování naší neuronové sítì je potøeba velké množství trénovacích dat. Trénovacími daty jsou myšleny snímky, ke kterým dodáme informace, jako napøíklad poèet a umístìní jednotlivých vajíèek. Abychom si získávání a oznaèování dat usnadnili, je potøeba nìkolik nástrojù, které jsou detailnì popsány v kapitole \ref{chap:nastroje}.
 \begin{itemize}
 	\item Pro hromadné stažení dat použijeme nástroje \texttt{bash} a \texttt{wget}. Hromadnì stažená data budou obsahovat i obsah, který pro nás není užiteèný. Proto použijeme nástroj, který všechna neužiteèná data smaže. Více v kapitole \ref{sec:hromadne_stazeni_dat}.
-	\item Trénovací a testovací data vytvoøíme pomocí nástrojù \texttt{LabelImg} a \texttt{Tagger}. Detailní informace obsahuje kapitola \label{sec:priprava_dat}.
+	\item Trénovací a testovací data vytvoøíme pomocí nástrojù \texttt{LabelImg} a \texttt{Tagger}. Detailní informace obsahuje kapitola \ref{sec:priprava_dat}.
 \end{itemize}
-Abychom byli schopni novì vytvoøená trénovací data použít k trénování neuronové sítì, musíme je pøevést do standardního formátu. V našem pøípadì musíme z binárních dat snímkù a textových XML souborù vytvoøit tzn. \texttt{TFRecord}~\cite{tfrecord}. Každy zpùsob implementace vyžaduje mírnì odlišný formát trénovacích dat. V kapitolách \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}, které se popisují konkrétní implementace, diskutujeme i o pøípravì trénovacích dat.
+Abychom byli schopni novì vytvoøená trénovací data použít k trénování neuronové sítì, musíme je pøevést do standardního formátu. V našem pøípadì musíme z binárních dat snímkù a textových XML souborù vytvoøit tzv. \texttt{TFRecord}~\cite{tfrecord}. Každy zpùsob implementace vyžaduje mírnì odlišný formát trénovacích dat. V kapitolách \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}, které se popisují konkrétní implementace, diskutujeme i pøípravu trénovacích dat.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Shrnutí kapitoly}
 V této kapitole jsme prozkoumali strukturu projektu Ptáci Online, problémy souèasného zpùsobu sbírání dat. Adresovali jsme všechny funkèní i nefunkèní požadavky s ohledem na strukturu projektu a dat. Navrhli jsme 2 možná konkurenèní øešení, u kterých není pøedem jasné, jaké z nich je efektivnìjší. Nezbývá nám tedy nic jiného, než implementovat obì dvì øešení a jejich výsledky porovnat. Zamìøili jsme se také na výbìr vhodných principù a nástrojù potøebných k úspìšné implementaci. Vybrali jsme platformu knihovny, knihovnu pro práci s neuronovými sítìmi a velkou škálu nástrojù pro pøípravu dat.
 
-V dalších kapitolách se zamìøíme na samotné použití nástrojù a jejich tvorbu. Ale pøedevším budeme diskutovat oba dva zpùsoby implementace, které nakonec porovnáme.
+V dalších kapitolách se zamìøíme na samotné použití nástrojù a jejich tvorbu. Ale pøedevším budeme diskutovat oba dva zpùsoby implementace, které nakonec porovnáme. 
