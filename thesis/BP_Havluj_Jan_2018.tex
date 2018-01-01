@@ -30,6 +30,8 @@
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{maroon}{rgb}{0.5,0,0}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
 \lstset{frame=tb,
 	language=Java,
 	aboveskip=3mm,
@@ -45,6 +47,18 @@
 	breaklines=true,
 	breakatwhitespace=true,
 	tabsize=3
+}
+\lstdefinelanguage{XML}
+{
+	basicstyle=\ttfamily\tiny,
+	morestring=[s]{"}{"},
+	morecomment=[s]{?}{?},
+	morecomment=[s]{!--}{--},
+	commentstyle=\color{darkgreen},
+	moredelim=[s][\color{black}]{>}{<},
+	moredelim=[s][\color{red}]{\ }{=},
+	stringstyle=\color{blue},
+	identifierstyle=\color{maroon}
 }
 
 % % list of acronyms

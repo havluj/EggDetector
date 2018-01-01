@@ -1,118 +1,20 @@
 \chapter{Tagger}\label{chap:tagger}
 Tato pøíloha obsahuje zdrojový kód a zpùsob použití nástroje \texttt{Tagger}. Kompletní dokumentace a zdrojový kód je dostupný na pøiloženém CD (viz pøíloha \ref{chap:cd}).
 
-\lstinputlisting[language=xml,label={list:imgdata}]{media/imgdata.xml}
-
 \section{Dokumentace (v AJ)}
-Folder trimmer is a command line tool for deleting useless data the download script downloads.
-
-\subsection{What does it do}
-\begin{itemize}
-	\item Deletes files that do not end on either \texttt{.png}, \texttt{.xml}, or \texttt{.txt}.
-	\item If a folder does not contain another folder or at least one of the files listed above, the folder is deleted.
-\end{itemize}
+Data tagger is a simple web application used for data tagging used to train a neural network. The data strictly needs to follow the structure of \url{http://athena.pef.czu.cz/ptacionline/134572snaps/}
 
 \subsection{Usage manual}
 \begin{itemize}
-	\item Compile (if needed) the app with \texttt{mvn clean package}.
-	\item Run with \texttt{target/run.sh} on Linux or \texttt{target\textbackslash run.bat} on Windows. Both scripts accept two parameters:
-	
-	\begin{itemize}
-		\item First parameter can be \texttt{true} or \texttt{false} and it determines whether you want to delete everything except manually tagged data (containing imgdata.xml) in case of \texttt{true} or if you just want to delete the useless data in case of \texttt{false}.
-		\item Second parameter specifies the root folder of the data that should be trimmed. 
-		\item For example to delete only useless data but keep all the folders with	some image data, use: \texttt{target\textbackslash run.bat false C:\textbackslash school\textbackslash bakalarka\textbackslash data}.
-		\item To delete everything except tagged data, run: \texttt{target\textbackslash run.bat true C:\textbackslash school\textbackslash bakalarka\textbackslash data}.
-	\end{itemize}
+	\item Compile (if needed) the app with \texttt{mvn clean package}
+	\item Run with \texttt{target/run.sh} on Linux or \texttt{target\textbackslash run.bat} on Windows. Both scripts accept data location as the first and only parameter.
+	\item For example: \texttt{target/run.sh /home/test/egg/data/nest1}
 \end{itemize}
 
 \section{Zdrojový kód}
-\begin{lstlisting}[caption={Zdrojový kód nástroje FolderTrimmer}]
-package org.cvut.havluja1.foldertrimmer;
+Zdrojový kód je dostupný na pøiloženém CD (viz pøíloha \ref{chap:cd}).
 
-import java.io.File;
-import java.io.IOException;
+\section{Ukázkový výstup}
+Po urèení poètu vajec v každém snímku je do pøíslušné složky vygenerován soubor \texttt{imgdata.xml}, který je použit pro trénování a pozdìji testování neuronové sítì. Níže je pøiložen ukázkový výpis souboru.
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-
-public class FolderTrimmer {
-	public static void main(String[] args) throws IOException {
-		File rootDir = new File(args[0]);
-		
-		if (!rootDir.exists() || !rootDir.isDirectory()) {
-			throw new IllegalArgumentException("root dir does not exist");
-		}
-		
-		System.out.println("finding useless data...");
-		findAndDeleteEmptyDirs(rootDir);
-		System.out.println("done");
-	}
-	
-	private static void findAndDeleteEmptyDirs(File dir) {
-		final boolean[] shouldBeDeleted = {true};
-		final boolean leaveOnlyTaggedData = System.getProperty("leaveonlytagged").equalsIgnoreCase("true");
-		
-		File[] toBeProcessed = dir.listFiles((file, s) -> {
-			File workingFile = new File(file, s);
-			
-			// if dir -> return true and tag this folder not to be deleted
-			if (workingFile.isDirectory()) {
-				shouldBeDeleted[0] = false;
-				return true;
-			}
-	
-	
-			if (workingFile.isFile()) {
-				if (leaveOnlyTaggedData) { // if we want to keep only tagged data
-					if (s.equals("imgdata.xml")) {
-						shouldBeDeleted[0] = false;
-						return false;
-					} else {
-						if (FilenameUtils.getExtension(s).equals("png")) {
-							return false;
-						}
-						return true;
-					}
-				} else { // If file and is not xml, txt or png return true. If it is, tag this folder not to be deleted.
-					if (FilenameUtils.getExtension(s).equals("xml")
-						|| FilenameUtils.getExtension(s).equals("png")
-						|| FilenameUtils.getExtension(s).equals("txt")) {
-						shouldBeDeleted[0] = false;
-						return false;
-					} else {
-						return true;
-					}
-				}
-			}
-	
-			return true;
-		});
-	
-		if (shouldBeDeleted[0]) {
-			try {
-				FileUtils.deleteDirectory(dir);
-				System.out.println("[D] deleting dir: " + dir.getAbsolutePath());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			if (toBeProcessed.length > 0) {
-				for (File currFile : toBeProcessed) {
-					// if file -> delete
-					if (currFile.isFile()) {
-						if (currFile.delete()) {
-							System.out.println("[F] deleting file: " + currFile.getAbsolutePath());
-						}
-						continue;
-					}
-					
-					// if dir -> recursive call
-					if (currFile.isDirectory()) {
-						findAndDeleteEmptyDirs(currFile);
-					}
-				}
-			}
-		}
-	}
-}
-\end{lstlisting}
+\lstinputlisting[language=XML,label={list:imgdata}]{media/imgdata.xml}
