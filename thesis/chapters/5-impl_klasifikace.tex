@@ -41,7 +41,7 @@ Souèasná struktura našich dat je následující:
 	}
 \end{figure}
 
-Struktura, kterou potøebujeme:
+Nová struktura dat, které potøebujeme docílit:
 \begin{figure}[H]
 	\dirtree{%
 		.1 0\DTcomment{Kategorie \textbf{0}}.
@@ -50,32 +50,46 @@ Struktura, kterou potøebujeme:
 		.2 ....
 		.1 1\DTcomment{Kategorie \textbf{1}}.
 		.2 snímek1.png.
-		.1 2\DTcomment{Kategorie \textbf{2}}.
-		.2 snímek1.png.
-		.1 3\DTcomment{Kategorie \textbf{3}}.
-		.2 snímek1.png.
-		.1 4\DTcomment{Kategorie \textbf{4}}.
-		.2 snímek1.png.
-		.1 5\DTcomment{Kategorie \textbf{5}}.
-		.2 snímek1.png.
-		.1 6\DTcomment{Kategorie \textbf{6}}.
-		.2 snímek1.png.
-		.1 7\DTcomment{Kategorie \textbf{7}}.
-		.2 snímek1.png.
-		.1 8\DTcomment{Kategorie \textbf{8}}.
-		.2 snímek1.png.
-		.1 9\DTcomment{Kategorie \textbf{9}}.
-		.2 snímek1.png.
-		.1 10\DTcomment{Kategorie \textbf{10}}.
-		.2 snímek1.png.
+		.2 ....
+		.1 2.
+		.2 ....
+		.1 3.
+		.2 ....
+		.1 ....
+		.1 9.
+		.2 ....
+		.1 10.
+		.2 ....
 	}
 \end{figure}
-Každá kategorie má vlastní složku. Do každé kategorie patøí snímky s poètem vajec, který odpovídá dané kategorii.
-
-
+Každá kategorie má vlastní složku. Do každé kategorie patøí snímky s poètem vajec, který odpovídá dané kategorii. Jakmile máme naše trénovací data uspoøádaná do požadované struktury, je vše pøiprano pro trénování neuronové sítì.
 
 \section{Trénování neuronové sítì}
-trenovani (ne od nuly, ale uz z nejakeho modelu)
+Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extrémnì} výpoèetnì nároèné je vytrénovat. Uèení \uv{pøenosem modelu}\footnote{Transfer learning.} je technika, která ušetøí spoustu práce využitím již pøed-trénovaného modelu a pøetrénováním pouze finálních vrstev~\cite{decaf}. Více informací k efektivitì tohoto øešení viz kapitola \ref{chap:reserse}.
+
+Pøedpokladem pro trénování neuronové sítì je nainstalovaná knihovna TensorFlow a všechny její závislosti~\cite{tensor_install}. Model, ze kterého budeme vycházet je \textbf{Inception-v4}\footnote{Dostupný ke stažení na: \url{http://download.tensorflow.org/models/inception_v4_2016_09_09.tar.gz}}~\cite{inceptionv4}, který byl vytrénován spoleèností Google na pøibližnì 1,2 mil. snímkù\cite{v4trainingsize}. V soutìži ImageNet~\cite{imagenet} drží model Inception-v4 nejlepšího skóre: Top-1 Accuracy\footnote{Odpovìd modelu (ta s nejvyšší pravdìpodobností) pøesnì odpovídala oèekávanému výsledku.} 80.2\% a Top-5 Accuracy\footnote{Kterákoliv z 5 nejpravdìpodobnìjších odpovìdí modelu odpovídala oèekávanému výsledku.} 95.2\%~\cite{imagenetresults}.
+
+Googlem poskytovaný skript pro pøetrénování finálních vrstev nepodporuje model Inception-v4. Staèí však jednoduchá modifikace skriptu, aby nejnovìjší model podporoval. Upravený skript se nachází v pøíloze \ref{chap:retrain.py}.
+\begin{lstlisting}[language=bash]
+python3 train_image_classifier.py \
+	--train_dir=egg_recognition/models \
+	--dataset_dir=egg_recognition/training_data \
+	--dataset_name=eggs \
+	--dataset_split_name=train \
+	--model_name=inception_v4 \
+	--checkpoint_path=egg_recognition/inception_checkpoint/inception_v4.ckpt \
+	--checkpoint_exclude_scopes=InceptionV3/Logits,InceptionV3/AuxLogits \
+	--trainable_scopes=InceptionV3/Logits,InceptionV3/AuxLogits
+python3 tensorflow/examples/image_retraining/retrain.py \
+	--bottleneck_dir=egg_recognition/bottlenecks \
+	--how_many_training_steps=8000 \
+	--model_dir=egg_recognition/models/ \
+	--summaries_dir=egg_recognition/training_summaries/"${ARCHITECTURE}" \
+	--output_graph=egg_recognition/retrained_graph.pb \
+	--output_labels=egg_recognition/retrained_labels.txt \
+	--architecture="${ARCHITECTURE}" \
+	--image_dir=egg_recognition/training_data
+\end{lstlisting}
 
 \section{Ovìøení funkènosti}
 info o spatnych vysledcich
