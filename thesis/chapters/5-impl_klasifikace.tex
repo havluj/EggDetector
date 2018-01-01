@@ -1,4 +1,87 @@
 \chapter{Implementace rozpoznávání obrazu}\label{chap:impl_rozpoz}
+V této kapitole se zamìøíme na implementaci neuronové sítì, která bude mít za cíl rozpoznat, do které kategorie snímek patøí. Øešíme tedy problém klasifikace obrazu. Kategorií, do kterých budeme chtít snímky rozøadit, bude \textbf{11}:
+\begin{description}[labelindent=1cm]
+	\item[Kategorie \uv{0}:] Pro snímky, kde je poèet vajec roven \textbf{0}.
+	\item[Kategorie \uv{1}:] Pro snímky, kde je poèet vajec roven \textbf{1}.
+	\item[Kategorie \uv{2}:] Pro snímky, kde je poèet vajec roven \textbf{2}.
+	\item[Kategorie \uv{3}:] Pro snímky, kde je poèet vajec roven \textbf{3}.
+	\item[Kategorie \uv{4}:] Pro snímky, kde je poèet vajec roven \textbf{4}.
+	\item[Kategorie \uv{5}:] Pro snímky, kde je poèet vajec roven \textbf{5}.
+	\item[Kategorie \uv{6}:] Pro snímky, kde je poèet vajec roven \textbf{6}.
+	\item[Kategorie \uv{7}:] Pro snímky, kde je poèet vajec roven \textbf{7}.
+	\item[Kategorie \uv{8}:] Pro snímky, kde je poèet vajec roven \textbf{8}.
+	\item[Kategorie \uv{9}:] Pro snímky, kde je poèet vajec roven \textbf{9}.
+	\item[Kategorie \uv{10}:] Pro snímky, kde je poèet vajec roven \textbf{10}.
+\end{description}
+	
+Celé øešení -- pøíprava dat, trénování neuronové sítì, testování funkènosti a mìøení pøesnosti -- budeme implementovat v programovacím jazyce Python 3.
+
 \section{Pøíprava dat}
+Abychom nemuseli psát vlastní skripty pro trénování neuronové sítì, ale mohli použít skripty standartnì dostupné~\cite{recog_retrain.py}, musíme upravit strukturu našich dat.
+
+Souèasná struktura našich dat je následující:
+\begin{figure}[H]
+	\dirtree{%
+		.1 hnízdo1.
+		.2 záznam1.
+		.3 imgdata.xml\DTcomment{informace o poètu vajec v jednotlivých snímcích}.
+		.3 snímek1.png.
+		.3 snímek2.png.
+		.3 ....
+		.2 záznam2.
+		.3 imgdata.xml\DTcomment{informace o poètu vajec v jednotlivých snímcích.}.
+		.3 snímek1.png.
+		.3 ....
+		.2 ....
+		.1 hnízdo2.
+		.2 záznam1.
+		.3 ....
+		.2 ....
+		.1 ....
+	}
+\end{figure}
+
+Struktura, kterou potøebujeme:
+\begin{figure}[H]
+	\dirtree{%
+		.1 0\DTcomment{Kategorie \textbf{0}}.
+		.2 snímek1.png.
+		.2 snímek2.png.
+		.2 ....
+		.1 1\DTcomment{Kategorie \textbf{1}}.
+		.2 snímek1.png.
+		.1 2\DTcomment{Kategorie \textbf{2}}.
+		.2 snímek1.png.
+		.1 3\DTcomment{Kategorie \textbf{3}}.
+		.2 snímek1.png.
+		.1 4\DTcomment{Kategorie \textbf{4}}.
+		.2 snímek1.png.
+		.1 5\DTcomment{Kategorie \textbf{5}}.
+		.2 snímek1.png.
+		.1 6\DTcomment{Kategorie \textbf{6}}.
+		.2 snímek1.png.
+		.1 7\DTcomment{Kategorie \textbf{7}}.
+		.2 snímek1.png.
+		.1 8\DTcomment{Kategorie \textbf{8}}.
+		.2 snímek1.png.
+		.1 9\DTcomment{Kategorie \textbf{9}}.
+		.2 snímek1.png.
+		.1 10\DTcomment{Kategorie \textbf{10}}.
+		.2 snímek1.png.
+	}
+\end{figure}
+Každá kategorie má vlastní složku. Do každé kategorie patøí snímky s poètem vajec, který odpovídá dané kategorii.
+
+
+
 \section{Trénování neuronové sítì}
+trenovani (ne od nuly, ale uz z nejakeho modelu)
+
 \section{Ovìøení funkènosti}
+info o spatnych vysledcich
+
+\section{Identifikované problémy}
+tøídy jsou moc podobné (obrázek neni zas az tak jiny, jestli tam je jedno nebo dve vajicka)
+vetsina casti obrazku neni pro urceni nasi tridy relevantni
+
+kdybychom chteli lepsi vysledky, museli bychom nejak predem oriznout obraz, aby vajicka tvorili vetsinu obrazku
