@@ -182,18 +182,52 @@ tensorboard --logdir=gs://eggdata --port=8080
 \end{lstlisting}
 
 \section{Ovìøení funkènosti a výsledky}
-%export inference graph
-%```
-%python3 export_inference_graph.py \
-%--input_type image_tensor \
-%--pipeline_config_path training/ssd_mobilenet_v1_coco.config \
-%--trained_checkpoint_prefix training/model.ckpt-7918 \
-%--output_directory frozen_graph
-%```
+Jakmile se rozhodneme ukonèit proces trénování, máme k dispozici nìkolik souborù, které jsou pouhými záchytnými body\footnote{Checkpoints.} pro další iterace. Tyto soubory se hodí, kdybychom chteli trénování obnovit tam, kde bylo naposledy ukonèeno. Nicménì pro práci s modelem a detekci vajec je potøeba tyto soubory pøevést na jeden statický. Tomuto procesu se øiká \uv{zmražení grafu}. Graf exportujeme následovnì:
+\begin{lstlisting}[language=bash]
+python3 export_inference_graph.py \
+	--input_type image_tensor \
+	--pipeline_config_path training/ssd_mobilenet_v1_coco.config \
+	--trained_checkpoint_prefix training/model.ckpt-VERSION \
+	--output_directory frozen_graph
+\end{lstlisting}
+Ve složce \texttt{frozen\_graph} pøibyl soubor typu PB\footnote{Protocol Buffer.}. Tento soubor je výsledným modelem, který mùžeme použít k validaci øešení.
 
-ipnb notebook
+K validace použijeme Python skript napsaný jako Jupyter Notebook~\cite{jupyter}.
+\begin{lstlisting}[language=bash]
+jupyter notebook
+\end{lstlisting}
+Na pøehledové stránce otevøeme soubor \texttt{test.ipynb} a zvolíme \texttt{Cell \textrightarrow\space Run All}. Po chvíli jsou prezentovány výsledky. Ukázka výstupu skriptu, ve kterém používáme nejúspìšnìjší model vytvoøený metodou \uv{transfer learning} z modelu \texttt{ssd\_mobilenet\_v1\_coco} je vidìt na obrázcích \ref{fig:obresnotebook1}, \ref{fig:obresnotebook2} a \ref{fig:obresnotebook3}. Ménì úspìšný model je zobrazen na obrázku \ref{fig:notsogoodtraining}.
 
-ukazka vysledku trenovani podle jednoho modelu a trenovani podle druheho modelu
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{media/obresnotebook1.png}
+	\caption{Model je schopný detekovat všech 9 vajec i pøes to, že nìkterá vejce jsou sotva viditelná.}
+	\label{fig:obresnotebook1}
+\end{figure}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{media/obresnotebook2.png}
+	\caption{Model je schopný detekovat i vejce v jiném prostøedí.}
+	\label{fig:obresnotebook2}
+\end{figure}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{media/obresnotebook3.png}
+	\caption{Model detekuje vejce i ve složitých podmínkách.}
+	\label{fig:obresnotebook3}
+\end{figure}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{media/notsogoodtraining.png}
+	\caption{Ménì úspìšný model nedokáže odhalit špatnì viditelné vejce.}
+	\label{fig:notsogoodtraining}
+\end{figure}
 
 \section{Závìr}
+Dokázali jsme, že øešení popsané v této kapitole funguje. Z výsledkù vyplývá, že správná konfigurace a výchozí model dokáží znaènì ovlivnit výsledné chování modelu i pøes to, že ho vždy trénujeme stejnými daty.
 
+Výsledky doruèené modelem, který byl vytrénován metodou \u{trasfer learning} z modelu \texttt{ssd\_mobilenet\_v1\_coco} a používá konfiguraci \texttt{training/pipeline.config}, jsou ze všech nejlepší. Proto jsem se rozhodl použít právì tento model jako výsledek této kapitoly a na závìr ho porovnat implementací klasifikace obrazu (viz kapitola \ref{chap:impl_rozpoz}).
+
+I pøes uspokojující výsledky øešení je zde prostor pro vylepšení. Více trénovacích a testovacích dat by zajistilo ještì lepší výsledky (vzorek použitý v této kapitole obsahuje \textbf{1890 detekcí}). Pøedzpracování obrazu tak, aby nikdy nebyl pøíliš svìtlý nebo tmavý by zajisté výsledky zlepšilo také. Možná existuje i lepší kombinace konfigurace a výchozího modelu.
+
+Na závìr by bylo vhodné shrnout, že efektivita rozpoznávání vajec touto metodou je \textbf{velmi dobrá}. 
