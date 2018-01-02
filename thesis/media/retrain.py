@@ -1,18 +1,3 @@
-# Copyright 2015 The TensorFlow Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ==============================================================================
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -38,29 +23,10 @@ from tensorflow.python.util import compat
 
 FLAGS = None
 
-# These are all parameters that are tied to the particular model architecture
-# we're using for Inception v3. These include things like tensor names and their
-# sizes. If you want to adapt this script to work with another model, you will
-# need to update these to reflect the values in the network you're using.
 MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1  # ~134M
 
 
 def create_image_lists(image_dir, testing_percentage, validation_percentage):
-  """Builds a list of training images from the file system.
-
-  Analyzes the sub folders in the image directory, splits them into stable
-  training, testing, and validation sets, and returns a data structure
-  describing the lists of images for each label and their paths.
-
-  Args:
-    image_dir: String path to a folder containing subfolders of images.
-    testing_percentage: Integer percentage of the images to reserve for tests.
-    validation_percentage: Integer percentage of images reserved for validation.
-
-  Returns:
-    A dictionary containing an entry for each label subfolder, with images split
-    into training, testing, and validation sets within each label.
-  """
   if not gfile.Exists(image_dir):
     tf.logging.error("Image directory '" + image_dir + "' not found.")
     return None
@@ -97,19 +63,7 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
     validation_images = []
     for file_name in file_list:
       base_name = os.path.basename(file_name)
-      # We want to ignore anything after '_nohash_' in the file name when
-      # deciding which set to put an image in, the data set creator has a way of
-      # grouping photos that are close variations of each other. For example
-      # this is used in the plant disease data set to group multiple pictures of
-      # the same leaf.
       hash_name = re.sub(r'_nohash_.*$', '', file_name)
-      # This looks a bit magical, but we need to decide whether this file should
-      # go into the training, testing, or validation sets, and we want to keep
-      # existing files in the same set even if more files are subsequently
-      # added.
-      # To do that, we need a stable way of deciding based on just the file name
-      # itself, so we do a hash of that and then use that to generate a
-      # probability value that we use to assign it.
       hash_name_hashed = hashlib.sha1(compat.as_bytes(hash_name)).hexdigest()
       percentage_hash = ((int(hash_name_hashed, 16) %
                           (MAX_NUM_IMAGES_PER_CLASS + 1)) *
@@ -130,22 +84,6 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
 
 
 def get_image_path(image_lists, label_name, index, image_dir, category):
-  """"Returns a path to an image for a label at the given index.
-
-  Args:
-    image_lists: Dictionary of training images for each label.
-    label_name: Label string we want to get an image for.
-    index: Int offset of the image we want. This will be moduloed by the
-    available number of images for the label, so it can be arbitrarily large.
-    image_dir: Root folder string of the subfolders containing the training
-    images.
-    category: Name string of set to pull images from - training, testing, or
-    validation.
-
-  Returns:
-    File system path string to an image that meets the requested parameters.
-
-  """
   if label_name not in image_lists:
     tf.logging.fatal('Label does not exist %s.', label_name)
   label_lists = image_lists[label_name]
@@ -164,35 +102,11 @@ def get_image_path(image_lists, label_name, index, image_dir, category):
 
 def get_bottleneck_path(image_lists, label_name, index, bottleneck_dir,
                         category, architecture):
-  """"Returns a path to a bottleneck file for a label at the given index.
-
-  Args:
-    image_lists: Dictionary of training images for each label.
-    label_name: Label string we want to get an image for.
-    index: Integer offset of the image we want. This will be moduloed by the
-    available number of images for the label, so it can be arbitrarily large.
-    bottleneck_dir: Folder string holding cached files of bottleneck values.
-    category: Name string of set to pull images from - training, testing, or
-    validation.
-    architecture: The name of the model architecture.
-
-  Returns:
-    File system path string to an image that meets the requested parameters.
-  """
   return get_image_path(image_lists, label_name, index, bottleneck_dir,
                         category) + '_' + architecture + '.txt'
 
 
 def create_model_graph(model_info):
-  """"Creates a graph from saved GraphDef file and returns a Graph object.
-
-  Args:
-    model_info: Dictionary containing information about the model architecture.
-
-  Returns:
-    Graph holding the trained Inception network, and various tensors we'll be
-    manipulating.
-  """
   with tf.Graph().as_default() as graph:
     model_path = os.path.join(FLAGS.model_dir, model_info['model_file_name'])
     print('Model path: ', model_path)
@@ -212,19 +126,6 @@ def create_model_graph(model_info):
 def run_bottleneck_on_image(sess, image_data, image_data_tensor,
                             decoded_image_tensor, resized_input_tensor,
                             bottleneck_tensor):
-  """Runs inference on an image to extract the 'bottleneck' summary layer.
-
-  Args:
-    sess: Current active TensorFlow Session.
-    image_data: String of raw JPEG data.
-    image_data_tensor: Input data layer in the graph.
-    decoded_image_tensor: Output of initial image resizing and preprocessing.
-    resized_input_tensor: The input node of the recognition graph.
-    bottleneck_tensor: Layer before the final softmax.
-
-  Returns:
-    Numpy array of bottleneck values.
-  """
   # First decode the JPEG image, resize it, and rescale the pixel values.
   resized_input_values = sess.run(decoded_image_tensor,
                                   {image_data_tensor: image_data})
@@ -236,14 +137,6 @@ def run_bottleneck_on_image(sess, image_data, image_data_tensor,
 
 
 def maybe_download_and_extract(data_url):
-  """Download and extract model tar file.
-
-  If the pretrained model we're using doesn't already exist, this function
-  downloads it from the TensorFlow.org website and unpacks it into a directory.
-
-  Args:
-    data_url: Web location of the tar file containing the pretrained model.
-  """
   dest_directory = FLAGS.model_dir
   if not os.path.exists(dest_directory):
     os.makedirs(dest_directory)
@@ -269,11 +162,6 @@ def maybe_download_and_extract(data_url):
 
 
 def ensure_dir_exists(dir_name):
-  """Makes sure the folder exists on disk.
-
-  Args:
-    dir_name: Path string to the folder we want to create.
-  """
   if not os.path.exists(dir_name):
     os.makedirs(dir_name)
 
@@ -285,7 +173,6 @@ def create_bottleneck_file(bottleneck_path, image_lists, label_name, index,
                            image_dir, category, sess, jpeg_data_tensor,
                            decoded_image_tensor, resized_input_tensor,
                            bottleneck_tensor):
-  """Create a single bottleneck file."""
   tf.logging.info('Creating bottleneck at ' + bottleneck_path)
   image_path = get_image_path(image_lists, label_name, index,
                               image_dir, category)
@@ -308,31 +195,6 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
                              category, bottleneck_dir, jpeg_data_tensor,
                              decoded_image_tensor, resized_input_tensor,
                              bottleneck_tensor, architecture):
-  """Retrieves or calculates bottleneck values for an image.
-
-  If a cached version of the bottleneck data exists on-disk, return that,
-  otherwise calculate the data and save it to disk for future use.
-
-  Args:
-    sess: The current active TensorFlow Session.
-    image_lists: Dictionary of training images for each label.
-    label_name: Label string we want to get an image for.
-    index: Integer offset of the image we want. This will be modulo-ed by the
-    available number of images for the label, so it can be arbitrarily large.
-    image_dir: Root folder string of the subfolders containing the training
-    images.
-    category: Name string of which set to pull images from - training, testing,
-    or validation.
-    bottleneck_dir: Folder string holding cached files of bottleneck values.
-    jpeg_data_tensor: The tensor to feed loaded jpeg data into.
-    decoded_image_tensor: The output of decoding and resizing the image.
-    resized_input_tensor: The input node of the recognition graph.
-    bottleneck_tensor: The output tensor for the bottleneck values.
-    architecture: The name of the model architecture.
-
-  Returns:
-    Numpy array of values produced by the bottleneck layer for the image.
-  """
   label_lists = image_lists[label_name]
   sub_dir = label_lists['dir']
   sub_dir_path = os.path.join(bottleneck_dir, sub_dir)
@@ -368,30 +230,6 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
 def cache_bottlenecks(sess, image_lists, image_dir, bottleneck_dir,
                       jpeg_data_tensor, decoded_image_tensor,
                       resized_input_tensor, bottleneck_tensor, architecture):
-  """Ensures all the training, testing, and validation bottlenecks are cached.
-
-  Because we're likely to read the same image multiple times (if there are no
-  distortions applied during training) it can speed things up a lot if we
-  calculate the bottleneck layer values once for each image during
-  preprocessing, and then just read those cached values repeatedly during
-  training. Here we go through all the images we've found, calculate those
-  values, and save them off.
-
-  Args:
-    sess: The current active TensorFlow Session.
-    image_lists: Dictionary of training images for each label.
-    image_dir: Root folder string of the subfolders containing the training
-    images.
-    bottleneck_dir: Folder string holding cached files of bottleneck values.
-    jpeg_data_tensor: Input tensor for jpeg data from file.
-    decoded_image_tensor: The output of decoding and resizing the image.
-    resized_input_tensor: The input node of the recognition graph.
-    bottleneck_tensor: The penultimate output layer of the graph.
-    architecture: The name of the model architecture.
-
-  Returns:
-    Nothing.
-  """
   how_many_bottlenecks = 0
   ensure_dir_exists(bottleneck_dir)
   for label_name, label_lists in image_lists.items():
@@ -413,32 +251,6 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many, category,
                                   bottleneck_dir, image_dir, jpeg_data_tensor,
                                   decoded_image_tensor, resized_input_tensor,
                                   bottleneck_tensor, architecture):
-  """Retrieves bottleneck values for cached images.
-
-  If no distortions are being applied, this function can retrieve the cached
-  bottleneck values directly from disk for images. It picks a random set of
-  images from the specified category.
-
-  Args:
-    sess: Current TensorFlow Session.
-    image_lists: Dictionary of training images for each label.
-    how_many: If positive, a random sample of this size will be chosen.
-    If negative, all bottlenecks will be retrieved.
-    category: Name string of which set to pull from - training, testing, or
-    validation.
-    bottleneck_dir: Folder string holding cached files of bottleneck values.
-    image_dir: Root folder string of the subfolders containing the training
-    images.
-    jpeg_data_tensor: The layer to feed jpeg image data into.
-    decoded_image_tensor: The output of decoding and resizing the image.
-    resized_input_tensor: The input node of the recognition graph.
-    bottleneck_tensor: The bottleneck output layer of the CNN graph.
-    architecture: The name of the model architecture.
-
-  Returns:
-    List of bottleneck arrays, their corresponding ground truths, and the
-    relevant filenames.
-  """
   class_count = len(image_lists.keys())
   bottlenecks = []
   ground_truths = []
@@ -478,30 +290,6 @@ def get_random_cached_bottlenecks(sess, image_lists, how_many, category,
 def get_random_distorted_bottlenecks(
     sess, image_lists, how_many, category, image_dir, input_jpeg_tensor,
     distorted_image, resized_input_tensor, bottleneck_tensor):
-  """Retrieves bottleneck values for training images, after distortions.
-
-  If we're training with distortions like crops, scales, or flips, we have to
-  recalculate the full model for every image, and so we can't use cached
-  bottleneck values. Instead we find random images for the requested category,
-  run them through the distortion graph, and then the full graph to get the
-  bottleneck results for each.
-
-  Args:
-    sess: Current TensorFlow Session.
-    image_lists: Dictionary of training images for each label.
-    how_many: The integer number of bottleneck values to return.
-    category: Name string of which set of images to fetch - training, testing,
-    or validation.
-    image_dir: Root folder string of the subfolders containing the training
-    images.
-    input_jpeg_tensor: The input layer we feed the image data to.
-    distorted_image: The output node of the distortion graph.
-    resized_input_tensor: The input node of the recognition graph.
-    bottleneck_tensor: The bottleneck output layer of the CNN graph.
-
-  Returns:
-    List of bottleneck arrays and their corresponding ground truths.
-  """
   class_count = len(image_lists.keys())
   bottlenecks = []
   ground_truths = []
@@ -529,18 +317,6 @@ def get_random_distorted_bottlenecks(
 
 def should_distort_images(flip_left_right, random_crop, random_scale,
                           random_brightness):
-  """Whether any distortions are enabled, from the input flags.
-
-  Args:
-    flip_left_right: Boolean whether to randomly mirror images horizontally.
-    random_crop: Integer percentage setting the total margin used around the
-    crop box.
-    random_scale: Integer percentage of how much to vary the scale by.
-    random_brightness: Integer range to randomly multiply the pixel values by.
-
-  Returns:
-    Boolean value indicating whether any distortions should be applied.
-  """
   return (flip_left_right or (random_crop != 0) or (random_scale != 0) or
           (random_brightness != 0))
 
@@ -548,63 +324,6 @@ def should_distort_images(flip_left_right, random_crop, random_scale,
 def add_input_distortions(flip_left_right, random_crop, random_scale,
                           random_brightness, input_width, input_height,
                           input_depth, input_mean, input_std):
-  """Creates the operations to apply the specified distortions.
-
-  During training it can help to improve the results if we run the images
-  through simple distortions like crops, scales, and flips. These reflect the
-  kind of variations we expect in the real world, and so can help train the
-  model to cope with natural data more effectively. Here we take the supplied
-  parameters and construct a network of operations to apply them to an image.
-
-  Cropping
-  ~~~~~~~~
-
-  Cropping is done by placing a bounding box at a random position in the full
-  image. The cropping parameter controls the size of that box relative to the
-  input image. If it's zero, then the box is the same size as the input and no
-  cropping is performed. If the value is 50%, then the crop box will be half the
-  width and height of the input. In a diagram it looks like this:
-
-  <       width         >
-  +---------------------+
-  |                     |
-  |   width - crop%     |
-  |    <      >         |
-  |    +------+         |
-  |    |      |         |
-  |    |      |         |
-  |    |      |         |
-  |    +------+         |
-  |                     |
-  |                     |
-  +---------------------+
-
-  Scaling
-  ~~~~~~~
-
-  Scaling is a lot like cropping, except that the bounding box is always
-  centered and its size varies randomly within the given range. For example if
-  the scale percentage is zero, then the bounding box is the same size as the
-  input and no scaling is applied. If it's 50%, then the bounding box will be in
-  a random range between half the width and height and full size.
-
-  Args:
-    flip_left_right: Boolean whether to randomly mirror images horizontally.
-    random_crop: Integer percentage setting the total margin used around the
-    crop box.
-    random_scale: Integer percentage of how much to vary the scale by.
-    random_brightness: Integer range to randomly multiply the pixel values by.
-    graph.
-    input_width: Horizontal size of expected input image to model.
-    input_height: Vertical size of expected input image to model.
-    input_depth: How many channels the expected input image should have.
-    input_mean: Pixel value that should be zero in the image for the graph.
-    input_std: How much to divide the pixel values by before recognition.
-
-  Returns:
-    The jpeg input layer and the distorted result tensor.
-  """
-
   jpeg_data = tf.placeholder(tf.string, name='DistortJPGInput')
   decoded_image = tf.image.decode_jpeg(jpeg_data, channels=input_depth)
   decoded_image_as_float = tf.cast(decoded_image, dtype=tf.float32)
@@ -642,7 +361,6 @@ def add_input_distortions(flip_left_right, random_crop, random_scale,
 
 
 def variable_summaries(var):
-  """Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""
   with tf.name_scope('summaries'):
     mean = tf.reduce_mean(var)
     tf.summary.scalar('mean', mean)
@@ -656,28 +374,6 @@ def variable_summaries(var):
 
 def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor,
                            bottleneck_tensor_size, quantize_layer):
-  """Adds a new softmax and fully-connected layer for training.
-
-  We need to retrain the top layer to identify our new classes, so this function
-  adds the right operations to the graph, along with some variables to hold the
-  weights, and then sets up all the gradients for the backward pass.
-
-  The set up for the softmax and fully-connected layers is based on:
-  https://www.tensorflow.org/versions/master/tutorials/mnist/beginners/index.html
-
-  Args:
-    class_count: Integer of how many categories of things we're trying to
-        recognize.
-    final_tensor_name: Name string for the new final node that produces results.
-    bottleneck_tensor: The output of the main CNN graph.
-    bottleneck_tensor_size: How many entries in the bottleneck vector.
-    quantize_layer: Boolean, specifying whether the newly added layer should be
-        quantized.
-
-  Returns:
-    The tensors for the training and cross entropy results, and tensors for the
-    bottleneck input and ground truth input.
-  """
   with tf.name_scope('input'):
     bottleneck_input = tf.placeholder_with_default(
         bottleneck_tensor,
@@ -746,16 +442,6 @@ def add_final_training_ops(class_count, final_tensor_name, bottleneck_tensor,
 
 
 def add_evaluation_step(result_tensor, ground_truth_tensor):
-  """Inserts the operations we need to evaluate the accuracy of our results.
-
-  Args:
-    result_tensor: The new final node that produces results.
-    ground_truth_tensor: The node we feed ground truth data
-    into.
-
-  Returns:
-    Tuple of (evaluation step, prediction).
-  """
   with tf.name_scope('accuracy'):
     with tf.name_scope('correct_prediction'):
       prediction = tf.argmax(result_tensor, 1)
@@ -786,22 +472,6 @@ def prepare_file_system():
 
 
 def create_model_info(architecture):
-  """Given the name of a model architecture, returns information about it.
-
-  There are different base image recognition pretrained models that can be
-  retrained using transfer learning, and this function translates from the name
-  of a model to the attributes that are needed to download and train with it.
-
-  Args:
-    architecture: Name of a model architecture.
-
-  Returns:
-    Dictionary of information about the model, or None if the name isn't
-    recognized
-
-  Raises:
-    ValueError: If architecture name is unknown.
-  """
   architecture = architecture.lower()
   is_quantized = False
   if architecture == 'inception_v3':
@@ -817,62 +487,6 @@ def create_model_info(architecture):
     model_file_name = 'inception_v4.pb'
     input_mean = 128
     input_std = 128
-  elif architecture.startswith('mobilenet_'):
-    parts = architecture.split('_')
-    if len(parts) != 3 and len(parts) != 4:
-      tf.logging.error("Couldn't understand architecture name '%s'",
-                       architecture)
-      return None
-    version_string = parts[1]
-    if (version_string != '1.0' and version_string != '0.75' and
-        version_string != '0.50' and version_string != '0.25'):
-      tf.logging.error(
-          """"The Mobilenet version should be '1.0', '0.75', '0.50', or '0.25',
-  but found '%s' for architecture '%s'""",
-          version_string, architecture)
-      return None
-    size_string = parts[2]
-    if (size_string != '224' and size_string != '192' and
-        size_string != '160' and size_string != '128'):
-      tf.logging.error(
-          """The Mobilenet input size should be '224', '192', '160', or '128',
- but found '%s' for architecture '%s'""",
-          size_string, architecture)
-      return None
-    if len(parts) == 3:
-      is_quantized = False
-    else:
-      if parts[3] != 'quantized':
-        tf.logging.error(
-            "Couldn't understand architecture suffix '%s' for '%s'", parts[3],
-            architecture)
-        return None
-      is_quantized = True
-
-    if is_quantized:
-      data_url = 'http://download.tensorflow.org/models/mobilenet_v1_'
-      data_url += version_string + '_' + size_string + '_quantized_frozen.tgz'
-      bottleneck_tensor_name = 'MobilenetV1/Predictions/Reshape:0'
-      resized_input_tensor_name = 'Placeholder:0'
-      model_dir_name = ('mobilenet_v1_' + version_string + '_' + size_string +
-                        '_quantized_frozen')
-      model_base_name = 'quantized_frozen_graph.pb'
-
-    else:
-      data_url = 'http://download.tensorflow.org/models/mobilenet_v1_'
-      data_url += version_string + '_' + size_string + '_frozen.tgz'
-      bottleneck_tensor_name = 'MobilenetV1/Predictions/Reshape:0'
-      resized_input_tensor_name = 'input:0'
-      model_dir_name = 'mobilenet_v1_' + version_string + '_' + size_string
-      model_base_name = 'frozen_graph.pb'
-
-    bottleneck_tensor_size = 1001
-    input_width = int(size_string)
-    input_height = int(size_string)
-    input_depth = 3
-    model_file_name = os.path.join(model_dir_name, model_base_name)
-    input_mean = 127.5
-    input_std = 127.5
   else:
     tf.logging.error("Couldn't understand architecture name '%s'", architecture)
     raise ValueError('Unknown architecture', architecture)
@@ -894,19 +508,6 @@ def create_model_info(architecture):
 
 def add_jpeg_decoding(input_width, input_height, input_depth, input_mean,
                       input_std):
-  """Adds operations that perform JPEG decoding and resizing to the graph..
-
-  Args:
-    input_width: Desired width of the image fed into the recognizer graph.
-    input_height: Desired width of the image fed into the recognizer graph.
-    input_depth: Desired channels of the image fed into the recognizer graph.
-    input_mean: Pixel value that should be zero in the image for the graph.
-    input_std: How much to divide the pixel values by before recognition.
-
-  Returns:
-    Tensors for the node to feed JPEG data into, and the output of the
-      preprocessing steps.
-  """
   jpeg_data = tf.placeholder(tf.string, name='DecodeJPGInput')
   decoded_image = tf.image.decode_jpeg(jpeg_data, channels=input_depth)
   decoded_image_as_float = tf.cast(decoded_image, dtype=tf.float32)
@@ -921,14 +522,8 @@ def add_jpeg_decoding(input_width, input_height, input_depth, input_mean,
 
 
 def main(_):
-  # Needed to make sure the logging output is visible.
-  # See https://github.com/tensorflow/tensorflow/issues/3047
   tf.logging.set_verbosity(tf.logging.INFO)
-
-  # Prepare necessary directories that can be used during training
   prepare_file_system()
-
-  # Gather information about the model architecture we'll be using.
   model_info = create_model_info(FLAGS.architecture)
   if not model_info:
     tf.logging.error('Did not recognize architecture flag')
@@ -1269,14 +864,6 @@ if __name__ == '__main__':
       type=str,
       default='inception_v3',
       help="""\
-      Which model architecture to use. 'inception_v3' is the most accurate, but
-      also the slowest. For faster or smaller models, chose a MobileNet with the
-      form 'mobilenet_<parameter size>_<input_size>[_quantized]'. For example,
-      'mobilenet_1.0_224' will pick a model that is 17 MB in size and takes 224
-      pixel input images, while 'mobilenet_0.25_128_quantized' will choose a much
-      less accurate, but smaller and faster network that's 920 KB on disk and
-      takes 128x128 images. See https://research.googleblog.com/2017/06/mobilenets-open-source-models-for.html
-      for more information on Mobilenet.\
       """)
   FLAGS, unparsed = parser.parse_known_args()
   tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)

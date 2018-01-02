@@ -38,7 +38,7 @@ FolderTrimmer funguje ve dvou režimech. První, základní režim, smaže všechny sou
 \section{Pøíprava trénovacích a testovacích dat}\label{sec:priprava_dat}
 Když máme všechna potøebná data stažená, je potøeba je pøipravit tak, abychom je mohli použít k trénování neuronové sítì. Pøíprava dat se liší podle typu implementace, který zvolíme. V pøípadì trénování neuronové sítì k detekci objektù, chceme k jednotlivým snímkùm pøidat informaci \textbf{kde}, \textbf{jaké velikosti} a \textbf{kolik} vajec se v nich nachází. V pøípadì trénování neuronové sítì pro rozpoznávání (klasifikaci) obrazu, je potøeba ke snímkùm pøidat informaci o \textbf{celkovém poètu vajec}.
 
-\subsection{Tagger}
+\subsection{Tagger}\label{chap:tagger}
 Nástroj \texttt{Tagger} slouží k manuálnímu oznaèování snímkù. Pracuji na úrovni složek, kde jednotlivé složky a snímky reprezentují jednu videosekvenci. Uživatel pak mùže program spustit a pomìrnì rychle oznaèit, kolik vajec se na daných snímcích nachází. Tagger je webovou aplikací s jednoduchým uživatelským rozhraním. Uživatel je prezentován všemi snímky dané složky a má možnost u každého snímku specifikovat poèet vajec. Uživateli je složka vybrána automaticky. Po odeslání dat je uživatel vyzván k oznaèení další složky. Tento proces se opakuje do té doby, než jsou oznaèené všechny složky. Ukázka uživatelského rozhraní je vidìt na obrázku \ref{fig:tagger}.
 
 \begin{figure}

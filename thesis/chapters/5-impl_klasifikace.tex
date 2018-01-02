@@ -17,6 +17,8 @@ V této kapitole se zamìøíme na implementaci neuronové sítì, která bude mít za cí
 Celé øešení -- pøíprava dat, trénování neuronové sítì, testování funkènosti a mìøení pøesnosti -- budeme implementovat v programovacím jazyce Python 3.
 
 \section{Pøíprava dat}
+Nástrojem \texttt{Tagger} (viz kapitola \ref{chap:tagger}) jsem oznaèil \textbf{6178 snímkù}. Všechny tyto snímky budou slouit jako trénovací nebo testovací data pro tuto kapitolu.
+
 Abychom nemuseli psát vlastní skripty pro trénování neuronové sítì, ale mohli pouít skripty standartnì dostupné~\cite{recog_retrain.py}, musíme upravit strukturu našich dat.
 
 Souèasná struktura našich dat je následující:
@@ -69,23 +71,66 @@ Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extré
 
 Pøedpokladem pro trénování neuronové sítì je nainstalovaná knihovna TensorFlow a všechny její závislosti~\cite{tensor_install}. Model, ze kterého budeme vycházet je \textbf{Inception-v4}\footnote{Dostupnı ke staení na: \url{http://download.tensorflow.org/models/inception_v4_2016_09_09.tar.gz}}~\cite{inceptionv4}, kterı byl vytrénován spoleèností Google na pøiblinì 1,2 mil. snímkù\cite{v4trainingsize}. V soutìi ImageNet~\cite{imagenet} drí model Inception-v4 nejlepšího skóre: Top-1 Accuracy\footnote{Odpovìd modelu (ta s nejvyšší pravdìpodobností) pøesnì odpovídala oèekávanému vısledku.} 80.2\% a Top-5 Accuracy\footnote{Kterákoliv z 5 nejpravdìpodobnìjších odpovìdí modelu odpovídala oèekávanému vısledku.} 95.2\%~\cite{imagenetresults}.
 
-Googlem poskytovanı skript pro pøetrénování finálních vrstev nepodporuje model Inception-v4. Staèí však pár modifikací, aby nejnovìjší model podporoval. Upravenı skript se nachází v pøíloze \ref{chap:retrain.py}
+Googlem poskytovanı skript pro pøetrénování finálních vrstev nepodporuje nejnovìjší model Inception-v4. Staèí však pár modifikací a mùeme novı model pouít. Upravenı skript se nachází v pøíloze \ref{chap:retrain.py}.
+
+\subsection{Struktura aplikace}
+Na disku vytvoøíme sloku \texttt{egg\_recognition}, ve které se budeme pohybovat. Budeme potøebovat tuto strukturu:
+\begin{figure}[H]
+	\dirtree{%
+		.1 egg\_recognition\DTcomment{pracovní sloka}.
+		.2 bottlenecks.
+		.2 models.
+		.2 training\_summaries.
+		.2 result\DTcomment{umístìní vısledného modelu}.
+		.2 training\_data\DTcomment{trénovací data ve formátu specifikovaném vıše}.
+		.2 models.
+		.3 inception\_v4.pb\DTcomment{nutné pro správné fungování skriptu \texttt{retrain.py}}.
+	}
+\end{figure}
+
+\noindent Poté spustíme pøipravenı skript \texttt{retrain.py}:
 \begin{lstlisting}[language=bash]
-python3 tensorflow/examples/image_retraining/retrain.py \
---bottleneck_dir=egg_recognition/bottlenecks \
---how_many_training_steps=8000 \
---model_dir=egg_recognition/models/ \
---summaries_dir=egg_recognition/training_summaries/ \
---output_graph=egg_recognition/retrained_graph.pb \
---output_labels=egg_recognition/retrained_labels.txt \
---image_dir=egg_recognition/training_data
+cd egg_recognition
+python3 retrain.py \
+	--bottleneck_dir=bottlenecks \
+	--how_many_training_steps=8000 \
+	--model_dir=models/ \
+	--summaries_dir=training_summaries/ \
+	--output_graph=result/egg_classifier_graph.pb \
+	--output_labels=result/egg_classifier_labels.txt \
+	--image_dir=training_data \
+	--print_misclassified_test_images
+	--random_crop=16
+	--random_scale=7
+	--random_brightness=4
+\end{lstlisting}
+Hodnoty parametrù \texttt{random\_crop} a \texttt{random\_scale} a \texttt{random\_brightness} a \texttt{how\_many\_training\_steps} mùeme zmìnit. K hodnotám uvedenım vıše jsem dospìl opakovanım testováním a tyto hodnoty produkovaly nejlepší vısledky. Samotnı skript \texttt{retrain.py}~\cite{recog_retrain.py} poskytuje nejlepší dokumentaci dostupnıch parametrù.
+
+\section{Ovìøení funkènosti a vısledky}
+Vytrénovanı a vyexportovanı model mùeme otestovat pomocí veøejnì dostupného skriptu \texttt{label\_image.py}~\cite{recog_label_image.py}:
+\begin{lstlisting}[language=bash]
+cd egg_recognition
+python3 ~/tensorflow/examples/image_retraining/label_image.py \
+	--graph=result/egg_classifier_graph.pb \
+	--labels=/tmp/output_labels.txt \
+	--output_layer=final_result:0 \
+	--image=test_image.jpg
 \end{lstlisting}
 
-\section{Ovìøení funkènosti}
-info o spatnych vysledcich
+\noindent Vısledek je prezentován v následujícím formátu (hodnoty mohou bıt odlišné):
+\begin{lstlisting}[language=bash]
+5 (score = 0.62071)
+4 (score = 0.44595)
+6 (score = 0.43252)
+0 (score = 0.43049)
+9 (score = 0.00032)
+\end{lstlisting}
 
-\section{Identifikované problémy}
-tøídy jsou moc podobné (obrázek neni zas az tak jiny, jestli tam je jedno nebo dve vajicka)
-vetsina casti obrazku neni pro urceni nasi tridy relevantni
+\section{Závìr}
+Dokázali jsme, e øešení funguje. Pøi hromadném testu dat zjistíme, e tato implementace \textbf{není} pøíliš efektivní i pøes to, e náš trénovací vzorek dat je pomìrnì velkı (\textbf{6178 snímkù}). U ze samotného vısledku pøi vyhodnocení pouze jednoho snímku je vidìt, e si sí není jistá, do jaké kategorie danı snímek zaøadit. Všechny vısledky mají buï relativnì nízké skóre nebo naopak všechny pomìrnì vysoké. Bohuel se nedostáváme k vısledku, u kterého by byla jedna kategorie dominantní\footnote{Sí by jedné kategorii pøiøadila vysoké skóre (> 80\%) a zbytek kategorií by mìlo skóre nízké.}.
 
-kdybychom chteli lepsi vysledky, museli bychom nejak predem oriznout obraz, aby vajicka tvorili vetsinu obrazku
+Nejvìtší problém spoèívá v \textbf{malıch rozdílech mezi jednotlivımi kategoriemi}. Vajíèka tvoøí pouze malou èást snímku, take rozdíl mezi jedním nebo dvìmi vajíèky je malı. \textbf{Vìtšina plochy snímku se stává šumem}, kterı \uv{mate} tuto implementaci. Kdyby kategorie reprezentovaly dvì velmi odlišné vìci, jako napøíklad auto a psa, bylo by vıraznì snaší snímek mezi tyto dvì dramaticky odlišné kategorie zaøadit.
+
+Øešení by se stalo mnohem efektivnìjší v pøípadì, kdyby snímky, které sí zpracovává byly pøedem zpracované a upravené. Normalizace jasu a pøedevším oøezání snímku tak, aby na nìm zbyly pouze vajíèka, by dramaticky zvıšila efektivitu této implementace.
+
+Tato kapitola neposkytla vısledky, ve které jsem doufal. Je zde ale prostor pro vylepšení, které by toto øešení mohli udìlat efektivnìjší ne detekce objektù popsaná v kapitole \ref{chap:impl_detekce}.
