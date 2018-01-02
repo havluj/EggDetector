@@ -124,25 +124,35 @@ Druhá varianta, která je komplexnìjší na zprovoznìní je trénování na lokálním st
 Nejpraktiètìjší, ale nejsložitìjší na zprovoznìní je trénování na vzdálených serverech. Google poskytuje na platformì \textit{Google Cloud Platform} produkt \textit{ML Engine}~\cite{googlemlengine}, který je specializován mimo jiné i na trénování modelù -- tzn. je použit optimální hardware. Spoleènost Google stojí za frameworkem TensorFlow i platformou \textit{ML Engine}, proto je jejich integrace relativnì dobøe vyøešená. Tento fakt dìlá tzv. \uv{cloud learning} nejefektnivnìjším øešením.
 
 \subsubsection{Monitorování prùbìhu trénování}
+TensorFlow obsahuje nástroj, kterým mùžeme monitorovat prùbìh trénování modelu. Program spustíme následovnì:
+\begin{lstlisting}[language=bash]
+tensorboard --log_dir=training --port=8080
+\end{lstlisting}
+
+Ve webovém prohlížeèi otevøeme adresu \url{http://localhost:8080} a budeme prezentováni úvodní obrazovkou aplikace TensorBoard (viz obr. \ref{fig:tensorboard_overview}). Nástroj vizualizuje veškeré potøebné metriky -- jednou z nejzajímavìjších je metrika \uv{total loss} (viz obr. \ref{fig:tensorboard_loss}).
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{media/tensorboard_loss.png}
 	\caption{Vizualizace prùbìhu trénování programem TensorBoard.}
-	\label{fig:tensor_models}
+	\label{fig:tensorboard_loss}
 \end{figure}
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{media/tensorboard_overview.png}
 	\caption{Úvodní obrazovka programu TensorBoard: pøehled stavu trénování.}
-	\label{fig:tensor_models}
+	\label{fig:tensorboard_overview}
 \end{figure}
 
-\subsubsection{Trénování lokálnì}
-%train the network
-%`$OBJ_DET/train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/ssd_mobilenet_v1_coco.config`
-%
-\subsubsection{Trénování na Google Cloud Platform}
+\subsubsection{Trénování modelu na lokálním hardware}
+Trénováním na jedné grafické kartì, více grafických kartách nebo na procesoru spouštímì vždy stejným zpùsobem:
+\begin{lstlisting}[language=bash]
+python3 $OBJ_DET/train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/pipeline.config
+\end{lstlisting}
+Parametry mùžeme specifikovat, jak a kolik grafických karet má být využito. Napøíklad pøi použití dvou grafických karet jsem specifikoval tyto parametry: \texttt{--num\_clones=2 --ps\_tasks=1}. Více informací viz \cite{odtrainmultigpu}.
+
+
+\subsubsection{Trénování modelu na Google Cloud ML Engine~\cite{googlemlengine}}
 
 \section{Ovìøení funkènosti a výsledky}
 %export inference graph
