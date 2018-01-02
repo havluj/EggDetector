@@ -90,7 +90,7 @@ public static ArrayList<String> scanFolder(String location) {
 }
 \end{lstlisting}
 
-\subsection{LabelImg~\cite{labelimg}}
+\subsection{LabelImg~\cite{labelimg}}\label{subsec:labelimg}
 Trénovací data pro detekci objektù vyžadují jiný formát než data pro rozpoznávání obrazu. Je potøeba na jednotlivých snímcích oznaèit pozici jednotlivých vajec. Pøesnì za tímto úèelem byl vytvoøen nástroj LabelImg~\cite{labelimg}. Uživatel si pøi spuštìní programu zvolí složku, ve které má data pøipravená na oznaèení. Uživatel má možnost zadat typy objektù, které chce na snímcích oznaèovat. V našem pøípadì se jedná pouze o jeden typ objektu -- vejce\footnote{Ve skuteènosti se náš objekt (label) jmenuje \texttt{egg}.}. Poté je uživatel prezentován se snímkem, kde má možnost objekty manuálnì ohranièit (viz obrázek \ref{fig:labelimg}).
 
 \begin{figure}

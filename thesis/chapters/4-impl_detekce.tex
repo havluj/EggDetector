@@ -1,8 +1,10 @@
 \chapter{Implementace detekování objektù}\label{chap:impl_detekce}
-%V této kapitole se zamìøíme na implementaci neuronové sítì, která bude mít za cíl rozpoznat, do které kategorie snímek patøí. Jedná se tedy o klasifikaci do pøedem daných kategorií. Vstupem pro naše skripty bude obrázek libovolné velikosti. Internì bude zmenšen na velikost 300~x~300 bodù. Snímek bude reprezentován pole hodnot o velikosti 300~x~300~x~3 (snímek velikosti 300~x~300 bodù a zùstane barevný -- každý bod obsahuje 3 barevné složky. Kategorií, do kterých budeme chtít snímky rozøadit, bude \textbf{11}:
-%\begin{description}[labelindent=1cm]
-%	\item[Kategorie \uv{egg}:] Objekt vejce.
-%\end{description}
+V této kapitole se zamìøíme na implementaci neuronové sítì, která bude sloužit k detekci objektù. V rámci této práce nás bude zajímat pouze jeden objekt: vejce. 
+
+Abychom mohli vytrénovat nový model, který je schopný detekce vajec, je potøeba, abychom snímky a data pøevedli do speciálního formátu. Pro použítí a validaci modelu budeme používat skript, u kterého bude vstupem obrázek libovolné velikosti. Internì bude zmenšen na velikost 300~x~300 bodù. Snímek bude reprezentován pole hodnot o velikosti 300~x~300~x~3 (snímek velikosti 300~x~300 bodù a zùstane barevný -- každý bod obsahuje 3 barevné složky. Jakmile provedeme detekci objektù, musíme objekty klasifikovat do pøedem stanovených kategorií. Kategorie, do které budeme chtít snímky rozøadit, bude pouze \textbf{1}:
+\begin{description}[labelindent=1cm]
+	\item[Kategorie \uv{egg}:] Objekt vejce.
+\end{description}
 
 Celé øešení -- pøíprava dat, trénování neuronové sítì, testování funkènosti a mìøení pøesnosti budeme implementovat v programovacím jazyce Python~3.
 
@@ -30,11 +32,42 @@ Abychom mohli používat \texttt{TensorFlow Object Detection API}, je potøeba násl
 \end{enumerate}
 
 \section{Pøíprava dat}
-o label img a poctu obrazku
+Nástrojem LabelImg (viz kapitola \ref{subsec:labelimg}) jsem oznaèil \textbf{1800} vajec. Data je potøeba rozdìlit na trénovací a testovací. Testovací data slouží k validaci a vyhodnocení úspìšnosti trénovaného modelu. Standardnì se data dìlí pøibližnì v pomìru 9:1 ve prospìch trénovacích dat. Data jsem rozdìlil následnovnì:
+\begin{itemize}
+	\item \textbf{1701} výskytù vajec jako trénovací data,
+	\item \textbf{189} výskytù vajec jako data validaèní.
+\end{itemize}
 
-rozdeleni dat na testovaci a trenovaci
+\section{Struktura projektu}
+Projekt, ve kterém budeme celou implementaci tvoøit, bude mít následující strukturu:
+\begin{figure}[H]
+	\dirtree{%
+		.1 object-detection-training\DTcomment{pracovní složka}.
+		.2 training\DTcomment{složka s konfigurací}.
+		.3 checkpoint\_model\DTcomment{data modelu, ze kterého budeme vycházet}.
+		.3 egg\_label\_map.pbtxt.
+		.3 pipeline.config.
+		.2 test\_images\DTcomment{testovací obrázky k validaci}.
+		.2 frozen\_graph\DTcomment{výsledný, exportovaný graf}.
+		.2 images\DTcomment{všechna testovací a trénovací data}.
+		.3 test\DTcomment{testovací data}.
+		.3 train\DTcomment{trénovací data}.
+		.2 export\_inference\_graph.py.
+		.2 generate\_tfrecord.py.
+		.2 xml\_to\_csv.py.
+	}
+\end{figure}
 
+Stejná struktura je dostupná u pøiloženého zdrojového kódu v pøíloze \ref{chap:cd}, konkrétnì ve složce \texttt{src/object-detection-training}.
 
+Všechny skripty, které používáme k trénování a validaci jsou dostupné v pøíloze \ref{chap:cd}.
+
+\section{Trénování neuronové sítì}
+\subsection{Základní model}
+
+\subsection{Konfigurace}
+
+\subsection{Trénovací data}
 %
 %generate csv files from xml
 %`python3.5 xml_to_csv.py`
@@ -47,21 +80,16 @@ rozdeleni dat na testovaci a trenovaci
 %
 
 
-\section{Trénování neuronové sítì}
-struktura slozky
-
-konfiguration file
-
+\subsection{Trénování}
+checkpointy, ukázky tensorboard, atd
+sledovani trenovani
 muzeme trenovat lokalne nebo na cloudu
 
-lokalne: 
+\subsubsection{Trénování lokálnì}
 %train the network
 %`$OBJ_DET/train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/ssd_mobilenet_v1_coco.config`
 %
-
-na cloudu
-
-sledovani trenovani
+\subsubsection{Trénování na Google Cloud Platform}
 
 \section{Ovìøení funkènosti a výsledky}
 %export inference graph
