@@ -71,7 +71,7 @@ Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extré
 
 Pøedpokladem pro trénování neuronové sítì je nainstalovaná knihovna TensorFlow a všechny její závislosti~\cite{tensor_install}. Model, ze kterého budeme vycházet je \textbf{Inception-v4}\footnote{Dostupný ke stažení na: \url{http://download.tensorflow.org/models/inception_v4_2016_09_09.tar.gz}}~\cite{inceptionv4}, který byl vytrénován spoleèností Google na pøibližnì 1,2 mil. snímkù\cite{v4trainingsize}. V soutìži ImageNet~\cite{imagenet} drží model Inception-v4 nejlepšího skóre: Top-1 Accuracy\footnote{Odpovìd modelu (ta s nejvyšší pravdìpodobností) pøesnì odpovídala oèekávanému výsledku.} 80.2\% a Top-5 Accuracy\footnote{Kterákoliv z 5 nejpravdìpodobnìjších odpovìdí modelu odpovídala oèekávanému výsledku.} 95.2\%~\cite{imagenetresults}.
 
-Googlem poskytovaný skript pro pøetrénování finálních vrstev nepodporuje nejnovìjší model Inception-v4. Staèí však pár modifikací a mùžeme nový model použít. Upravený skript se nachází v pøíloze \ref{chap:retrain.py}.
+Googlem poskytovaný skript pro pøetrénování finálních vrstev nepodporuje nejnovìjší model Inception-v4. Staèí však pár modifikací a mùžeme nový model použít. Upravený skript se nachází v pøíloze \ref{chap:cd}.
 
 \subsection{Struktura aplikace}
 Na disku vytvoøíme složku \texttt{egg\_recognition}, ve které se budeme pohybovat. Budeme potøebovat tuto strukturu:

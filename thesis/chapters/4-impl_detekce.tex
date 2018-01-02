@@ -38,6 +38,23 @@ Nástrojem LabelImg (viz kapitola \ref{subsec:labelimg}) jsem oznaèil \textbf{180
 	\item \textbf{189} vıskytù vajec jako data validaèní.
 \end{itemize}
 
+Trénovací data pøesuneme do pracovní sloky. Po pøesunutí je nutné opravit XML záznamky vygenerované nástrojem \texttt{LabelImg}. Ve slokách, kde máme trénovací data a testovací data pustíme následující pøíkaz:
+\begin{lstlisting}[language=bash]
+for fullfile in *.jpg; do
+	filename=$(basename "$fullfile")
+	filename="${filename%.*}"
+	echo "$filename".xml
+	awk -v var="$filename" 'NR==3{$0="\t<filename>"var".jpg</filename>"}1;' "$filename".xml > temp.xml && mv temp.xml "$filename".xml
+done
+
+for fullfile in *.png; do
+	filename=$(basename "$fullfile")
+	filename="${filename%.*}"
+	echo "$filename".xml
+	awk -v var="$filename" 'NR==3{$0="\t<filename>"var".png</filename>"}1;' "$filename".xml > temp.xml && mv temp.xml "$filename".xml
+done
+\end{lstlisting}
+
 \section{Struktura projektu}
 Projekt, ve kterém budeme celou implementaci tvoøit, bude mít následující strukturu:
 \begin{figure}[H]
@@ -63,11 +80,25 @@ Stejná struktura je dostupná u pøiloeného zdrojového kódu v pøíloze \ref{chap:c
 Všechny skripty, které pouíváme k trénování a validaci jsou dostupné v pøíloze \ref{chap:cd}.
 
 \section{Trénování neuronové sítì}
-\subsection{Základní model}
+Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extrémnì} vıpoèetnì nároèné je vytrénovat. Uèení \uv{pøenosem modelu}\footnote{Transfer learning.} je technika, která ušetøí spoustu práce vyuitím ji pøed-trénovaného modelu a pøetrénováním pouze finálních vrstev~\cite{decaf}. Trénování sítì \uv{od nuly} je standardnì efektivnìjší, ale v mém testování jsem ve vısledcích rozdíl nepocítil. Proto jsem se rozhodl o pouítí ji pøedtrénovaného modelu.
+
+\subsection{Vıchozí model}
+V rámci této implementace jsem zkusil pouil tøi rùzné modely, které slouily jako startovní bod pro trénování. Nejlepší vısledky se dostavily pøi pouítí modelu \texttt{ssd\textunderscore mobilenet\textunderscore v1\textunderscore coco}\footnote{Ke staení na \url{http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2017_11_17.tar.gz} nebo v pøíloze \ref{chap:cd}.}~\cite{tensor_models}. Modely, které nebyly tak úspìšné jsou: \texttt{faster\_rcnn\_nas\_coco}\footnote{Ke staení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_2017_11_08.tar.gz}.} a \texttt{faster\_rcnn\_resnet101\_coco}\footnote{Ke staení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2017_11_08.tar.gz}.}. Staenı model umístíme do sloky \texttt{training} v pracovním adresáøi. Další modely, jejich rychlost a efektivita jsou zobrazeny na obrázku \ref{fig:tensor_models}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\textwidth]{media/tensor_models.png}
+	\caption{Pøed-trénované modely poskytované spoleèností Google.}
+	\label{fig:tensor_models}
+\end{figure}
 
 \subsection{Konfigurace}
+Nyní je èas nakonfigurovat parametry, podle kterıch se bude neuronová sí øidit pøi uèení. TensorFlow Object Detection API pouívá soubory \texttt{protobuf} ke konfiguraci trénovacího a evaluaèního procesu. Konfiguraèní soubor je rozdìlen do 5 èástí: \texttt{model}, \texttt{train\_config}, \texttt{eval\_config}, \texttt{train\_input\_config} a \texttt{eval\_input\_config}~\cite{tensor_od_config}.
+
+Pro kadı typ aplikace jsou vhodné jiné parametry. Vıslednı konfiguraèní soubor pouitı spoleènì s modelem \texttt{ssd\_mobilenet\_v1\_coco} je vypsán v pøíloze \ref{chap:config_detection}.
 
 \subsection{Trénovací data}
+TensorFlow Object Detection API oèekává trénovací data ve formátu \texttt{TFRecord}~\cite{tfrecord}. Do pøílohy \ref{chap:cd} jsem pøiloil všechny skripty pro vygenerování tìchto souborù z trénovacích dat. Staèí nejdøíve vytvoøit z XML záznamù vytvoøenıch nástrojem 
 %
 %generate csv files from xml
 %`python3.5 xml_to_csv.py`
