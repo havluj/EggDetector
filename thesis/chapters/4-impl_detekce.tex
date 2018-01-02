@@ -38,7 +38,7 @@ Nástrojem LabelImg (viz kapitola \ref{subsec:labelimg}) jsem oznaèil \textbf{180
 	\item \textbf{189} vıskytù vajec jako data validaèní.
 \end{itemize}
 
-Trénovací data pøesuneme do pracovní sloky. Po pøesunutí je nutné opravit XML záznamky vygenerované nástrojem \texttt{LabelImg}. Ve slokách, kde máme trénovací data a testovací data pustíme následující pøíkaz:
+Trénovací data pøesuneme do pracovní sloky. Po pøesunutí je nutné opravit XML soubory vygenerované nástrojem \texttt{LabelImg}. V obou slokách, kde máme trénovací data a testovací data pustíme následující pøíkaz:
 \begin{lstlisting}[language=bash]
 for fullfile in *.jpg; do
 	filename=$(basename "$fullfile")
@@ -98,23 +98,45 @@ Nyní je èas nakonfigurovat parametry, podle kterıch se bude neuronová sí øidit 
 Pro kadı typ aplikace jsou vhodné jiné parametry. Vıslednı konfiguraèní soubor pouitı spoleènì s modelem \texttt{ssd\_mobilenet\_v1\_coco} je vypsán v pøíloze \ref{chap:config_detection}.
 
 \subsection{Trénovací data}
-TensorFlow Object Detection API oèekává trénovací data ve formátu \texttt{TFRecord}~\cite{tfrecord}. Do pøílohy \ref{chap:cd} jsem pøiloil všechny skripty pro vygenerování tìchto souborù z trénovacích dat. Staèí nejdøíve vytvoøit z XML záznamù vytvoøenıch nástrojem 
-%
-%generate csv files from xml
-%`python3.5 xml_to_csv.py`
-%
-%generate train data
-%`python3.5 generate_tfrecord.py --csv_input=data/train_labels.csv --output_path=data/train.record`
-%
-%generate test data
-%`python3.5 generate_tfrecord.py --csv_input=data/test_labels.csv --output_path=data/test.record`
-%
-
+TensorFlow Object Detection API oèekává trénovací data ve formátu \texttt{TFRecord}~\cite{tfrecord}. Do pøílohy \ref{chap:cd} jsem pøiloil všechny skripty pro vygenerování tìchto souborù z trénovacích dat. Nyní máme pouze jednotlivé snímky a k ním XML soubory, které obsahují dodateèné informace o danıch snímcích. Cílem je dostat dva soubory: \texttt{train.record}, kterı obsahuje všechna potøebná data pro trénování a \texttt{test.record}, kterı obsahuje všechna data pro validaci a testování. Konverzní skript byl napsán podle pøedlohy \cite{create_tfrecord}. Abychom dostali dva poadované soubory, budeme postupovat v tìchto krocích:
+\begin{enumerate}
+	\item Vygenerujeme dva CSV\footnote{Comma Separated Values.} soubory, které budou obsahovat informace o jednotlivıch detekcích v trénovacích a testovacích datech:
+	\begin{lstlisting}[language=bash] 
+	python3 xml_to_csv.py
+	\end{lstlisting}
+	\item Z kombinace CSV záznamu vygenerovaném v pøedchozím kroku a trénovacích snímku vytvoøíme soubor \texttt{train.record}: 
+	\begin{lstlisting}[language=bash]
+	python3 generate_tfrecord.py --csv_input=data/train_labels.csv --output_path=data/train.record
+	\end{lstlisting}
+	\item Z kombinace CSV záznamu vygenerovaném v prvním kroku a validaèních snímku vytvoøíme soubor \texttt{test.record}: 
+	\begin{lstlisting}[language=bash]
+	python3 generate_tfrecord.py --csv_input=data/test_labels.csv --output_path=data/test.record
+	\end{lstlisting}
+\end{enumerate}
 
 \subsection{Trénování}
-checkpointy, ukázky tensorboard, atd
-sledovani trenovani
-muzeme trenovat lokalne nebo na cloudu
+V tuto chvíli máme vše pøipraveno a mùeme zaèít samotné trénování. Je nutné se uvìdomit, e trénování modelu je velmi vıpoèetnì nároèné a je moné, e nebudeme mít lokálnì dostupnı dostateènì vıkonnı hardware, kterı by tuto úlohu zvládl v rozumném èase. Máme tedy tøi monosti, kde a jak model vytrénovat. Èas potøebnı k trénování je ovlivnìn mnostvím trénovacích dat, komplexitou modelu a hardwarovım vıkonem. 
+
+První, nejjednoduší, ale nejménì vıkonná varianta je trénování na notebooku nebo stolním poèítaèi pomocí procesoru. Tento zpùsob je pomìrnì neefektivní -- napøíklad pøi pouití metody \uv{transfer learning} se model trénoval 6 dní èistého èasu, ne se stal pouitelnım. Trénování takového modelu bez pouití metody \uv{transfer learning} by trvalo tıdny. 
+
+Druhá varianta, která je komplexnìjší na zprovoznìní je trénování na lokálním stroji pomocí grafické karty. Tato metoda je podstatnì více efektivní, ne trénování na procesoru poèítaèe. Na dvou desktopovıch grafickıch kartách \textit{Nvidia GeForce GTX 650} byl model pouitelnı po 7 hodinách pøi pouití metody \uv{transfer learning}. 
+
+Nejpraktiètìjší, ale nejsloitìjší na zprovoznìní je trénování na vzdálenıch serverech. Google poskytuje na platformì \textit{Google Cloud Platform} produkt \textit{ML Engine}~\cite{googlemlengine}, kterı je specializován mimo jiné i na trénování modelù -- tzn. je pouit optimální hardware. Spoleènost Google stojí za frameworkem TensorFlow i platformou \textit{ML Engine}, proto je jejich integrace relativnì dobøe vyøešená. Tento fakt dìlá tzv. \uv{cloud learning} nejefektnivnìjším øešením.
+
+\subsubsection{Monitorování prùbìhu trénování}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{media/tensorboard_loss.png}
+	\caption{Vizualizace prùbìhu trénování programem TensorBoard.}
+	\label{fig:tensor_models}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{media/tensorboard_overview.png}
+	\caption{Úvodní obrazovka programu TensorBoard: pøehled stavu trénování.}
+	\label{fig:tensor_models}
+\end{figure}
 
 \subsubsection{Trénování lokálnì}
 %train the network
