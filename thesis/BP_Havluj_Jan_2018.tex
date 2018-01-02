@@ -36,7 +36,8 @@
 \colorlet{punct}{red!60!black}
 \definecolor{delim}{RGB}{20,105,176}
 \colorlet{numb}{magenta!60!black}
-\lstset{frame=tb,
+\lstset{frame=shadowbox,
+	rulesepcolor=\color{gray},
 	language=Java,
 	aboveskip=3mm,
 	belowskip=3mm,
@@ -54,7 +55,6 @@
 }
 \lstdefinelanguage{XML}
 {
-	basicstyle={\small\ttfamily},
 	morestring=[s]{"}{"},
 	morecomment=[s]{?}{?},
 	morecomment=[s]{!--}{--},
@@ -64,13 +64,19 @@
 	stringstyle=\color{blue},
 	identifierstyle=\color{maroon}
 }
+\lstdefinelanguage{bash}
+{
+	numbers=none,
+	prebreak={\space\textbackslash},
+	showstringspaces=false,
+	commentstyle=\color{red},
+	keywordstyle=\color{blue}
+}
 \lstdefinelanguage{json}{
-	basicstyle={\small\ttfamily},
 	stepnumber=1,
 	numbersep=8pt,
 	showstringspaces=false,
 	breaklines=true,
-	frame=lines,
 	literate=
 	*{0}{{{\color{numb}0}}}{1}
 	{1}{{{\color{numb}1}}}{1}

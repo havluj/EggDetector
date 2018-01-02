@@ -151,13 +151,40 @@ python3 $OBJ_DET/train.py --logtostderr --train_dir=training/ --pipeline_config_
 \end{lstlisting}
 Parametry mùžeme specifikovat, jak a kolik grafických karet má být využito. Napøíklad pøi použití dvou grafických karet jsem specifikoval tyto parametry: \texttt{--num\_clones=2 --ps\_tasks=1}. Více informací viz \cite{odtrainmultigpu}.
 
-
 \subsubsection{Trénování modelu na Google Cloud ML Engine~\cite{googlemlengine}}
+Abychom mohli model trénovat na Google Cloud ML Engine, je potøeba nìkolik krokù navíc. Výborný návod, který popisuje, jak zprovoznit trénování krok po kroku mùže ètenáø najít zde: \url{https://medium.com/google-cloud/object-detection-tensorflow-and-google-cloud-platform-72e0a3f3bdd6}.
+
+\begin{figure}
+	\centering
+	\subfloat[Google Cloud Storage Bucket naplnìný daty.]{{\includegraphics[width=0.45\textwidth]{media/cloudmlbucket.png}\label{fig:cloudmlbucket} }}%
+	\qquad
+	\subfloat[Výstup trénování na Google Cloud Machine Learning Engine.]{{\includegraphics[width=0.45\textwidth]{media/cloudmllog.png}\label{fig:cloudmllog} }}%
+	\caption{Použití Google Cloud Platform.}
+	\label{fig:cloudml}
+\end{figure}
+
+Jakmile máme pøipravené naše uložištì (viz obr. \ref{fig:cloudmlbucket}), mùžeme spustit \uv{vzdálený trénink}:
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=bash]
+gcloud ml-engine jobs submit training object_detection_${version_unique_ID} \
+	--job-dir=gs://eggdata/train \
+	--packages dist/object_detection-0.1.tar.gz,slim/dist/slim-0.1.tar.gz \
+	--module-name object_detection.train \
+	--config object_detection/samples/cloud/cloud.yml \
+	-- \
+	--train_dir=gs://eggdata/train \
+	--pipeline_config_path=gs://eggdata/data/faster_rcnn_resnet101_coco.config
+\end{lstlisting}
+\end{minipage}
+Prùbìh trénování je zaznamenáván do \uv{logu}, který je videt na obrázku \ref{fig:cloudmllog}. Samozøejmì mùžeme použít i nástroj TensorBoard stejnì, jako kdybychom model trénovali lokálnì:
+\begin{lstlisting}[language=bash]
+tensorboard --logdir=gs://eggdata --port=8080
+\end{lstlisting}
 
 \section{Ovìøení funkènosti a výsledky}
 %export inference graph
 %```
-%python3.5 export_inference_graph.py \
+%python3 export_inference_graph.py \
 %--input_type image_tensor \
 %--pipeline_config_path training/ssd_mobilenet_v1_coco.config \
 %--trained_checkpoint_prefix training/model.ckpt-7918 \
