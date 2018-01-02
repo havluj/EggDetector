@@ -18,8 +18,14 @@ Folder trimmer is a command line tool for deleting useless data the download scr
 	\begin{itemize}
 		\item First parameter can be \texttt{true} or \texttt{false} and it determines whether you want to delete everything except manually tagged data (containing imgdata.xml) in case of \texttt{true} or if you just want to delete the useless data in case of \texttt{false}.
 		\item Second parameter specifies the root folder of the data that should be trimmed. 
-		\item For example to delete only useless data but keep all the folders with	some image data, use: \texttt{target\textbackslash run.bat false C:\textbackslash school\textbackslash bakalarka\textbackslash data}.
-		\item To delete everything except tagged data, run: \texttt{target\textbackslash run.bat true C:\textbackslash school\textbackslash bakalarka\textbackslash data}.
+		\item For example to delete only useless data but keep all the folders with	some image data, use:
+		\begin{lstlisting}[language=bash] 
+		target/run.sh false ~/eggdetector/data
+		\end{lstlisting}
+		\item To delete everything except tagged data, run: 
+		\begin{lstlisting}[language=bash] 
+		target/run.sh true ~/eggdetector/data
+		\end{lstlisting}
 	\end{itemize}
 \end{itemize}
 
