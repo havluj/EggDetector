@@ -1,5 +1,81 @@
 \chapter{Implementace detekování objektù}\label{chap:impl_detekce}
+%V této kapitole se zamìøíme na implementaci neuronové sítì, která bude mít za cíl rozpoznat, do které kategorie snímek patøí. Jedná se tedy o klasifikaci do pøedem daných kategorií. Vstupem pro naše skripty bude obrázek libovolné velikosti. Internì bude zmenšen na velikost 300~x~300 bodù. Snímek bude reprezentován pole hodnot o velikosti 300~x~300~x~3 (snímek velikosti 300~x~300 bodù a zùstane barevný -- každý bod obsahuje 3 barevné složky. Kategorií, do kterých budeme chtít snímky rozøadit, bude \textbf{11}:
+%\begin{description}[labelindent=1cm]
+%	\item[Kategorie \uv{egg}:] Objekt vejce.
+%\end{description}
+
+Celé øešení -- pøíprava dat, trénování neuronové sítì, testování funkènosti a mìøení pøesnosti budeme implementovat v programovacím jazyce Python~3.
+
+\section{Pøíprava vývojového prostøedí}
+Abychom mohli používat \texttt{TensorFlow Object Detection API}, je potøeba následnì pøipravit vývojové prostøedí:
+\begin{enumerate}
+	\item Nainstalovat \texttt{Python~3} a \texttt{pip3}.
+	\item Stáhnout repositoø s TensorFlow modely: \texttt{git clone https://github.com/tensorflow/models}.
+	\item Nainstalovat modely: \texttt{cd models/research \&\& python3 setup.py}.
+	\item Pøidat tyto øádky do \texttt{\textasciitilde/.bashrc} (path\_to\_models\_directory nahradíme skuteèným umístìním modelù):
+	\begin{lstlisting}[language=bash]
+	export MODELS=path_to_models_directory
+	export PYTHONPATH=$MODELS:$MODELS/slim
+	export OBJ_DET=$MODELS/object_detection
+	\end{lstlisting}
+	\item Nainstalovat TensorFlow: \texttt{sudo pip3 install tensorflow-gpu} nebo \texttt{sudo pip3 install tensorflow}. Více informací viz \cite{tensor_install}.
+	\item Pro ovìøení instalace spustíme interaktivní \texttt{Python 3}:
+	\begin{lstlisting}[language=Python]
+	import tensorflow as tf
+	hello = tf.constant('EggDetector!')
+	sess = tf.Session()
+	print(sess.run(hello))
+	\end{lstlisting}
+	Systém by mìl odpovìdìt \uv{\texttt{EggDetector!}}.
+\end{enumerate}
 
 \section{Pøíprava dat}
+o label img a poctu obrazku
+
+rozdeleni dat na testovaci a trenovaci
+
+
+%
+%generate csv files from xml
+%`python3.5 xml_to_csv.py`
+%
+%generate train data
+%`python3.5 generate_tfrecord.py --csv_input=data/train_labels.csv --output_path=data/train.record`
+%
+%generate test data
+%`python3.5 generate_tfrecord.py --csv_input=data/test_labels.csv --output_path=data/test.record`
+%
+
+
 \section{Trénování neuronové sítì}
-\section{Ovìøení funkènosti}
+struktura slozky
+
+konfiguration file
+
+muzeme trenovat lokalne nebo na cloudu
+
+lokalne: 
+%train the network
+%`$OBJ_DET/train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/ssd_mobilenet_v1_coco.config`
+%
+
+na cloudu
+
+sledovani trenovani
+
+\section{Ovìøení funkènosti a výsledky}
+%export inference graph
+%```
+%python3.5 export_inference_graph.py \
+%--input_type image_tensor \
+%--pipeline_config_path training/ssd_mobilenet_v1_coco.config \
+%--trained_checkpoint_prefix training/model.ckpt-7918 \
+%--output_directory frozen_graph
+%```
+
+ipnb notebook
+
+ukazka vysledku trenovani podle jednoho modelu a trenovani podle druheho modelu
+
+\section{Závìr}
+

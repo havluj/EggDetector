@@ -1,5 +1,5 @@
 \chapter{Implementace rozpoznávání obrazu}\label{chap:impl_rozpoz}
-V této kapitole se zamìøíme na implementaci neuronové sítì, která bude mít za cíl rozpoznat, do které kategorie snímek patøí. Øešíme tedy problém klasifikace obrazu. Kategorií, do kterých budeme chtít snímky rozøadit, bude \textbf{11}:
+V této kapitole se zamìøíme na implementaci neuronové sítì, která bude mít za cíl rozpoznat, do které kategorie snímek patøí. Jedná se tedy o klasifikaci do pøedem daných kategorií. Vstupem pro naše skripty bude obrázek libovolné velikosti. Internì bude zmenšen na velikost 300~x~300 bodù. Snímek bude reprezentován pole hodnot o velikosti 300~x~300~x~3 (snímek velikosti 300~x~300 bodù a zùstane barevný -- každý bod obsahuje 3 barevné složky. Kategorií, do kterých budeme chtít snímky rozøadit, bude \textbf{11}:
 \begin{description}[labelindent=1cm]
 	\item[Kategorie \uv{0}:] Pro snímky, kde je poèet vajec roven \textbf{0}.
 	\item[Kategorie \uv{1}:] Pro snímky, kde je poèet vajec roven \textbf{1}.
@@ -14,7 +14,7 @@ V této kapitole se zamìøíme na implementaci neuronové sítì, která bude mít za cí
 	\item[Kategorie \uv{10}:] Pro snímky, kde je poèet vajec roven \textbf{10}.
 \end{description}
 	
-Celé øešení -- pøíprava dat, trénování neuronové sítì, testování funkènosti a mìøení pøesnosti -- budeme implementovat v programovacím jazyce Python 3.
+Celé øešení -- pøíprava dat, trénování neuronové sítì, testování funkènosti a mìøení pøesnosti budeme implementovat v programovacím jazyce Python~3.
 
 \section{Pøíprava dat}
 Nástrojem \texttt{Tagger} (viz kapitola \ref{chap:tagger}) jsem oznaèil \textbf{6178 snímkù}. Všechny tyto snímky budou sloužit jako trénovací nebo testovací data pro tuto kapitolu.
