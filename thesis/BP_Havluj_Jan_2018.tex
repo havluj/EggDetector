@@ -21,6 +21,7 @@
 \usepackage[czech]{babel}
 \usepackage[T1]{fontenc}
 \usepackage{float}
+\usepackage{empheq}
 
 \usepackage{textcomp}
 
@@ -218,6 +219,9 @@
 \chapter{Konfigurace detekování objektù}\label{chap:config_detection}
 Výsledný konfiguraèní soubor použitý spoleènì s modelem \texttt{ssd\_mobilenet\_v1\_coco}:
 \lstinputlisting[language=json]{media/pipeline.config}
+
+\chapter{Test efektivity knihovny}\label{chap:test_efektivity}
+\lstinputlisting[caption={Test k vyhodnocení efektivy knihovny.}]{media/SuccessRateTest.java}
 
 
 \chapter{Použité programy}

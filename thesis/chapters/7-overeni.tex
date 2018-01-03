@@ -1,13 +1,104 @@
 \chapter{Ovìøení implementace}\label{chap:overeniatestovani}
+V této kapitole se zamìøíme testování, validaci a mìøení efektivity implementace knihovny popsané v kapitole \ref{chap:javaknihovna}. Všechny testy jsou implementovány v jazyce Java pomomcí testovacího frameworku JUnit~\cite{junitdoc}. Zdrojové kódy testù jsou dostupné v pøíloze \ref{chap:cd}.
 
-\subsection{Testování funkènosti}
-2 testy
+\section{Testování funkènosti}
+Abych dokázal, že souèasná implementace knihovny funguje, napsal jsem dva jednotkové testy\footnote{Unit testing.}. 
 
-\subsection{Testování distribuce}
-jeden projekt mimo, kde knihovnu pridame formou zavislosti
+První test využívá pìt snímkù pøiložených ke zdrojovým kódùm testù. Nejdøíve porovnává pøedem známý poèet vajec v tìchto snímcích s poètem, který vypoèítá knihovna. Následnì je porovnán výsledný poèet vajec, který byl vypoèítán z tìchto 5 snímkù.
 
-\subsection{Mìøení efektivity implementace}\label{sec:efektivita_knihovny}
-test, kde to projedeme všechna data
-vysledky testu
+\begin{lstlisting}[caption={Testování softwarové knihovny EggDetector.}]
+public class PackagedDataTest {
+	
+	static EggDetector eggDetector;
+	static SequenceClassifier sequenceClassifier;
+	
+	@BeforeClass
+	public static void setUp() {
+		eggDetector = new EggDetector();
+		sequenceClassifier = eggDetector.evaluate(new File(PackagedDataTest.class.getClassLoader().
+		getResource("sample_images").getFile()));
+	}
+	
+	@AfterClass
+	public static void close() {
+		eggDetector.closeSession();
+	}
+	
+	@Test
+	public void testIndividualScores() {
+		Map<String, Integer> res = sequenceClassifier.getIndividualCounts();
+		Assert.assertEquals((int) res.get("image1.png"), 9);
+		Assert.assertEquals((int) res.get("image2.png"), 5);
+		Assert.assertEquals((int) res.get("image3.jpg"), 3);
+		Assert.assertEquals((int) res.get("image4.jpg"), 4);
+		Assert.assertEquals((int) res.get("image5.jpg"), 3);
+	}
+	
+	@Test
+	public void testFinalScore() {
+		// we expect 3, because we counted 3 eggs 2 times
+		Assert.assertEquals((int) sequenceClassifier.getFinalCount(), 3);
+	}
+}
+\end{lstlisting}
 
-nejlepši nastaveni thresholdu
+Druhý test porovnává výsledky knihovny s manuálnì oznaèenými daty nástrojem \texttt{Tagger} (viz kapitola \ref{chap:tagger}). Vstupem je pouze jedna složka s libovolným poètem snímkù.
+
+\section{Testování distribuce}
+Abychom otestovali, že knihovna splòuje funkèní požadavek na distribuci, vytvoøíme nový projekt, ve kterém se pokusíme knihovnu použít. Pøidáme knihovnu EggDetector do projektu:
+\begin{lstlisting}[language=XML]
+<dependency>
+	<groupId>org.cvut.havluja1</groupId>
+	<artifactId>eggdetector</artifactId>
+	<version>1.0</version>
+	<scope>system</scope>
+	<systemPath>${basedir}/../eggdetector-lib-final/eggdetector-1.0-jar-with-dependencies.jar</systemPath>
+</dependency>
+\end{lstlisting}
+a pokusíme se jí použít.
+
+Je vidìt, že distribuce funguje. Zdrojové kódy externího projektu se nachází v pøíloze \ref{chap:cd} ve složce \texttt{src/libtest}.
+
+\section{Mìøení efektivity implementace}\label{sec:efektivita_knihovny}
+Pro urèení efektivity naší implementace využijeme manuálnì oznaèených \textbf{6178 snímkù} nástrojem Tagger. Porovnáme také výsledky pøi rùzných nastaveních \uv{thresholdu} knihovny (viz kapitola \ref{sec:impl_impl}).
+
+Zdrojový kód testu je vypsán v pøíloze \ref{chap:test_efektivity}. Knihovnu otestujeme na stejných datech s 5 rùznými nastaveními \uv{thresholdu}. V nadcházejících sekcích jsou vypsány výsledky.
+
+V testu se zamìøíme na dvì metriky. První metrikou je pomìr je procentuální úspìšnost knihovny. Tu získáme následujícím zpùsobem:
+\begin{empheq}[box=\fcolorbox{black}{white}]{align*}
+\textrm{úspìšnost} = \frac{\textrm{souèet správnì urèených poètù vajec}}{\textrm{celkový poèet videosekvencí}} * 100
+\end{empheq}
+Druhou metrikou je rozdíl mezi oèekávaným poètem vajec a výsledkem, který dostaneme použitím knihovny:
+\begin{empheq}[box=\fcolorbox{black}{white}]{align*}
+\textrm{vzdálenost} = \sum_{n=1}^{\textrm{poèet videosekvencí}} | \textrm{známý poèet vajec} - \textrm{poèet vajec vypoèítaný knihovnou} |
+\end{empheq}
+
+Druhá metrika je lepším nástrojem pro mìøení efektivity, protože øíká, o kolik vajec se knihovna spletla. Z toho vyplívá, že \textbf{èím nižší èíslo, tím lepší efektivita}.
+
+\subsection{Test efektivity s nastavením hranice na 60\%}
+\begin{lstlisting}[language=bash]
+res
+\end{lstlisting}
+
+\subsection{Test efektivity s nastavením hranice na 50\%}
+\begin{lstlisting}[language=bash]
+res
+\end{lstlisting}
+
+\subsection{Test efektivity s nastavením hranice na 40\%}
+\begin{lstlisting}[language=bash]
+res
+\end{lstlisting}
+
+\subsection{Test efektivity s nastavením hranice na 30\%}
+\begin{lstlisting}[language=bash]
+res
+\end{lstlisting}
+
+\subsection{Test efektivity s nastavením hranice na 20\%}
+\begin{lstlisting}[language=bash]
+res
+\end{lstlisting}
+
+\section{Závìr}
+V této kapitole jsme dokázali, že má implementace knihovny funguje a je možné jí použít formou závislostí z jiného projektu. Mìøením efektivity knihovny jsme došli k závìru, že nejlepší nastavení hranice pro detekci objektù je \textbf{30\%}. Knihovnu tedy upravíme tak, aby toto nastavení používala jako výchozí hodnotu.
