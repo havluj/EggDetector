@@ -77,28 +77,48 @@ Druhá metrika je lepším nástrojem pro mìøení efektivity, protože øíká, o kolik v
 
 \subsection{Test efektivity s nastavením hranice na 60\%}
 \begin{lstlisting}[language=bash]
-res
+Found 186 directories.
+EggDetector evaluated 57 directories correctly.
+57/186: 30.645163% success rate.
+Egg count of all folders added together: 982.
+Distance (|real eggs - found eggs|): 409 eggs (smaller is better).
 \end{lstlisting}
 
 \subsection{Test efektivity s nastavením hranice na 50\%}
 \begin{lstlisting}[language=bash]
-res
+Found 186 directories.
+EggDetector evaluated 59 directories correctly.
+59/186: 31.72043% success rate.
+Egg count of all folders added together: 982.
+Distance (|real eggs - found eggs|): 367 eggs (smaller is better).
 \end{lstlisting}
 
 \subsection{Test efektivity s nastavením hranice na 40\%}
 \begin{lstlisting}[language=bash]
-res
+Found 186 directories.
+EggDetector evaluated 62 directories correctly.
+62/186: 33.333336% success rate.
+Egg count of all folders added together: 982.
+Distance (|real eggs - found eggs|): 336 eggs (smaller is better).
 \end{lstlisting}
 
 \subsection{Test efektivity s nastavením hranice na 30\%}
 \begin{lstlisting}[language=bash]
-res
+Found 186 directories.
+EggDetector evaluated 62 directories correctly.
+62/186: 33.333336% success rate.
+Egg count of all folders added together: 982.
+Distance (|real eggs - found eggs|): 311 eggs (smaller is better).
 \end{lstlisting}
 
 \subsection{Test efektivity s nastavením hranice na 20\%}
 \begin{lstlisting}[language=bash]
-res
+Found 186 directories.
+EggDetector evaluated 46 directories correctly.
+46/186: 24.731182% success rate.
+Egg count of all folders added together: 982.
+Distance (|real eggs - found eggs|): 340 eggs (smaller is better).
 \end{lstlisting}
 
-\section{Závìr}
-V této kapitole jsme dokázali, že má implementace knihovny funguje a je možné jí použít formou závislostí z jiného projektu. Mìøením efektivity knihovny jsme došli k závìru, že nejlepší nastavení hranice pro detekci objektù je \textbf{30\%}. Knihovnu tedy upravíme tak, aby toto nastavení používala jako výchozí hodnotu.
+\section{Shrnutí kapitoly}
+V této kapitole bylo dokázáno, že implementace knihovny funguje a je možné jí použít formou závislostí z jiného projektu. Mìøením efektivity knihovny jsme došli k závìru, že nejlepší nastavení hranice pro detekci objektù je \textbf{30\%}. Knihovnu tedy upravíme tak, aby toto nastavení používala jako výchozí hodnotu.
