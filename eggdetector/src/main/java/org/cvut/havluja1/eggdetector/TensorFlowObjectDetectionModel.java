@@ -151,7 +151,7 @@ class TensorFlowObjectDetectionModel {
             frame.setLayout(new FlowLayout());
             frame.setSize(convertedImg.getWidth(), convertedImg.getHeight());
             JLabel lbl = new JLabel();
-            frame.setTitle("Java (Win/Ubuntu), Tensorflow");
+            frame.setTitle("EggDetector");
             lbl.setIcon(icon);
             frame.add(lbl);
             frame.setVisible(true);
