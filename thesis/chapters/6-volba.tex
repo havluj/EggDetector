@@ -25,7 +25,9 @@ Pøi tvorbì uivatelského rozhraní vycházíme z prvotního návrhu, kterı vznikl ana
 \section{Implementace}
 Kompletní zdrojové kódy implementace jsou dostupné v pøíloze \ref{chap:cd}. Knihovnu zkompilujeme nástrojem Maven: \texttt{mvn clean package -DskipTests}.
 
-\begin{lstlisting}[caption={Poèítání finálního poètu vajec pro celou sloku pomocí dat z jednotlivıch snímkù.}]
+Neuronová sí, která se stará o detekci a klasifikaci objektù na jednotlivıch snímcích vrací vısledek ve jako mnoinu detekcí. Kadá detekce se skládá z informací o umístìní objektu, typu objektu a pravdìpodobnosti v procentech, e se opravdu o danı objekt jedná. Je tedy nutné stanovit hranici\footnote{Threshold.}, která slouí jako mezník, zda-li je vısledek relevantní, èi nikoliv. Jestlie nastavíme hranici napøíklad na 30\%, knihovna vrátí pouze detekované objekty, u kterıch si je jistá alespoò na 30\%. Kdybychom nastavili hranici na 0\%, knihovna by vrátila všechny moné detekce nalezené v obrázku. Celkovı poèet objektù na snímku je limitován na 100. V kapitole \ref{sec:efektivita_knihovny} se zamìøíme na to, jak nastavená hranice pøináší nejlepší vısledky.
+
+\begin{lstlisting}[caption={Poèítání finálního poètu vajec pro celou sloku pomocí dat z jednotlivıch snímkù.},label={alg:celkovypocetvajec}]
 public Integer getFinalCount() {
 	TreeMap<Integer, Integer> scores = new TreeMap<>();
 	
@@ -117,7 +119,9 @@ Abychom splnili funkèní poadavek \textbf{F2} (viz kapitola \ref{sec:cil_funkcni
 \section{Vısledek}
 Vısledkem této kapitoly je funkèní softwarová knihovna v jazyce Java, která splòuje všechny cíle stanovené na zaèátku práce. Ke knihovnì je dostupná kompletní uivatelská dokumentace.
 
-Knihovna obsahuje \uv{debuggovací} reim, kterı vizualizuje, jakım zpùsobem knihovna reprezentuje detekce internì. Ukázka \uv{debuggovacího} reimu je vidìt na obrázcích \ref{fig:eggdetectordebug}.
+Uivatel získá pøístup k detekovanému poètu vajec v poadované sloce (vıpoèet celkového poètu viz alg. \ref{alg:celkovypocetvajec}) i k informacím o jednotlivıch snímcích. Uivatel má monost zmìnit hranici, podle které knihovna urèí, jaká podmnoina vısledkù je relevantní. Napøíklad pøi nastavení hranice na 50\% budou brány v potaz pouze detekce, u kterıch si je knihovna jistá alespoò na 50\%.
+
+Knihovna obsahuje \uv{debuggovací} reim, kterı vizualizuje, jakım zpùsobem jsou detekce reprezentovıny internì. Ukázka \uv{debuggovacího} reimu je vidìt na obrázcích \ref{fig:eggdetectordebug}.
 
 \begin{figure}[ht]
 	\centering
