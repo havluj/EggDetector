@@ -236,17 +236,22 @@ Výsledný konfiguraèní soubor použitý spoleènì s modelem \texttt{ssd\_mobilenet\_
 \chapter{Obsah pøiloženého média}\label{chap:cd}
 \begin{figure}
 	\dirtree{%
-		.1 readme.txt\DTcomment{struèný popis obsahu CD}.
 		.1 bin\DTcomment{adresáø se spustitelnou formou implementace}.
 		.1 doc\DTcomment{adresáø s dokumentací implementace}.
+		.1 text\DTcomment{text práce}.
+		.2 thesis.pdf\DTcomment{text práce ve formátu PDF}.
 		.1 src.
 		.2 impl\DTcomment{zdrojové kódy implementace}.
 		.3 eggdetector\DTcomment{zdrojové kódy implementace knihovny}.
-		.3 \texttt{nn\_training}\DTcomment{zdrojové kódy pro trénování neuronové sítì}.
+		.3 \texttt{egg\_recognition}\DTcomment{zdrojové kódy implementace rozpoznávání obrazu}.
+		.3 \texttt{object-detection-training}\DTcomment{zdrojové kódy implementace detekce objektù}.
 		.3 tools\DTcomment{zdrojové kódy pomocných nástrojù k tvorbì bakaláøské práce}.
-		.2 thesis\DTcomment{zdrojová forma práce ve formátu \LaTeX{}}.
-		.1 text\DTcomment{text práce}.
-		.2 thesis.pdf\DTcomment{text práce ve formátu PDF}.
+		.4 \texttt{foldertrimmer}\DTcomment{zdrojové kódy nástroje FolderTrimmer}.
+		.4 \texttt{tagger}\DTcomment{zdrojové kódy nástroje Tagger}.
+		.4 \texttt{download.sh}\DTcomment{skript pro hromadné stažení dat}.
+		.3 \texttt{libtest}\DTcomment{projekt pro testování distribuce knihovny}.
+		.2 thesis\DTcomment{zdrojové kód textu práce}.
+		.1 readme.txt\DTcomment{struèný popis obsahu média}.
 	}
 \end{figure}
 
