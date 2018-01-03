@@ -80,11 +80,10 @@ Na disku vytvoøíme složku \texttt{egg\_recognition}, ve které se budeme pohybova
 		.1 egg\_recognition\DTcomment{pracovní složka}.
 		.2 bottlenecks.
 		.2 models.
+		.3 inception\_v4.pb\DTcomment{nutné pro správné fungování skriptu \texttt{retrain.py}}.
 		.2 training\_summaries.
 		.2 result\DTcomment{umístìní výsledného modelu}.
 		.2 training\_data\DTcomment{trénovací data ve formátu specifikovaném výše}.
-		.2 models.
-		.3 inception\_v4.pb\DTcomment{nutné pro správné fungování skriptu \texttt{retrain.py}}.
 	}
 \end{figure}
 
@@ -104,7 +103,7 @@ python3 retrain.py \
 	--random_scale=7
 	--random_brightness=4
 \end{lstlisting}
-Hodnoty parametrù \texttt{random\_crop} a \texttt{random\_scale} a \texttt{random\_brightness} a \texttt{how\_many\_training\_steps} mùžeme zmìnit. K hodnotám uvedeným výše jsem dospìl opakovaným testováním a tyto hodnoty produkovaly nejlepší výsledky. Samotný skript \texttt{retrain.py}~\cite{recog_retrain.py} poskytuje nejlepší dokumentaci dostupných parametrù.
+Hodnoty parametrù \texttt{how\_many\_training\_steps}, \texttt{random\_brightness}, \texttt{random\_scale} a \newline\texttt{random\_crop} mùžeme zmìnit. K hodnotám uvedeným výše jsem dospìl opakovaným testováním a tyto hodnoty produkovaly nejlepší výsledky. Samotný skript \texttt{retrain.py}~\cite{recog_retrain.py} poskytuje nejlepší dokumentaci dostupných parametrù.
 
 \section{Ovìøení funkènosti a výsledky}
 Vytrénovaný a vyexportovaný model mùžeme otestovat pomocí veøejnì dostupného skriptu \texttt{label\_image.py}~\cite{recog_label_image.py}:

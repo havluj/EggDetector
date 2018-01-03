@@ -69,7 +69,7 @@ Neuronové sítì mùeme naprogramovat v libovolném programovacím jazyce. Tato podm
 Distribuci pøeloeného zdrojového kódu vyøešíme pomocí nástroje pro správu, øízení a automatizaci buildù aplikací. Maven je pro nás nejvhodnìjší volba, vzhledem k druhé èásti podmínky -- Do archivu bude pøibalen konfiguraèní soubor pro systém Maven s definicí závislostí.
 
 \subsection{F3}
-\textit{Knihovna musí umìt pracovat se strukturou dat na serveru \url{http://athena.pef.czu.cz/ptacionline/}.}
+\textit{Knihovna musí umìt pracovat se strukturou dat na serveru \newline\url{http://athena.pef.czu.cz/ptacionline/}.}
 
 \vspace{0.5cm}
 Knihovna bude schopna pracovat se strukturou dat popsanou v kapitole \ref{sec:vstupni_data}. Uivateli bude schopen interagovat s knihovnou, která bude reflektovat strukturu dat projektu:\newline
@@ -132,6 +132,14 @@ Jádro implementace bude tvoøit neuronová sí, která bude vytvoøena metodou \uv{u
 	\caption{Program urèenı ke klasifikaci obrazu.}
 	\caption*{\tiny{Zdroj: dokumentace softwarové knihovny TensorFlow~\cite{tens_recognition}.}}
 	\label{fig:ukazka_img_klasifikace}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{media/img_detekce.png}
+	\caption{Program urèenı k detekci objektù.}
+	\caption*{\tiny{Zdroj: dokumentace softwarové knihovny TensorFlow~\cite{tens_detection}.}}
+	\label{fig:ukazka_img_detekce}
 \end{figure}
 
 Existuje nìkolik zpùsobù, jak neuronovou sí vytrénovat. Prvním monım øešením je neuronová sí urèená ke klasifikaci celého obrazu. Typickım vstupem je snímek, ve kterém je objekt, kterı chceme rozpoznat, nejvıraznìjší. Pokroèilejší typ této sítì je schopnı popsat komplexnìjší scény, jako napøíklad \uv{Dva lidé na plái.}. Ukázka takového programu je vidìt na obrázku \ref{fig:ukazka_img_klasifikace}. V našem pøípadì bychom klasifikovali poèet vajec v hnízdì, kde by jednotlivé vısledky reprezentovali poèet vajec na daném snímku. Tzn. vıstupem takové neuronové sítì by byla jedna z pøedem danıch kategorií, o které si s nejvìtší pravdìpodobností myslíme, e popisuje, co je na daném snímku. Kadá kategorie by reprezentovala jinı poèet vajec v hnízdì, napøíklad kategorie 0, kategorie 1, atd.

@@ -12,8 +12,14 @@ Celé øešení -- pøíprava dat, trénování neuronové sítì, testování funkènosti a mì
 Abychom mohli používat \texttt{TensorFlow Object Detection API}, je potøeba následnì pøipravit vývojové prostøedí:
 \begin{enumerate}
 	\item Nainstalovat \texttt{Python~3} a \texttt{pip3}.
-	\item Stáhnout repositoø s TensorFlow modely: \texttt{git clone https://github.com/tensorflow/models}.
-	\item Nainstalovat modely: \texttt{cd models/research \&\& python3 setup.py}.
+	\item Stáhnout repositoø s TensorFlow modely:
+	\begin{lstlisting}[language=bash]
+	git clone https://github.com/tensorflow/models
+	\end{lstlisting}
+	\item Nainstalovat modely:
+	\begin{lstlisting}[language=bash]
+	cd models/research && python3 setup.py
+	\end{lstlisting}
 	\item Pøidat tyto øádky do \texttt{\textasciitilde/.bashrc} (path\_to\_models\_directory nahradíme skuteèným umístìním modelù):
 	\begin{lstlisting}[language=bash]
 	export MODELS=path_to_models_directory
@@ -32,7 +38,7 @@ Abychom mohli používat \texttt{TensorFlow Object Detection API}, je potøeba násl
 \end{enumerate}
 
 \section{Pøíprava dat}
-Nástrojem LabelImg (viz kapitola \ref{subsec:labelimg}) jsem oznaèil \textbf{1800} vajec. Data je potøeba rozdìlit na trénovací a testovací. Testovací data slouží k validaci a vyhodnocení úspìšnosti trénovaného modelu. Standardnì se data dìlí pøibližnì v pomìru 9:1 ve prospìch trénovacích dat. Data jsem rozdìlil následnovnì:
+Nástrojem LabelImg (viz kapitola \ref{subsec:labelimg}) jsem oznaèil \textbf{1890} vajec. Data je potøeba rozdìlit na trénovací a testovací. Testovací data slouží k validaci a vyhodnocení úspìšnosti trénovaného modelu. Standardnì se data dìlí pøibližnì v pomìru 9:1 ve prospìch trénovacích dat. Data jsem rozdìlil následnovnì:
 \begin{itemize}
 	\item \textbf{1701} výskytù vajec jako trénovací data,
 	\item \textbf{189} výskytù vajec jako data validaèní.
@@ -83,7 +89,7 @@ Všechny skripty, které používáme k trénování a validaci jsou dostupné v pøíloze 
 Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extrémnì} výpoèetnì nároèné je vytrénovat. Uèení \uv{pøenosem modelu}\footnote{Transfer learning.} je technika, která ušetøí spoustu práce využitím již pøed-trénovaného modelu a pøetrénováním pouze finálních vrstev~\cite{decaf}. Trénování sítì \uv{od nuly} je standardnì efektivnìjší, ale v mém testování jsem ve výsledcích rozdíl nepocítil. Proto jsem se rozhodl o použítí již pøedtrénovaného modelu.
 
 \subsection{Výchozí model}
-V rámci této implementace jsem zkusil použil tøi rùzné modely, které sloužily jako startovní bod pro trénování. Nejlepší výsledky se dostavily pøi použítí modelu \texttt{ssd\textunderscore mobilenet\textunderscore v1\textunderscore coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2017_11_17.tar.gz} nebo v pøíloze \ref{chap:cd}.}~\cite{tensor_models}. Modely, které nebyly tak úspìšné jsou: \texttt{faster\_rcnn\_nas\_coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_2017_11_08.tar.gz}.} a \texttt{faster\_rcnn\_resnet101\_coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2017_11_08.tar.gz}.}. Stažený model umístíme do složky \texttt{training} v pracovním adresáøi. Další modely, jejich rychlost a efektivita jsou zobrazeny na obrázku \ref{fig:tensor_models}.
+V rámci této implementace jsem zkusil použil tøi rùzné modely, které sloužily jako startovní bod pro trénování. Nejlepší výsledky se dostavily pøi použítí modelu \texttt{ssd\textunderscore mobilenet\textunderscore v1\textunderscore coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2017_11_17.tar.gz} nebo v pøíloze \ref{chap:cd}.}~\cite{tensor_models}. Modely, které nebyly tak úspìšné jsou: \texttt{faster\_rcnn\_nas\_coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_2017_11_08.tar.gz}.} a \newline\texttt{faster\_rcnn\_resnet101\_coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2017_11_08.tar.gz}.}. Stažený model umístíme do složky \texttt{training} v pracovním adresáøi. Další modely, jejich rychlost a efektivita jsou zobrazeny na obrázku \ref{fig:tensor_models}.
 
 \begin{figure}
 	\centering
@@ -152,7 +158,7 @@ python3 $OBJ_DET/train.py --logtostderr --train_dir=training/ --pipeline_config_
 Parametry mùžeme specifikovat, jak a kolik grafických karet má být využito. Napøíklad pøi použití dvou grafických karet jsem specifikoval tyto parametry: \texttt{--num\_clones=2 --ps\_tasks=1}. Více informací viz \cite{odtrainmultigpu}.
 
 \subsubsection{Trénování modelu na Google Cloud ML Engine~\cite{googlemlengine}}
-Abychom mohli model trénovat na Google Cloud ML Engine, je potøeba nìkolik krokù navíc. Výborný návod, který popisuje, jak zprovoznit trénování krok po kroku mùže ètenáø najít zde: \url{https://medium.com/google-cloud/object-detection-tensorflow-and-google-cloud-platform-72e0a3f3bdd6}.
+Abychom mohli model trénovat na Google Cloud ML Engine, je potøeba nìkolik krokù navíc. Výborný návod, který detailnì popisuje, jak zprovoznit trénování na Google platformì viz \cite{mediumodtgcp}.
 
 \begin{figure}
 	\centering
@@ -226,7 +232,7 @@ Na pøehledové stránce otevøeme soubor \texttt{test.ipynb} a zvolíme \texttt{Cell
 \section{Závìr}
 Dokázali jsme, že øešení popsané v této kapitole funguje. Z výsledkù vyplývá, že správná konfigurace a výchozí model dokáží znaènì ovlivnit výsledné chování modelu i pøes to, že ho vždy trénujeme stejnými daty.
 
-Výsledky doruèené modelem, který byl vytrénován metodou \u{trasfer learning} z modelu \texttt{ssd\_mobilenet\_v1\_coco} a používá konfiguraci \texttt{training/pipeline.config}, jsou ze všech nejlepší. Proto jsem se rozhodl použít právì tento model jako výsledek této kapitoly a na závìr ho porovnat implementací klasifikace obrazu (viz kapitola \ref{chap:impl_rozpoz}).
+Výsledky doruèené modelem, který byl vytrénován metodou \u{trasfer learning} z modelu \newline\texttt{ssd\_mobilenet\_v1\_coco} a používá konfiguraci \texttt{training/pipeline.config}, jsou ze všech nejlepší. Proto jsem se rozhodl použít právì tento model jako výsledek této kapitoly a na závìr ho porovnat implementací klasifikace obrazu (viz kapitola \ref{chap:impl_rozpoz}).
 
 I pøes uspokojující výsledky øešení je zde prostor pro vylepšení. Více trénovacích a testovacích dat by zajistilo ještì lepší výsledky (vzorek použitý v této kapitole obsahuje \textbf{1890 detekcí}). Pøedzpracování obrazu tak, aby nikdy nebyl pøíliš svìtlý nebo tmavý by zajisté výsledky zlepšilo také. Možná existuje i lepší kombinace konfigurace a výchozího modelu.
 
