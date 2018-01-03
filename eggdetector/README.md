@@ -1,1 +1,0 @@
-build by `mvn clean package -DskipTests`

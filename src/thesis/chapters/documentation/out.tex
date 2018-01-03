@@ -1,0 +1,326 @@
+\chapter{Dokumentace API knihovny}\label{chap:dokumentaceapi}
+Pøíloha obsahuje dokumentaci API Java knihovny, která je výsledkem této práce. Dokumentace byla vygenerována ze zdrojových kódù nástroji Javadoc\cite{javadoc} a TexDoclet\cite{texdoclet}. Kód je psán v~anglickém jazyce, stejnì jako jeho dokumentace. Proto je text i zde v~angliètinì.
+
+\section{Package org.cvut.havluja1.eggdetector}{
+\label{org.cvut.havluja1.eggdetector}\hskip -.05in
+\hbox to \hsize{\textit{ Package Contents\hfil Page}}
+\vskip .13in
+\hbox{{Classes}}
+\entityintro{EggDetector}{org.cvut.havluja1.eggdetector.EggDetector}
+\entityintro{SequenceClassifier}{org.cvut.havluja1.eggdetector.SequenceClassifier}
+\vskip .1in
+\vskip .1in
+\subsection{\label{org.cvut.havluja1.eggdetector.EggDetector}Class EggDetector}{
+\vskip .1in 
+\subsubsection{Count the number of eggs in given images}
+
+The egg detector is a library that helps you count the number of eggs in a given folder.
+Egg detector works by using TeonsorFlow Object Detection API in the background. To learn more, see {https://www.tensorflow.com}.
+\vskip .1in
+\noindent Example usage:
+\begin{lstlisting}
+EggDetector eggDetector = new EggDetector();
+SequenceClassifier sequenceClassifier = eggDetector.evaluate(new File("image_dir"));
+System.out.println("final count: " + sequenceClassifier.getFinalCount());
+System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
+eggDetector.closeSession();
+\end{lstlisting}
+\newpage
+\subsubsection{Declaration}{
+\begin{lstlisting}[frame=none]
+public class EggDetector
+ extends java.lang.Object\end{lstlisting}
+\subsubsection{Constructor summary}{
+\begin{verse}
+{\textit{EggDetector()}}\\
+Constructor loads the pre-trained frozen graph into memory.
+\end{verse}
+}
+\subsubsection{Method summary}{
+\begin{verse}
+{\textit{closeSession()}}\\
+Closes the EggDetector session.
+
+{\textit{evaluate(File)}}\\
+Runs egg detection on a given \textit{ dir}.
+
+{\textit{getMinimalConfidence()}}\\
+Get the minimalConfidence setting for this instance.
+
+
+{\textit{isDebugMode()}}\\
+Get this instance's debug mode setting.
+
+{\textit{setDebugMode(boolean)}}\\
+Set this instance's debug mode setting.
+
+{\textit{setMinimalConfidence(float)}}\\
+Set the minimalConfidence setting for this instance.
+
+{\textit{toString()}} \\
+\end{verse}
+}
+\subsubsection{Constructors}{
+\vskip -2em
+\begin{itemize}
+\item{ 
+\index{EggDetector()}
+{\textit{EggDetector}}\\
+\begin{lstlisting}[frame=none]
+public EggDetector()\end{lstlisting} %end signature
+\begin{itemize}
+\item{
+{\bf  Description}
+
+
+
+Constructor loads the pre-trained frozen graph into memory.
+
+It also checks whether TensorFlow is supported on your platform.
+}
+\end{itemize}
+}%end item
+\end{itemize}
+}
+\subsubsection{Methods}{
+\vskip -2em
+\begin{itemize}
+\item{ 
+\index{closeSession()}
+{\textit{closeSession}}\\
+\begin{lstlisting}[frame=none]
+public void closeSession() throws java.lang.IllegalStateException\end{lstlisting} %end signature
+\begin{itemize}
+\item{
+{\bf  Description}
+
+Closes the EggDetector session. This instance of EggDetector will not be usable again.
+}
+\item{{\bf  Throws}
+  \begin{itemize}
+   \item{\vskip -.6ex \texttt{java.lang.IllegalStateException} -- if the session has been closed already by calling \texttt{\small closeSession()}{\small 
+\refdefined{org.cvut.havluja1.eggdetector.EggDetector.closeSession()}}}
+  \end{itemize}
+}%end item
+\end{itemize}
+}%end item
+\item{ 
+\index{evaluate(File)}
+{\textit{evaluate}}\\
+\begin{lstlisting}[frame=none]
+public SequenceClassifier evaluate(java.io.File dir) throws java.lang.IllegalArgumentException, java.lang.IllegalStateException\end{lstlisting} %end signature
+\begin{itemize}
+\item{
+{\bf  Description}
+
+
+
+Runs egg detection on a given \textit{ dir}.
+}
+\item{
+{\bf  Parameters}
+  \begin{itemize}
+   \item{
+\texttt{dir} -- a directory containing .jpg or .png files for object detection}
+  \end{itemize}
+}%end item
+\item{{\bf  Returns} -- 
+ 
+}%end item
+\item{{\bf  Throws}
+  \begin{itemize}
+   \item{\vskip -.6ex \texttt{java.lang.IllegalArgumentException} -- if \textit{ dir} is not a directory or contains no images}
+   \item{\vskip -.6ex \texttt{java.lang.IllegalStateException} -- if the session has been closed already by calling \texttt{\small closeSession()}{\small 
+\refdefined{org.cvut.havluja1.eggdetector.EggDetector.closeSession()}}}
+  \end{itemize}
+}%end item
+\end{itemize}
+}%end item
+\item{ 
+\index{getMinimalConfidence()}
+{\textit{getMinimalConfidence}}\\
+\begin{lstlisting}[frame=none]
+public float getMinimalConfidence()\end{lstlisting} %end signature
+\begin{itemize}
+\item{
+{\bf  Description}
+
+
+
+Get the \textit{minimalConfidence} setting for this instance.
+
+Minimal Confidence score is used as a confidence boundary during the process of object detection. An object that has been detected with a confidence score lower than \textit{ minimalConfidence} is ignored. An object that has been detected with a confidence score higher or equal than \textit{ minimalConfidence} is added to the final result list.
+}
+\item{{\bf  Returns} -- 
+This instance's \textit{minimalConfidence} setting. 
+}%end item
+\end{itemize}
+}%end item
+\item{ 
+\index{isDebugMode()}
+{\textit{isDebugMode}}\\
+\begin{lstlisting}[frame=none]
+public boolean isDebugMode()\end{lstlisting} %end signature
+\begin{itemize}
+\item{
+{\bf  Description}
+
+
+
+Get this instance's debug mode setting.
+
+If debug mode is enabled (set to true), the library will open a \texttt{\small JFrame}{\small 
+\refdefined{javax.swing.JFrame}} for each processed image with detections graphically highlighted.
+}
+\item{{\bf  Returns} -- 
+debug mode setting for this instance 
+}%end item
+\end{itemize}
+}%end item
+\item{ 
+\index{setDebugMode(boolean)}
+{\textit{setDebugMode}}\\
+\begin{lstlisting}[frame=none]
+public void setDebugMode(boolean debugMode) throws java.lang.IllegalStateException\end{lstlisting} %end signature
+\begin{itemize}
+\item{
+{\bf  Description}
+
+
+
+Set this instance's debug mode setting.
+
+If debug mode is enabled (set to true), the library will open a \texttt{\small JFrame}{\small 
+\refdefined{javax.swing.JFrame}} for each processed image with detections graphically highlighted.
+}
+\item{
+{\bf  Parameters}
+  \begin{itemize}
+   \item{
+\texttt{debugMode} -- turn the debug mode on or off}
+  \end{itemize}
+}%end item
+\item{{\bf  Throws}
+  \begin{itemize}
+   \item{\vskip -.6ex \texttt{java.lang.IllegalStateException} -- if the session has been closed already by calling \texttt{\small closeSession()}{\small 
+\refdefined{org.cvut.havluja1.eggdetector.EggDetector.closeSession()}}}
+  \end{itemize}
+}%end item
+\end{itemize}
+}%end item
+\item{ 
+\index{setMinimalConfidence(float)}
+{\textit{setMinimalConfidence}}\\
+\begin{lstlisting}[frame=none]
+public void setMinimalConfidence(float minimalConfidence) throws java.lang.IllegalStateException\end{lstlisting} %end signature
+\begin{itemize}
+\item{
+{\bf  Description}
+
+
+
+Set the \textit{minimalConfidence} setting for this instance.
+
+Minimal Confidence score is used as a confidence boundary during the process of object detection. An object that has been detected with a confidence score lower than \textit{minimalConfidence} is ignored. An object that has been detected with a confidence score higher or equal than \textit{minimalConfidence} is added to the final result list.
+}
+\item{
+{\bf  Parameters}
+  \begin{itemize}
+   \item{
+\texttt{minimalConfidence} -- \textit{ minimalConfidence} for this instance}
+  \end{itemize}
+}%end item
+\item{{\bf  Throws}
+  \begin{itemize}
+   \item{\vskip -.6ex \texttt{java.lang.IllegalStateException} -- if the session has been closed already by calling \texttt{\small closeSession()}{\small 
+\refdefined{org.cvut.havluja1.eggdetector.EggDetector.closeSession()}}}
+  \end{itemize}
+}%end item
+\end{itemize}
+}%end item
+\item{ 
+\index{toString()}
+{\textit{toString}}\\
+\begin{lstlisting}[frame=none]
+public java.lang.String toString()\end{lstlisting} %end signature
+}%end item
+\end{itemize}
+}
+}
+\subsection{\label{org.cvut.havluja1.eggdetector.SequenceClassifier}Class SequenceClassifier}{
+\vskip .1in 
+\subsubsection{A class containing object detection results for a given directory}
+
+SequenceClassifier is a data class containing the results of object detection for a given directory. When constructed, object detection is performed on all images and results are stored in memory.
+\vskip .1in
+\noindent Example usage:
+\begin{lstlisting}
+EggDetector eggDetector = new EggDetector();
+SequenceClassifier sequenceClassifier = eggDetector.evaluate(new File("image_dir"));
+System.out.println("final count: " + sequenceClassifier.getFinalCount());
+System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
+eggDetector.closeSession();
+\end{lstlisting}
+\vskip .1in 
+\subsubsection{Declaration}{
+\begin{lstlisting}[frame=none]
+public class SequenceClassifier
+ extends java.lang.Object\end{lstlisting}
+\subsubsection{Method summary}{
+\begin{verse}
+{\textit{getFinalCount()}}\\
+Get the final score for the entire directory.
+
+{\textit{getIndividualCounts()}}\\
+Gets the individual egg count for every image provided.
+\end{verse}
+}
+\subsubsection{Methods}{
+\vskip -2em
+\begin{itemize}
+\item{ 
+\index{getFinalCount()}
+{\textit{getFinalCount}}\\
+\begin{lstlisting}[frame=none]
+public java.lang.Integer getFinalCount()\end{lstlisting} %end signature
+\begin{itemize}
+\item{
+{\bf  Description}
+
+
+
+Get the final score for the entire directory.
+
+The final score is calculated as follows:\begin{itemize}
+\item{\vskip -.8ex individual scores of images are sorted and counted}
+\item{\vskip -.8ex the highest egg count is returned as a result if we detected this egg count in at least two different images}
+\item{\vskip -.8ex if no two images contain the same egg count, the highest detected egg count is returned}
+\item{\vskip -.8ex if no eggs are detected in any of the images, 0 is returned}
+\end{itemize}
+
+}
+\item{{\bf  Returns} -- 
+final egg count for this instance 
+}%end item
+\end{itemize}
+}%end item
+\item{ 
+\index{getIndividualCounts()}
+{\textit{getIndividualCounts}}\\
+\begin{lstlisting}[frame=none]
+public java.util.Map getIndividualCounts()\end{lstlisting} %end signature
+\begin{itemize}
+\item{
+{\bf  Description}
+
+Gets the individual egg count for every image provided.
+}
+\item{{\bf  Returns} -- 
+A map of individual scores. The key is the filename. The value is the egg count. 
+}%end item
+\end{itemize}
+}%end item
+\end{itemize}
+}
+}
+}

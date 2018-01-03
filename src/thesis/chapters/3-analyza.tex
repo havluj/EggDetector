@@ -1,0 +1,169 @@
+\chapter{Analıza a návrh}
+V této kapitole se zamìøíme na strukturu projektu Ptáci Online, problémy spojené se souèasnım zpùsobem sbírání dat, rozbor funkèních a nefunkèních poadavkù, návrh øešení a vıbìr technologií. Na závìr budeme diskutovat dva rùzné zpùsoby øešení -- jejich vıhody a nevıhody.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Ptáci Online}
+\uv{Cílem projektu je popularizovat ochranu ptákù v blízkosti lidskıch sídel, jejich hnízdìní, vèetnì jeho monitoringu, s vyuitím speciálního technického zaøízení tzv. \uv{chytré ptaèí budky}.}~\cite{mzp_ptaci_online}
+
+Tyto \uv{chytré ptaèí budky} slouí k monitorování hnízdícího ptactva. Kadá budka obsahuje jednu nebo dvì kamery s noèním pøísvitem. Ve vletovém otvoru budky je umístìn pohybovı senzor, kterı spustí natáèení kamer pøi detekci pohybu. Dále je do budky vestavìn venkovní a vnitøní teplotní senzor, mikrofon a senzor venkovního osvìtlení, kterı reguluji funkci pøísvitu kamer. Pøenos nasbíranıch dat z budky probíhá pøes ethernetovı PoE\footnote{Power over Ethernet.} kabel. Tento kabel zajišuje i napájení veškeré elektroniky uvnitø budky.~\cite{oProjektu} Jak vypadá záznam z budky je vidìt na obr. \ref{fig:ukazka_budka}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{media/ukazka_budka.png}
+	\caption{Ukázka neupraveného snímku z ptaèí budky.}
+	\label{fig:ukazka_budka}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Pøedstavení vstupních data}\label{sec:vstupni_data}
+Ptaèí budka vyprodukuje sekvenci videa pokadé, kdy je v ní detekován pohyb. Kvùli energetické úspornosti kamer a mnoství pøenášenıch dat mají tyto videa niší snímkovou frekvenci\footnote{Poèet snímkù za sekundu.}. Z takového videozáznamu lze  extrahovat mnoinu jednotlivıch snímku, které jako celek tvoøí dané video. Snímky jsou ukládány do formátu PNG a zaøazeny do sloek, pøièem \textbf{jedna sloka reprezentuje jeden videozáznam}.
+
+Vısledná softwarová knihovna bude umìt pracovat s jednotlivımi slokami. Naète všechny snímky z dané sloky a následnì je zpracuje. Uivatel bude schopen získat informace o sloce jako celku i jednotlivıch snímcích.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Souèasnı zpùsob zpracování dat}
+Akademiètí pracovnící potøebují nashromádit velké mnoství dat, ale taková èinnost je velmi èasovì nároèná. Proto jsou na takovou práci najímáni brigádníci. Brigádníky je nutno nejprve zaškolit, aby vìdìli, co mají ve videích hledat. Poté sledují jedno video za druhım a získané informace zapisují do tabulek v Excelu. Tento zpùsob práce je drahı a èasovì nároènı.
+
+Jedna z informací, která nás mùe zajímat, je poèet vajec v hnízdì. Brigádník musí video otevøít, shlédnout a najít èást, kde jsou vejce zøetelnì viditelná (viz obr. \ref{fig:viditelna_vejce}). Poté vejce spoèítá a vısledek zapíše do tabulky. Jeliko je nutné získat co nejvíce dat, brigádníci tento proces vykonávají co nejrychleji. To vede k chybám, napø. chybnì spoèítanı poèet vajec nebo zapsání vısledku na špatnı øádek tabulky.
+
+Je snahou vytvoøit systémy, které by tyto úkoly mohly provádìt automaticky. Pøíkladem takového systému je napøíklad práce od Pavla Šumy, kterı se snaí automaticky zjistit poèet mláïat v hnízdì~\cite{mladata}. Dalším pøíkladem je i tato práce.
+
+\begin{figure}
+	\centering
+	\subfloat[Vejce jsou zøetelnì viditelná v èase 0:01.]{{\includegraphics[width=0.45\textwidth]{media/viditelna-vejce.png}\label{fig:viditelna_vejce} }}%
+	\qquad
+	\subfloat[Vejce nejsou viditelná ve zbytku videa, jako je tomu napø. v èase 0:14.]{{\includegraphics[width=0.45\textwidth]{media/neviditelna-vejce.png}\label{fig:neviditelna_vejce} }}%
+	\caption{Vejce nemusí bıt vdy viditelná.}
+	\label{fig:ne_viditelna_vejce}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Nefunkèní poadavky}
+\subsection{N1}
+\textit{Knihovna musí pracovat v reálném èase. Po zadání vstupních dat je vısledek oèekáván maximálnì v jednotkách sekund.}
+
+\vspace{0.5cm}
+Z vlastnosti neuronovıch sítí vyplıvá, e tento poadavek nebude problém splnit. Samotnı prùchod snímku grafem, resp. prùchod snímku neuronovou sítí není pøíliš èasovì nároènı. Nutnou podmínkou však je dostupnı soubor obsahující popis struktury neuronové sítì. Trénování, nebo-li hledání optimální struktury neuronové sítì je velmi vıpoèetnì nároèná èinnost, která musí bıt dokonèena \textbf{pøed} pouitím knihovny.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Funkèní poadavky}
+\subsection{F1}
+\textit{Systém bude distribuovanı formou Java knihovny v archivu JAR.}
+
+\vspace{0.5cm}
+Neuronové sítì mùeme naprogramovat v libovolném programovacím jazyce. Tato podmínka mùe bıt tedy bez problému splnìna. Vısledná softwarová knihovna pro detekci poètu vajec v hnízdì bude implementována v jazyce Java.
+
+\subsection{F2}
+\textit{Knihovna bude distribuována ve dvou verzích: 
+\begin{itemize}
+	\item JAR archiv obsahující jak pøeloenı zdrojovı kód knihovny, tak i všechny závislosti, které jsou knihovnou vyadovány.
+	\item JAR archiv obsahující pouze pøeloenı zdrojovı kód knihovny bez externích závislostí. Do archivu bude pøibalen konfiguraèní soubor pro systém Maven\cite{maven} s definicí závislostí.
+\end{itemize}}
+
+\vspace{0.5cm}
+Distribuci pøeloeného zdrojového kódu vyøešíme pomocí nástroje pro správu, øízení a automatizaci buildù aplikací. Maven je pro nás nejvhodnìjší volba, vzhledem k druhé èásti podmínky -- Do archivu bude pøibalen konfiguraèní soubor pro systém Maven s definicí závislostí.
+
+\subsection{F3}
+\textit{Knihovna musí umìt pracovat se strukturou dat na serveru \url{http://athena.pef.czu.cz/ptacionline/}.}
+
+\vspace{0.5cm}
+Knihovna bude schopna pracovat se strukturou dat popsanou v kapitole \ref{sec:vstupni_data}. Uivateli bude schopen interagovat s knihovnou, která bude reflektovat strukturu dat projektu:\newline
+\begin{minipage}{\linewidth}
+\noindent\begin{lstlisting}[caption={Prvotní návrh uivatelského rozhraní knihovny.},label={alg:prvni_navrh}]
+// Inicializujeme EggDetector. Knihovna se pøipraví pro 
+// zpracovávání sekvencí.
+EggDetector eggDetector = new EggDetector();
+
+// EggDetectoru pøedáme absolutní cestu k sloce, kterou
+// chceme vyhodnotit. EggDetector nám vrátí tøídu 
+// SequenceClassifier, která obsahuje veškeré informace 
+// k dané sloce.
+SequenceClassifier sequenceClassifier = eggDetector.evaluate(new File("image_dir"));
+
+// Zjistíme finální poèet vajec v hnízdì pro danou sloku.
+System.out.println("final count: " + sequenceClassifier.getFinalCount());
+
+// Mùeme zjistit poèet vajec v jednotlivıch snímcích.
+System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
+
+// Ukonèíme EggDetector - uvolníme informace o neuronové
+// sítì z pamìti. Instance EggDetectoru se stane nepouitelná.
+eggDetector.closeSession();
+\end{lstlisting}
+\end{minipage}
+
+\subsection{F4}
+\textit{Knihovna musí umìt urèit poèet vajec v hnízdì pro kady jednotlivı snímek.}
+
+\vspace{0.5cm}
+Vısledná knihovna bude uivateli umìt poskytnout informace o jednotlivıch snímcích -- viz algoritmus \ref{alg:prvni_navrh}.
+
+\subsection{F5}
+\textit{Knihovna musí umìt urèit poèet vajec v hnízdì pro sloku jako celek. Sloka se skládá ze sekvence obázkù, které reprezentují jednu videosekvenci.}
+
+\vspace{0.5cm}
+Vısledná knihovna bude uivateli umìt poskytnout informace o sloce jako celku -- viz algoritmus \ref{alg:prvni_navrh}.
+
+\subsection{F6}
+\textit{Snímky mohou bıt ve formátu JPEG a PNG.}
+
+\vspace{0.5cm}
+Pro zpracování snímkù pouijeme standartnì dostupné tøídy pro práci s grafikou v programovacím jazyce Java. Konkrétnì \texttt{BufferedImage} a \texttt{Graphics2D} nám umoní zpracovat oba dva formáty -- JPEG i PNG.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Návrh øešení}
+Jádro implementace bude tvoøit neuronová sí, která bude vytvoøena metodou \uv{uèení s uèitelem}\footnote{Supervised learning.}. Tvorba implementace se bude skládat ze ètyø èástí:
+\begin{itemize}
+	\item Pøíprava trénovacích a testovacích dat.
+	\item Trénování neuronové sítì.
+	\item \uv{Konzumace} vytrénované neuronové sítì knihovnou, která je vısledkem této práce.
+	\item Ovìøení funkènosti.
+\end{itemize}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{media/img_klasifikace.png}
+	\caption{Program urèenı ke klasifikaci obrazu.}
+	\caption*{\tiny{Zdroj: dokumentace softwarové knihovny TensorFlow~\cite{tens_recognition}.}}
+	\label{fig:ukazka_img_klasifikace}
+\end{figure}
+
+Existuje nìkolik zpùsobù, jak neuronovou sí vytrénovat. Prvním monım øešením je neuronová sí urèená ke klasifikaci celého obrazu. Typickım vstupem je snímek, ve kterém je objekt, kterı chceme rozpoznat, nejvıraznìjší. Pokroèilejší typ této sítì je schopnı popsat komplexnìjší scény, jako napøíklad \uv{Dva lidé na plái.}. Ukázka takového programu je vidìt na obrázku \ref{fig:ukazka_img_klasifikace}. V našem pøípadì bychom klasifikovali poèet vajec v hnízdì, kde by jednotlivé vısledky reprezentovali poèet vajec na daném snímku. Tzn. vıstupem takové neuronové sítì by byla jedna z pøedem danıch kategorií, o které si s nejvìtší pravdìpodobností myslíme, e popisuje, co je na daném snímku. Kadá kategorie by reprezentovala jinı poèet vajec v hnízdì, napøíklad kategorie 0, kategorie 1, atd.
+
+Druhım monım øešením je komplexnìjší neuronová sí urèená k detekci objektù. Obraz je nejprve segmentován na èásti, o kterıch si sí myslí, e by mohly obsahovat nìjaké objekty. Následnì jsou tyto èásti klasifikovány a je rozhodnuto, zda-li se jedná o objekt a s jakou pravdìpodobností. Vısledkem je potom mnoina detekcí, která je tvoøena umístìním objektu, typem objektu a pravdìpodobností mírou, která reprezentuje jak moc je si sí jistá, e se opravdu jedná o danı objekt. Typickım vstupem je libovolnı snímek, jako je tomu vidìt na obrázku \ref{fig:ukazka_img_detekce}. V našem pøípadì bychom hledali detekci vajec s relativnì vysokou pravdìpodobností. Poèet detekcí by reprezentoval poèet vajec v hnízdì.
+
+A u zvolíme jakıkoliv zpùsob implementace, pro zpracování obrazu pøedáme neuronové síti pole hodnot o velikosti 300~x~300~x~3 (snímek bude zmenšen na velikost 300~x~300 bodù a zùstane barevnı -- kadı bod obsahuje 3 barevné sloky\footnote{RGB - red, green, blue. Kadı bod obrázku obsahuje informaci o koncentraci èervené, zelené a modré.}), které reprezentuje náš snímek. Knihovna nám poté vrátí poadovanı vısledek\footnote{V pøípadì rozpoznávání obrazu, knihovna vrátí seznam pravdìpodobností pro všechny známe typy. V pøípadì detekce objektù, knihovna vrátí seznam, pozici a typ objektù.}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Volba technologií}
+V této kapitole vybereme konkrétní platformy, programovací jazyky a nástroje potøebné k implementaci praktické èásti této práce.
+
+\subsection{Platforma}
+Vzhledem k funkèním poadavkùm je jednoznaènou volbou programovací jazyk Java. Volíme verzi Java 8 SE, která poskytuje všechny nástroje, které k doruèení vısledku potøebujeme. 
+
+\subsection{Neuronové sítì}
+Pro znaèné usnadnìní tvorby neuronovıch sítí pouijeme softwarovou knihovnu. Mezi tøi nejznámìjší patøí TensorFlow, OpenNN a FANN\footnote{Fast Artificial Neural Network.}. Z tìchto tøí knihoven pouze TensorFlow poskytuje Java API a u jen z tohoto dùvodu je náš nejlepší kandidát.
+
+TensorFlow má skvìlou dokumentaci~\cite{tens_doc} s velkım mnostvím kompletních návodù~\cite{tens_priklad}. Poskytuje API k detekci objektù, kde je moné vyuít ji pøedtrénované modely~\cite{tens_detection}. Pomocné skripty urèené k trénování neuronové sítì, uloení její struktury a ovìøení funkènosti naimplementujeme v jazyce \texttt{Python 3}, jeliko je primárním jazykem pro práci s knihovnou TensorFlow.
+
+\subsection{Práce s daty}
+K vytrénování naší neuronové sítì je potøeba velké mnoství trénovacích dat. Trénovacími daty jsou myšleny snímky, ke kterım dodáme informace, jako napøíklad poèet a umístìní jednotlivıch vajíèek. Abychom si získávání a oznaèování dat usnadnili, je potøeba nìkolik nástrojù, které jsou detailnì popsány v kapitole \ref{chap:nastroje}.
+\begin{itemize}
+	\item Pro hromadné staení dat pouijeme nástroje \texttt{bash} a \texttt{wget}. Hromadnì staená data budou obsahovat i obsah, kterı pro nás není uiteènı. Proto pouijeme nástroj, kterı všechna neuiteèná data smae. Více v kapitole \ref{sec:hromadne_stazeni_dat}.
+	\item Trénovací a testovací data vytvoøíme pomocí nástrojù \texttt{LabelImg} a \texttt{Tagger}. Detailní informace obsahuje kapitola \ref{sec:priprava_dat}.
+\end{itemize}
+Abychom byli schopni novì vytvoøená trénovací data pouít k trénování neuronové sítì, musíme je pøevést do standardního formátu. V našem pøípadì musíme z binárních dat snímkù a textovıch XML souborù vytvoøit tzv. \texttt{TFRecord}~\cite{tfrecord}. Kady zpùsob implementace vyaduje mírnì odlišnı formát trénovacích dat. V kapitolách \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}, které se popisují konkrétní implementace, diskutujeme i pøípravu trénovacích dat.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Shrnutí kapitoly}
+V této kapitole jsme prozkoumali strukturu projektu Ptáci Online, problémy souèasného zpùsobu sbírání dat. Adresovali jsme všechny funkèní i nefunkèní poadavky s ohledem na strukturu projektu a dat. Navrhli jsme 2 moná konkurenèní øešení, u kterıch není pøedem jasné, jaké z nich je efektivnìjší. Nezbıvá nám tedy nic jiného, ne implementovat obì dvì øešení a jejich vısledky porovnat. Zamìøili jsme se také na vıbìr vhodnıch principù a nástrojù potøebnıch k úspìšné implementaci. Vybrali jsme platformu knihovny, knihovnu pro práci s neuronovımi sítìmi a velkou škálu nástrojù pro pøípravu dat.
+
+V dalších kapitolách se zamìøíme na samotné pouití nástrojù a jejich tvorbu. Ale pøedevším budeme diskutovat oba dva zpùsoby implementace, které nakonec porovnáme. 

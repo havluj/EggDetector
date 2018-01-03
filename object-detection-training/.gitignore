@@ -1,6 +1,0 @@
-images/
-data/
-.ipynb_checkpoints/
-training/*
-!training/egg_label_map.pbtxt
-!training/*.config
