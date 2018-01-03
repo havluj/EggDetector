@@ -1,7 +1,129 @@
 \chapter{Implementace Java knihovny}
+Pøedmìtem této kapitoly je tvorba softwarové knihovny, která je cílem této práce. Nejdøíve porovnáme výsledky dvou implementací z kapitoly \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}. Jako další krok budeme diskutovat, jakým zpùsobem integrovat vybranou implementaci do Javy. Následnì se zamìøíme na uživatelské rozhraní knihovny a implementaci. Na závìr vyøešíme distribuci knihovny nástrojem pro správu, øízení a automatizaci buildù aplikací.
+
 \section{Srovnání implementací neuronových sítí a volba øešení}
-\section{Použití exportovaného modelu v Javì}
+Vzhledem k výsledkùm popsaných v závìru kapitoly \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz} je zøejmé, že detekce objektù popsaná v kapitole \ref{chap:impl_detekce} je vhodnìjší implementací.
+
+Nicménì výsledná knihovna je navržena tak, že kdykoliv mùžeme styl øešení zmìnit bez toho, aniž bychom museli mìnit uživatelské rozhraní.
+
+\section{Použití TensorFlow v Javì}
+Abychom mohli použít model pro detekci vajec v naší knihovnì, je nutné ho exportovat, stejnì jako v kapitole \ref{sec:detekce_funkavysledky}. Exportovaný model umístíme mezi statické zdroje knihovny.
+
+TensorFlow poskytuje API pro jazyk Java. Abychom ho mohli používat, staèí pøidat do \texttt{pom.xml} závislost:
+\begin{lstlisting}[language=XML]
+<dependency>
+	<groupId>org.tensorflow</groupId>
+	<artifactId>tensorflow</artifactId>
+	<version>1.4.0</version>
+</dependency>
+\end{lstlisting}
+Java API, které TensorFlow poskytuje, je pomìrnì nízko-úrovòové~\cite{tensorflowjavaapi}. Abychom si usnadnili práci, použijeme wrapper\footnote{Tøída, která \uv{obalí} jinou tøídu a pøidá jí funkènost.}, který používá TensorFlow pro Android. Staèí jen pár drobných modifikací a mùžeme ho použít.
+
 \section{Uživatelské rozhraní knihovny}
-\section{Implementace??}
-\section{Maven}
+Pøi tvorbì uživatelského rozhraní vycházíme z prvotního návrhu, který vznikl analýzou funkèních požadavkù (viz algoritmus \ref{alg:prvni_navrh}). Kompletní dokumentace API, které knihovna uživateli poskytuje je dostupná v pøíloze \ref{chap:dokumentaceapi}. Nejlepším zdrojem ukázek použití knihovny jsou testy, které diskutujeme v kapitole \ref{chap:overeniatestovani}.
+
+\section{Implementace}
+Kompletní zdrojové kódy implementace jsou dostupné v pøíloze \ref{chap:cd}. Knihovnu zkompilujeme nástrojem Maven: \texttt{mvn clean package -DskipTests}.
+
+\begin{lstlisting}[caption={Poèítání finálního poètu vajec pro celou složku pomocí dat z jednotlivých snímkù.}]
+public Integer getFinalCount() {
+	TreeMap<Integer, Integer> scores = new TreeMap<>();
+	
+	for (Integer val : imageScores.values()) {
+		if (scores.containsKey(val)) {
+			scores.replace(val, scores.get(val) + 1); // increment
+		} else {
+			scores.put(val, 1);
+		}
+	}
+	
+	int bestGuess = 0;
+	while (!scores.isEmpty()) {
+		Map.Entry<Integer, Integer> e = scores.pollLastEntry();
+		if (e.getValue() > 1) { // threshold (how many times do we need the value)
+			return e.getKey();
+		} else if (e.getValue() == 1) {
+			bestGuess = e.getValue();
+		}
+		
+	}
+	
+	return bestGuess;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Transformace vstupního snímku bilineární interpolací.}]
+BufferedImage thumbnail = new BufferedImage(INPUT_SIZE, INPUT_SIZE, BufferedImage.TYPE_INT_RGB);
+Graphics2D tGraphics2D = thumbnail.createGraphics(); //create a graphics object to paint to
+tGraphics2D.setBackground(Color.WHITE);
+tGraphics2D.setPaint(Color.WHITE);
+tGraphics2D.fillRect(0, 0, INPUT_SIZE, INPUT_SIZE);
+tGraphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+tGraphics2D.drawImage(image, 0, 0, INPUT_SIZE, INPUT_SIZE, null);
+
+// convert img to [INPUT_SIZE, INPUT_SIZE, 3]
+BufferedImage convertedImg = new BufferedImage(thumbnail.getWidth(), thumbnail.getHeight(), BufferedImage.TYPE_INT_RGB);
+convertedImg.getGraphics().drawImage(thumbnail, 0, 0, null);
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Detekce objektù pomocí TensorFlow v Javì.}]
+intValues = ((DataBufferInt) convertedImg.getRaster().getDataBuffer()).getData();
+
+for (int i = 0; i < intValues.length; ++i) {
+	byteValues[i * 3 + 2] = (byte) (intValues[i] & 0xFF);
+	byteValues[i * 3 + 1] = (byte) ((intValues[i] >> 8) & 0xFF);
+	byteValues[i * 3 + 0] = (byte) ((intValues[i] >> 16) & 0xFF);
+}
+
+// Copy the input data into TensorFlow.
+inferenceInterface.feed(INPUT_NAME, byteValues, 1, INPUT_SIZE, INPUT_SIZE, 3);
+
+// Run the inference call.
+inferenceInterface.run(outputNames, logStats);
+
+// Copy the output Tensor back into the output array.
+outputLocations = new float[MAX_RESULTS * 4];
+outputScores = new float[MAX_RESULTS];
+outputClasses = new float[MAX_RESULTS];
+outputNumDetections = new float[1];
+inferenceInterface.fetch(outputNames[0], outputLocations);
+inferenceInterface.fetch(outputNames[1], outputScores);
+inferenceInterface.fetch(outputNames[2], outputClasses);
+inferenceInterface.fetch(outputNames[3], outputNumDetections);
+\end{lstlisting}
+
+\section{Distribuce}
+Abychom splnili funkèní požadavek \textbf{F2} (viz kapitola \ref{sec:cil_funkcnipozadavky}) o distribuci knihovny, použijeme \texttt{maven-assembly-plugin}:
+\begin{lstlisting}[language=XML]
+<plugin>
+	<artifactId>maven-assembly-plugin</artifactId>
+	<configuration>
+		<descriptorRefs>
+			<descriptorRef>jar-with-dependencies</descriptorRef>
+		</descriptorRefs>
+	</configuration>
+	<executions>
+		<execution>
+			<id>make-assembly</id> <!-- this is used for inheritance merges -->
+			<phase>package</phase> <!-- bind to the packaging phase -->
+			<goals>
+				<goal>single</goal>
+			</goals>
+		</execution>
+	</executions>
+</plugin>
+\end{lstlisting}
+
 \section{Výsledek}
+Výsledkem této kapitoly je funkèní softwarová knihovna v jazyce Java, která splòuje všechny cíle stanovené na zaèátku práce. Ke knihovnì je dostupná kompletní uživatelská dokumentace.
+
+Knihovna obsahuje \uv{debuggovací} režim, který vizualizuje, jakým zpùsobem knihovna reprezentuje detekce internì. Ukázka \uv{debuggovacího} režimu je vidìt na obrázcích \ref{fig:eggdetectordebug}.
+
+\begin{figure}[ht]
+	\centering
+	\subfloat{{\includegraphics[width=0.45\textwidth]{media/debug1.png}\label{fig:eggdetectordebug1} }}%
+	\qquad
+	\subfloat{{\includegraphics[width=0.45\textwidth]{media/debug2.png}\label{fig:eggdetectordebug2} }}%
+	\caption{Ukázka debuggovacího režimu knihovny EggDetector.}
+	\label{fig:eggdetectordebug}
+\end{figure}

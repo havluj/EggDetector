@@ -181,7 +181,7 @@ Prùbìh trénování je zaznamenáván do \uv{logu}, který je videt na obrázku \ref{fi
 tensorboard --logdir=gs://eggdata --port=8080
 \end{lstlisting}
 
-\section{Ovìøení funkènosti a výsledky}
+\section{Ovìøení funkènosti a výsledky}\label{sec:detekce_funkavysledky}
 Jakmile se rozhodneme ukonèit proces trénování, máme k dispozici nìkolik souborù, které jsou pouhými záchytnými body\footnote{Checkpoints.} pro další iterace. Tyto soubory se hodí, kdybychom chteli trénování obnovit tam, kde bylo naposledy ukonèeno. Nicménì pro práci s modelem a detekci vajec je potøeba tyto soubory pøevést na jeden statický. Tomuto procesu se øiká \uv{zmražení grafu}. Graf exportujeme následovnì:
 \begin{lstlisting}[language=bash]
 python3 export_inference_graph.py \
