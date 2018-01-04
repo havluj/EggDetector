@@ -120,19 +120,19 @@
 \abstractCS{
 	Tato práce se zabývá návrhem a tvorbou softwarové knihovny pro detekci objektù v obraze použitím neuronových sítí. 
 	
-	V první èásti jsme seznámeni s cílem práce a detailní specifikací požadavkù. Druhá èást se vìnuje teorii poèítaèového vidìní, strojového uèení a neuronových sítí. Následnì je na základì získaných teoretických znalostí a specifikace požadavkù vypracována analýza možného øešení. Dle analýzy jsou navržena a implementována dvì øešení. První implementace se zamìøuje na detekci objektù, druhá na rozpoznávání a klasifikaci obrazu. V poslední èásti je vybráno efektivnìjší øešení, které je øádnì ovìøeno a otestováno.
+	V první èásti jsme seznámeni s cílem práce a detailní specifikací požadavkù. Druhá èást se vìnuje teorii poèítaèového vidìní, neuronových sítí a TensorFlow. Následnì je na základì získaných teoretických znalostí a specifikace požadavkù vypracována analýza možného øešení. Dle analýzy jsou navržena a implementována dvì øešení. První implementace se zamìøuje na detekci objektù, druhá na rozpoznávání a klasifikaci obrazu. V poslední èásti je vybráno efektivnìjší øešení, které je øádnì ovìøeno a otestováno.
 	
 	Výsledkem je softwarová knihovna, která umožòuje automaticky rozpoznávat poèet vajec v daném videu. Celý program je implementován v jazyce Java a je možné ho integrovat do projektu BirdObserver.}
-\keywordsCS{neuronové sítì, poèítaèové vidìní, detekce objektù, strojové uèení, uèení s uèitelem, rozpoznávání obrazu, detekce vajec, ptaèí hnízda, Java}
+\keywordsCS{neuronové sítì, poèítaèové vidìní, detekce objektù, strojové uèení, uèení s uèitelem, rozpoznávání obrazu, detekce vajec, ptaèí hnízda, Java, TensorFlow}
 
 \abstractEN{
 	This thesis focuses on designing and creating a software library that is able to detect objects in images using neural networks.
 	
-	In the first part of the thesis, goals are set and technical parameters are specified. The second part discusses the theory behind computer vision, machine learning, and neural networks. Using the technical specification and acquired theoretical knowledge, a detailed analysis of a possible solution is presented. There are two implementations of the analysis. The first one is using object detection to meet it's goal, the second one image recognition. In the last part of the thesis, a more effective implementation is chosen, which is then properly tested and verified.
+	In the first part of the thesis, goals and technical requirements are specified. The second part discusses the theory behind computer vision, neural networks, and TensorFlow. Using the technical specification and acquired theoretical knowledge, a detailed analysis of a possible solution is presented. There are two implementations of the analysis. The first implementation is developed using object detection, the second one using image recognition. In the last part of the thesis, a more effective implementation is chosen, which is then properly tested and verified.
 	
-	The result of this thesis is a software library that is able to automatically detect the number of eggs in a given video sequence. The entire solution is written in Java and is easily intergratable with the BirdObserver project.
+	The result of this thesis is a software library that is able to automatically detect the number of eggs in a given video sequence. The entire solution is written in Java and is easily intergratable with other parts of the BirdObserver project.
 }
-\keywordsEN{neural networks, computer vision, object detection, machine learning, supervised learning, image recognition, egg detection, bird nests, Java}
+\keywordsEN{neural networks, computer vision, object detection, machine learning, supervised learning, image recognition, egg detection, bird nests, Java, TensorFlow}
 
 \begin{document}
 
@@ -140,10 +140,10 @@
 % \newacronym{FIT}{FIT}{Fakulta informa{\v c}n{\' i}ch technologi{\' i}}
 
 \begin{introduction}
-	Projekt Ptáci Online byl spuštìn Fakultou životního prostøedí Èeské zemìdìlské univerzity v Praze roku 2014~\cite{oProjektu}. Hlavním cílem projektu je poskytnout vìdecká data, ve formì videa z ptaèích budek, široké veøejnosti~\cite{oProjektu}. Projekt se tìší pomìrnì velké popularitì~\cite{ptaciVMediich} a aktuálnì spolupracuje s více než dvìma desítkami spolupracovníkù. Mezi nì patøí lidé z akademické sféry, soukromého sektoru, ale i z Ministerstva životního prostøedí Èeské republiky~\cite{oProjektu}. Vzhledem k množství poøízených záznamù, by bylo žádoucí informace extrahovat automaticky pomocí algoritmù umìlé inteligence. Pøedmìtem této práce je vytvoøit algoritmus, který je schopný urèit poèet vajec v hnízdì v daném videozáznamu. 
-	
+	Projekt Ptáci Online byl spuštìn Fakultou životního prostøedí Èeské zemìdìlské univerzity v Praze roku 2014~\cite{oProjektu}. Hlavním cílem projektu je poskytnout vìdecká data, ve formì videa z ptaèích budek, široké veøejnosti~\cite{oProjektu}. Projekt se tìší pomìrnì velké popularitì~\cite{ptaciVMediich} a aktuálnì spolupracuje s více než dvìma desítkami spolupracovníkù. Mezi nì patøí lidé z akademické sféry, soukromého sektoru, ale i z Ministerstva životního prostøedí Èeské republiky~\cite{oProjektu}. Vzhledem k množství poøízených záznamù, by bylo žádoucí informace extrahovat automaticky pomocí algoritmù umìlé inteligence. Pøedmìtem této práce je vytvoøit algoritmus, který je schopný urèit poèet vajec v hnízdì v daném videozáznamu.\newline\indent
 	Existuje hned nìkolik zpùsobù, jak nauèit poèítaè \uv{vidìt}. Témìø vždy se musíme zamìøit na pøedzpracování obrazu, jeho vlastnosti a jeho segmentaci. Jako øešení pak mùžeme zvolit rùznou sadu deterministických algoritmù, napøíklad pro detekci hran nebo na samotné klasifikování segmentovaného obrazu. Všechny tyto algoritmy mají však jednu spoleènou nevýhodu. Formálnì popsat tvar nìjakého objektu a vytvoøit sadu pravidel, podle kterých poznáme, jestli se jedná o hledaný objekt, je velmi tìžké.	Svìtelné podmínky nemusí být ideální, objekty se mohou pøekrývat, mohou být rùznì barevné, vzdálené nebo otoèené. Všechny tyto problémy znemožòují vytvoøení perfektního algoritmu manuálnì.
 	Lepším øešením je manuálnì vytvoøit jeden algoritmus, který dokáže \uv{vytrénovat} druhý obecný algoritmus k vyøešení konkrétního problému. Za tímto úèelem vznikly algoritmy inspirované pøírodou, napøíklad umìlé neuronové sítì inspirované lidským uèením a mozkem nebo evoluèní algoritmy inspirované evoluèní teorií. V této práci se budeme soustøedit na použití neuronových sítí pro vyøešení problémù poèítaèového vidìní.
+
 	
 	\section{Struktura práce}
 	Práce je rozdìlena do 7 èástí. První èást obsahuje stanovení cílù a specifikaci funkèních i nefunkèních požadavkù. Druhá èást je teoretická. Diskutuje problematiku poèítaèového vidìní, strojového uèení a neuronových sítí. Tøetí, analytická èást, se zamìøuje na výbìr vhodných technologií a postupù pro tvorbu implementace. Ètvrtou i pátou, praktickou èást, tvoøí dva rùzné zpùsoby implementace, jejich porovnání, otestování a validace. Na závìr vybereme efektivnìjší implementaci, dle které bude vytvoøena softwarová knihovna pro urèení poètu vajec v hnízdì.

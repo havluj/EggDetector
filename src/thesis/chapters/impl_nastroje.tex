@@ -1,7 +1,7 @@
 \chapter{Nástroje}\label{chap:nastroje}
 Pøípravu a zpracování dat si mùžeme usnadnit pomocí nìkolika nástrojù. Zamìøíme se na hromadné stažení dat ze serveru \url{http://athena.pef.czu.cz/ptacionline/} a jejich \uv{proèištìní}. Dále si pøedstavíme nástroje, ve kterých obohatíme stažené snímky o informace potøebné k trénování neuronové sítì.
 
-\section{Hromadné stažení dat}\label{sec:hromadne_stazeni_dat}
+\section{Hromadné stahování dat}\label{sec:hromadne_stazeni_dat}
 \subsection{Získání dat}\label{subsec:hromadne_stazeni_dat}
 Abychom nemuseli stahovat snímky jeden po druhém manuálnì, pomùžeme si napsáním jednoduchého skriptu, který stáhne všechny snímky za nás. K tomu nám postaèí dva nástroje: \texttt{bash} a \texttt{wget}. Tento skript stáhne veškerá data, která jsou na serveru \url{http://athena.pef.czu.cz/ptacionline/} dostupná. Detailní dokumentace skriptu je k nalezení v pøíloze \ref{chap:cd}).
 \noindent\begin{lstlisting}[caption={Hromadné stažení dat ze serveru athena.pef.czu.cz.},label={alg:download},language=bash]
