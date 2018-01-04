@@ -67,13 +67,22 @@ Pro urèení efektivity naší implementace využijeme manuálnì oznaèených \textbf{61
 Zdrojový kód testu je vypsán v pøíloze \ref{chap:test_efektivity}. Knihovnu otestujeme na stejných datech s 5 rùznými nastaveními \uv{thresholdu}. V nadcházejících sekcích jsou vypsány výsledky.
 
 V testu se zamìøíme na dvì metriky. První metrikou je pomìr je procentuální úspìšnost knihovny. Tu získáme následujícím zpùsobem:
-\begin{empheq}[box=\fcolorbox{black}{white}]{align*}
-\textrm{úspìšnost} = \frac{\textrm{souèet správnì urèených poètù vajec}}{\textrm{celkový poèet videosekvencí}} * 100
-\end{empheq}
+\begin{equation*}
+	\boxed{
+	\begin{gathered}
+		\textrm{úspìšnost} = \frac{\textrm{souèet správnì urèených poètù vajec}}{\textrm{celkový poèet videosekvencí}} * 100
+    \end{gathered}
+}
+\end{equation*}
 Druhou metrikou je rozdíl mezi oèekávaným poètem vajec a výsledkem, který dostaneme použitím knihovny:
-\begin{empheq}[box=\fcolorbox{black}{white}]{align*}
-\textrm{vzdálenost} = \sum_{n=1}^{\textrm{poèet videosekvencí}} | \textrm{známý poèet vajec} - \textrm{poèet vajec vypoèítaný knihovnou} |
-\end{empheq}
+\begin{equation*}
+	\boxed{
+	\begin{gathered}
+		\textrm{vzdálenost} = \\
+		= \sum_{n=1}^{\textrm{poèet videosekvencí}} | \textrm{známý poèet vajec} - \textrm{poèet vajec vypoèítaný knihovnou} |
+    \end{gathered}
+	}
+\end{equation*}
 
 Druhá metrika je lepším nástrojem pro mìøení efektivity, protože øíká, o kolik vajec se knihovna spletla. Z toho vyplívá, že \textbf{èím nižší èíslo, tím lepší efektivita}.
 

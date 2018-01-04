@@ -1,7 +1,6 @@
 \usepackage{color}
 \usepackage{ifthen}
 \usepackage{ifpdf}
-\usepackage[headings]{fullpage}
 \usepackage{listings}
 \lstset{language=Java,breaklines=true}
 \ifpdf
@@ -24,7 +23,4 @@
 \expandafter\ifx\csname r@#1\endcsname\relax
 \relax\else
 {$($in \ref{#1}, page \pageref{#1}$)$}\fi}
-\date{null}
-\title{Egg Detector}
-\author{Jan Havluj}
 \chardef\textbackslash=`\\

@@ -16,7 +16,7 @@ wget -o log.txt -nv --show-progress -c -P "$DIRECTORY" -r -np -nH --cut-dirs=1 -
 \vspace{0.5cm}\noindent
 Struèné vysvìtlení pøíkazu \texttt{wget}, který používáme na poslední øádce skriptu \ref{alg:download}:
 \begin{itemize}
-	\item Všechny složky a podsložky dostupné na serveru budou staženy lokálnì do složky \newline\texttt{\$DIRECTORY}.
+	\item Všechny složky a podsložky dostupné na serveru budou staženy lokálnì do složky \texttt{\$DIRECTORY}.
 	\item \texttt{-o log.txt} vytvoøí záznam do souboru \texttt{log.txt}.
 	\item \texttt{-nv} zobrazuje pouze chyby, ne varování.
 	\item \texttt{--show-progress} ukáže progres stahování.
@@ -39,14 +39,14 @@ FolderTrimmer funguje ve dvou režimech. První, základní režim, smaže všechny sou
 Když máme všechna potøebná data stažená, je potøeba je pøipravit tak, abychom je mohli použít k trénování neuronové sítì. Pøíprava dat se liší podle typu implementace, který zvolíme. V pøípadì trénování neuronové sítì k detekci objektù, chceme k jednotlivým snímkùm pøidat informaci \textbf{kde}, \textbf{jaké velikosti} a \textbf{kolik} vajec se v nich nachází. V pøípadì trénování neuronové sítì pro rozpoznávání (klasifikaci) obrazu, je potøeba ke snímkùm pøidat informaci o \textbf{celkovém poètu vajec}.
 
 \subsection{Tagger}\label{chap:tagger}
-Nástroj \texttt{Tagger} slouží k manuálnímu oznaèování snímkù. Pracuji na úrovni složek, kde jednotlivé složky a snímky reprezentují jednu videosekvenci. Uživatel pak mùže program spustit a pomìrnì rychle oznaèit, kolik vajec se na daných snímcích nachází. Tagger je webovou aplikací s jednoduchým uživatelským rozhraním. Uživatel je prezentován všemi snímky dané složky a má možnost u každého snímku specifikovat poèet vajec. Uživateli je složka vybrána automaticky. Po odeslání dat je uživatel vyzván k oznaèení další složky. Tento proces se opakuje do té doby, než jsou oznaèené všechny složky. Ukázka uživatelského rozhraní je vidìt na obrázku \ref{fig:tagger}.
-
-\begin{figure}
+\begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.7\textwidth]{media/tagger.png}
+	\includegraphics[height=\textheight-1cm]{media/tagger.png}
 	\caption{Tagger -- hromadné urèování poètu vajec.}
 	\label{fig:tagger}
 \end{figure}
+
+Nástroj \texttt{Tagger} slouží k manuálnímu oznaèování snímkù. Pracuji na úrovni složek, kde jednotlivé složky a snímky reprezentují jednu videosekvenci. Uživatel pak mùže program spustit a pomìrnì rychle oznaèit, kolik vajec se na daných snímcích nachází. Tagger je webovou aplikací s jednoduchým uživatelským rozhraním. Uživatel je prezentován všemi snímky dané složky a má možnost u každého snímku specifikovat poèet vajec. Uživateli je složka vybrána automaticky. Po odeslání dat je uživatel vyzván k oznaèení další složky. Tento proces se opakuje do té doby, než jsou oznaèené všechny složky. Ukázka uživatelského rozhraní je vidìt na obrázku \ref{fig:tagger}.
 
 Výstupem programu jsou soubory \texttt{imgdata.xml}, které obsahují informace o poètu vajec na jednotlivých snímcích. Tyto data jsou pak používána pro trénování neuronové sítì k rozpoznávání obrazu, kde poèet vajec reprezentuje možné výstupy neuronové sítì. Takto oznaèené snímky se dají použít i pro validaci jakéholiv øešení -- finální softwarové knihovnì pøedáme složku se snímky, knihovna vyhodnotí výsledky a my je poté mùžeme porovnat s výsledky, které jsme manuálnì nasbírali. Pøíklad výstupu je pøiložen v pøíloze \ref{list:imgdata}.
 
@@ -93,13 +93,13 @@ public static ArrayList<String> scanFolder(String location) {
 \subsection{LabelImg~\cite{labelimg}}\label{subsec:labelimg}
 Trénovací data pro detekci objektù vyžadují jiný formát než data pro rozpoznávání obrazu. Je potøeba na jednotlivých snímcích oznaèit pozici jednotlivých vajec. Pøesnì za tímto úèelem byl vytvoøen nástroj LabelImg~\cite{labelimg}. Uživatel si pøi spuštìní programu zvolí složku, ve které má data pøipravená na oznaèení. Uživatel má možnost zadat typy objektù, které chce na snímcích oznaèovat. V našem pøípadì se jedná pouze o jeden typ objektu -- vejce\footnote{Ve skuteènosti se náš objekt (label) jmenuje \texttt{egg}.}. Poté je uživatel prezentován se snímkem, kde má možnost objekty manuálnì ohranièit (viz obrázek \ref{fig:labelimg}).
 
-\begin{figure}
+Níže je pøiložen ukázkový výstup programu LabelImg.
+
+\lstinputlisting[language=XML,label={list:labelimg},caption={Ukázkový výstup programu LabelImg.}]{media/labelimg.xml}
+
+\begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{media/labelimg.png}
 	\caption{Uživatelské rozhraní nástroje LabelImg.}
 	\label{fig:labelimg}
 \end{figure}
-
-Níže je pøiložen ukázkový výstup programu LabelImg.
-
-\lstinputlisting[language=XML,label={list:labelimg}]{media/labelimg.xml}

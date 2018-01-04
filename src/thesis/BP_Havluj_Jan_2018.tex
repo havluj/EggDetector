@@ -6,15 +6,13 @@
 % english thesis in English language
 % hidelinks remove colour boxes around hyperlinks
 
-\documentclass[thesis=B,czech]{template/FITthesis}[2012/06/26]
+\documentclass[thesis=B,czech,hidelinks]{template/FITthesis}[2012/06/26]
 
 \usepackage[cp1250]{inputenc} % LaTeX source encoded as Windows-1250
 
 \usepackage{graphicx} %graphics files inclusion
 % \usepackage{amsmath} %advanced maths
 % \usepackage{amssymb} %additional math symbols
-
-%\usepackage[left=3.5cm,right=2.5cm,top=3.5cm,bottom=3cm]{geometry}
 
 \usepackage{subfig}
 \usepackage{dirtree} %directory tree visualisation
@@ -106,10 +104,6 @@
 
 \newcommand{\tg}{\mathop{\mathrm{tg}}} %cesky tangens
 \newcommand{\cotg}{\mathop{\mathrm{cotg}}} %cesky cotangens
-
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-% PRÁCE
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 
 \department{Katedra softwarového inženýrství}
 \title{Detekce objektù v ptaèích hnízdech pomocí neuronových sítí}
@@ -208,7 +202,7 @@
 
 \chapter{Konfigurace detekování objektù}\label{chap:config_detection}
 Výsledný konfiguraèní soubor použitý spoleènì s modelem \texttt{ssd\_mobilenet\_v1\_coco}:
-\lstinputlisting[language=json]{media/pipeline.config}
+\lstinputlisting[language=json,caption={Konfiguraèní soubor pro detekci vajec v ptaèích hnízdech.}]{media/pipeline.config}
 
 \chapter{Test efektivity knihovny}\label{chap:test_efektivity}
 \lstinputlisting[caption={Test k vyhodnocení efektivy knihovny.}]{media/SuccessRateTest.java}
@@ -243,9 +237,9 @@ Výsledný konfiguraèní soubor použitý spoleènì s modelem \texttt{ssd\_mobilenet\_
 		.1 src.
 		.2 impl\DTcomment{zdrojové kódy implementace}.
 		.3 eggdetector\DTcomment{zdrojové kódy implementace knihovny}.
-		.3 \texttt{egg\_recognition}\DTcomment{zdrojové kódy implementace rozpoznávání obrazu}.
-		.3 \texttt{object-detection-training}\DTcomment{zdrojové kódy implementace detekce objektù}.
-		.3 tools\DTcomment{zdrojové kódy pomocných nástrojù k tvorbì bakaláøské práce}.
+		.3 \texttt{egg\_recognition}\DTcomment{implementace rozpoznávání obrazu}.
+		.3 \texttt{object-detection-training}\DTcomment{implementace detekce objektù}.
+		.3 tools\DTcomment{zdrojové kódy pomocných nástrojù}.
 		.4 \texttt{foldertrimmer}\DTcomment{zdrojové kódy nástroje FolderTrimmer}.
 		.4 \texttt{tagger}\DTcomment{zdrojové kódy nástroje Tagger}.
 		.4 \texttt{download.sh}\DTcomment{skript pro hromadné stažení dat}.

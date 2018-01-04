@@ -113,7 +113,7 @@ Výsledná knihovna bude uživateli umìt poskytnout informace o složce jako celku -
 \textit{Snímky mohou být ve formátu JPEG a PNG.}
 
 \vspace{0.5cm}
-Pro zpracování snímkù použijeme standartnì dostupné tøídy pro práci s grafikou v programovacím jazyce Java. Konkrétnì \texttt{BufferedImage} a \texttt{Graphics2D} nám umožní zpracovat oba dva formáty -- JPEG i PNG.
+Pro zpracování snímkù použijeme standartnì dostupné tøídy pro práci s grafikou v programovacím jazyce Java. Tøídy \texttt{BufferedImage} a \texttt{Graphics2D} nám umožní zpracovat oba dva formáty -- JPEG i PNG.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -167,7 +167,7 @@ K vytrénování naší neuronové sítì je potøeba velké množství trénovacích dat. Tré
 	\item Pro hromadné stažení dat použijeme nástroje \texttt{bash} a \texttt{wget}. Hromadnì stažená data budou obsahovat i obsah, který pro nás není užiteèný. Proto použijeme nástroj, který všechna neužiteèná data smaže. Více v kapitole \ref{sec:hromadne_stazeni_dat}.
 	\item Trénovací a testovací data vytvoøíme pomocí nástrojù \texttt{LabelImg} a \texttt{Tagger}. Detailní informace obsahuje kapitola \ref{sec:priprava_dat}.
 \end{itemize}
-Abychom byli schopni novì vytvoøená trénovací data použít k trénování neuronové sítì, musíme je pøevést do standardního formátu. V našem pøípadì musíme z binárních dat snímkù a textových XML souborù vytvoøit tzv. \texttt{TFRecord}~\cite{tfrecord}. Každy zpùsob implementace vyžaduje mírnì odlišný formát trénovacích dat. V kapitolách \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}, které se popisují konkrétní implementace, diskutujeme i pøípravu trénovacích dat.
+Abychom byli schopni novì vytvoøená trénovací data použít k trénování neuronové sítì, musíme je pøevést do standardního formátu. V našem pøípadì musíme z binárních dat snímkù a textových XML souborù vytvoøit tzv. TFRecord~\cite{tfrecord}. Každy zpùsob implementace vyžaduje mírnì odlišný formát trénovacích dat. V kapitolách \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}, které se popisují konkrétní implementace, diskutujeme i pøípravu trénovacích dat.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
