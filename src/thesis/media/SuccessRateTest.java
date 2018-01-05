@@ -14,7 +14,7 @@ import org.junit.Test;
 
 public class SuccessRateTest {
 
-    static final String DIR = "/run/media/jan/data/bachelor_thesis_data/data/egg_count_images";
+    static final String DIR = "~/data/egg_count_images";
     static EggDetector eggDetector;
 
     @BeforeClass

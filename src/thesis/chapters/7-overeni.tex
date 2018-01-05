@@ -2,7 +2,7 @@
 V této kapitole se zamìøíme testování, validaci a mìøení efektivity implementace knihovny popsané v kapitole \ref{chap:javaknihovna}. Všechny testy jsou implementovány v jazyce Java pomomcí testovacího frameworku JUnit~\cite{junitdoc}. Zdrojové kódy testù jsou dostupné v pøíloze \ref{chap:cd}.
 
 \section{Testování funkènosti}
-Abych dokázal, že souèasná implementace knihovny funguje, napsal jsem dva jednotkové testy\footnote{Unit testing.}. 
+Abych dokázal, že souèasná implementace knihovny funguje, napsal jsem dva \uv{jednotkové testy}\footnote{Unit testing.}. 
 
 První test využívá pìt snímkù pøiložených ke zdrojovým kódùm testù. Nejdøíve porovnává pøedem známý poèet vajec v tìchto snímcích s poètem, který vypoèítá knihovna. Následnì je porovnán výsledný poèet vajec, který byl vypoèítán z tìchto 5 snímkù.
 
@@ -45,7 +45,9 @@ public class PackagedDataTest {
 Druhý test porovnává výsledky knihovny s manuálnì oznaèenými daty nástrojem \texttt{Tagger} (viz kapitola \ref{chap:tagger}). Vstupem je pouze jedna složka s libovolným poètem snímkù.
 
 \section{Testování distribuce}
-Abychom otestovali, že knihovna splòuje funkèní požadavek na distribuci, vytvoøíme nový projekt, ve kterém se pokusíme knihovnu použít. Pøidáme knihovnu EggDetector do projektu:
+Abychom otestovali, že knihovna splòuje funkèní požadavek na distribuci, vytvoøíme nový projekt, ve kterém se pokusíme knihovnu použít. 
+
+Pøidáme knihovnu EggDetector do projektu:
 \begin{lstlisting}[language=XML]
 <dependency>
 	<groupId>org.cvut.havluja1</groupId>
@@ -57,16 +59,24 @@ Abychom otestovali, že knihovna splòuje funkèní požadavek na distribuci, vytvoøí
 	</systemPath>
 </dependency>
 \end{lstlisting}
-a pokusíme se jí použít.
+a použijeme ji:
+\begin{lstlisting}
+EggDetector eggDetector = new EggDetector();
+SequenceClassifier sequenceClassifier = eggDetector.evaluate(new File(Main.class.getClassLoader().
+getResource("sample_images").getFile()));
 
-Je vidìt, že distribuce funguje. Zdrojové kódy externího projektu se nachází v pøíloze \ref{chap:cd} ve složce \texttt{src/libtest}.
+System.out.println("final count: " + sequenceClassifier.getFinalCount());
+System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
+
+eggDetector.closeSession();
+\end{lstlisting}
+
+Je vidìt, že distribuce funguje. Zdrojové kódy externího projektu se nachází v pøíloze \ref{chap:cd} ve složce \texttt{src/impl/libtest}.
 
 \section{Mìøení efektivity implementace}\label{sec:efektivita_knihovny}
 Pro urèení efektivity naší implementace využijeme manuálnì oznaèených \textbf{6178 snímkù} nástrojem Tagger. Porovnáme také výsledky pøi rùzných nastaveních \uv{thresholdu} knihovny (viz kapitola \ref{sec:impl_impl}).
 
-Zdrojový kód testu je vypsán v pøíloze \ref{chap:test_efektivity}. Knihovnu otestujeme na stejných datech s 5 rùznými nastaveními \uv{thresholdu}. V nadcházejících sekcích jsou vypsány výsledky.
-
-V testu se zamìøíme na dvì metriky. První metrikou je pomìr je procentuální úspìšnost knihovny. Tu získáme následujícím zpùsobem:
+Zdrojový kód testu je vypsán v pøíloze \ref{chap:test_efektivity}. Knihovnu otestujeme pìtkrát na stejných datech s pìti rùznými nastaveními \uv{thresholdu}. V testech se zamìøíme na dvì metriky. První metrikou je pomìr je procentuální úspìšnost knihovny. Tu získáme následujícím zpùsobem:
 \begin{equation*}
 	\boxed{
 	\begin{gathered}

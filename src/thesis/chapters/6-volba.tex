@@ -1,15 +1,15 @@
 \chapter{Implementace Java knihovny}\label{chap:javaknihovna}
-Pøedmìtem této kapitoly je tvorba softwarové knihovny, která je cílem této práce. Nejdøíve porovnáme vısledky dvou implementací z kapitoly \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}. Jako další krok budeme diskutovat, jakım zpùsobem integrovat vybranou implementaci do Javy. Následnì se zamìøíme na uivatelské rozhraní knihovny a implementaci. Na závìr vyøešíme distribuci knihovny nástrojem pro správu, øízení a automatizaci buildù aplikací.
+Pøedmìtem této kapitoly je tvorba softwarové knihovny, která je cílem této práce. Nejdøíve porovnáme vısledky dvou implementací z kapitoly \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}. Jako další krok budeme diskutovat, jakım zpùsobem integrovat vybranou implementaci do programovacího jazyka \texttt{Java}. Následnì se zamìøíme na uivatelské rozhraní knihovny a její implementaci. Na závìr vyøešíme distribuci knihovny nástrojem pro správu, øízení a automatizaci buildù aplikací.
 
 \section{Srovnání implementací neuronovıch sítí a volba øešení}
-Vzhledem k vısledkùm popsanıch v závìru kapitoly \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz} je zøejmé, e detekce objektù popsaná v kapitole \ref{chap:impl_detekce} je vhodnìjší implementací.
+Vzhledem k vısledkùm popsanıch v závìrech kapitol \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz} je zøejmé, e detekce objektù popsaná v kapitole \ref{chap:impl_detekce} je podstatnì efektivnìjší implementací.
 
-Nicménì vısledná knihovna je navrena tak, e kdykoliv mùeme styl øešení zmìnit bez toho, ani bychom museli mìnit uivatelské rozhraní.
+Nicménì vısledná knihovna je navrena tak, e kdykoliv mùe bıt styl øešení zmìnìn bez toho, ani by muselo bıt modifikováno uivatelské rozhraní.
 
 \section{Pouití TensorFlow v Javì}
-Abychom mohli pouít model pro detekci vajec v naší knihovnì, je nutné ho exportovat, stejnì jako v kapitole \ref{sec:detekce_funkavysledky}. Exportovanı model umístíme mezi statické zdroje knihovny.
+Abychom mohli pouít model pro detekci vajec v naší knihovnì, je nutné ho exportovat. Staèí postupovat v krocích popsanıch v kapitole \ref{sec:detekce_funkavysledky}. Exportovanı model umístíme mezi statické zdroje knihovny.
 
-TensorFlow poskytuje API pro jazyk Java. Abychom ho mohli pouívat, staèí pøidat do \texttt{pom.xml} závislost:
+TensorFlow poskytuje API pro jazyk Java. Abychom ho mohli pouívat, staèí pøidat novou \uv{závislost} do souboru \texttt{pom.xml}:
 \begin{lstlisting}[language=XML]
 <dependency>
 	<groupId>org.tensorflow</groupId>
@@ -17,7 +17,7 @@ TensorFlow poskytuje API pro jazyk Java. Abychom ho mohli pouívat, staèí pøidat
 	<version>1.4.0</version>
 </dependency>
 \end{lstlisting}
-Java API, které TensorFlow poskytuje, je pomìrnì nízko-úrovòové~\cite{tensorflowjavaapi}. Abychom si usnadnili práci, pouijeme wrapper\footnote{Tøída, která \uv{obalí} jinou tøídu a pøidá jí funkènost.}, kterı pouívá TensorFlow pro Android. Staèí jen pár drobnıch modifikací a mùeme ho pouít.
+Java API, které TensorFlow poskytuje, je pomìrnì nízko-úrovòové~\cite{tensorflowjavaapi}. Pro usnadnìní práce pouijeme wrapper\footnote{Tøída, která \uv{obalí} jinou tøídu a pøidá jí funkènost.}, kterı se inspiruje rozhraním, které TensorFlow poskytuje pro platformu Android.
 
 \section{Uivatelské rozhraní knihovny}
 Pøi tvorbì uivatelského rozhraní vycházíme z prvotního návrhu, kterı vznikl analızou funkèních poadavkù (viz algoritmus \ref{alg:prvni_navrh}). Kompletní dokumentace API, které knihovna uivateli poskytuje je dostupná v pøíloze \ref{chap:dokumentaceapi}. Nejlepším zdrojem ukázek pouití knihovny jsou testy, které diskutujeme v kapitole \ref{chap:overeniatestovani}.
@@ -25,9 +25,9 @@ Pøi tvorbì uivatelského rozhraní vycházíme z prvotního návrhu, kterı vznikl ana
 \section{Implementace}\label{sec:impl_impl}
 Kompletní zdrojové kódy implementace jsou dostupné v pøíloze \ref{chap:cd}. Knihovnu zkompilujeme nástrojem Maven: \texttt{mvn clean package -DskipTests}.
 
-Neuronová sí, která se stará o detekci a klasifikaci objektù na jednotlivıch snímcích vrací vısledek ve jako mnoinu detekcí. Kadá detekce se skládá z informací o umístìní objektu, typu objektu a pravdìpodobnosti v procentech, e se opravdu o danı objekt jedná. Je tedy nutné stanovit hranici\footnote{Threshold.}, která slouí jako mezník, zda-li je vısledek relevantní, èi nikoliv. Jestlie nastavíme hranici napøíklad na 30\%, knihovna vrátí pouze detekované objekty, u kterıch si je jistá alespoò na 30\%. Kdybychom nastavili hranici na 0\%, knihovna by vrátila všechny moné detekce nalezené v obrázku. Celkovı poèet objektù na snímku je limitován na 100. V kapitole \ref{sec:efektivita_knihovny} se zamìøíme na to, jak nastavená hranice pøináší nejlepší vısledky.
+Neuronová sí, která se stará o detekci a klasifikaci objektù na jednotlivıch snímcích vrací vısledek ve jako mnoinu detekcí. Kadá detekce se skládá z informací o umístìní objektu, typu objektu a pravdìpodobnosti v procentech, e se opravdu o danı objekt jedná. Je tedy nutné stanovit hranici\footnote{Threshold.}, která slouí jako mezník, zda-li je vısledek relevantní, èi nikoliv. Jestlie nastavíme hranici napøíklad na 30\%, knihovna vrátí pouze detekované objekty, o kterıch si je jistá alespoò na 30\%. Kdybychom nastavili hranici na 0\%, knihovna by vrátila všechny moné detekce nalezené v obrázku. Celkovı poèet detekcí na snímku je limitován na 100. V kapitole \ref{sec:efektivita_knihovny} se zamìøíme na to, jak nastavení hranice dokáe ovlivnit efektivitu knihovny.
 
-\begin{lstlisting}[caption={Poèítání finálního poètu vajec pro celou sloku pomocí dat z jednotlivıch snímkù.},label={alg:celkovypocetvajec}]
+\begin{lstlisting}[caption={Získání finálního poètu vajec pro celou sloku pomocí dat z jednotlivıch snímkù.},label={alg:celkovypocetvajec}]
 public Integer getFinalCount() {
 	TreeMap<Integer, Integer> scores = new TreeMap<>();
 	
@@ -106,8 +106,8 @@ Abychom splnili funkèní poadavek \textbf{F2} (viz kapitola \ref{sec:cil_funkcni
 	</configuration>
 	<executions>
 		<execution>
-			<id>make-assembly</id> <!-- this is used for inheritance merges -->
-			<phase>package</phase> <!-- bind to the packaging phase -->
+			<id>make-assembly</id>
+			<phase>package</phase>
 			<goals>
 				<goal>single</goal>
 			</goals>
@@ -117,9 +117,9 @@ Abychom splnili funkèní poadavek \textbf{F2} (viz kapitola \ref{sec:cil_funkcni
 \end{lstlisting}
 
 \section{Vısledek}
-Vısledkem této kapitoly je funkèní softwarová knihovna v jazyce Java, která splòuje všechny cíle stanovené na zaèátku práce. Ke knihovnì je dostupná kompletní uivatelská dokumentace.
+Vısledkem této kapitoly je funkèní softwarová knihovna v programovacím jazyce Java, která splòuje všechny cíle stanovené na zaèátku práce. Ke knihovnì je dostupná kompletní uivatelská dokumentace.
 
-Uivatel získá pøístup k detekovanému poètu vajec v poadované sloce (vıpoèet celkového poètu viz alg. \ref{alg:celkovypocetvajec}) i k informacím o jednotlivıch snímcích. Uivatel má monost zmìnit hranici, podle které knihovna urèí, jaká podmnoina vısledkù je relevantní. Napøíklad pøi nastavení hranice na 50\% budou brány v potaz pouze detekce, u kterıch si je knihovna jistá alespoò na 50\%.
+Uivatel získá pøístup k detekovanému poètu vajec v poadované sloce (zjišování celkového poètu viz alg. \ref{alg:celkovypocetvajec}) i k informacím o jednotlivıch snímcích. Uivatel má monost zmìnit hranici, podle které knihovna urèí, jaká podmnoina vısledkù je relevantní. Napøíklad pøi nastavení hranice na 50\% budou brány v potaz pouze detekce, u kterıch si je knihovna jistá alespoò na 50\%.
 
 Knihovna obsahuje \uv{debuggovací} reim, kterı vizualizuje, jakım zpùsobem jsou detekce reprezentovıny internì. Ukázka \uv{debuggovacího} reimu je vidìt na obrázcích \ref{fig:eggdetectordebug}.
 
