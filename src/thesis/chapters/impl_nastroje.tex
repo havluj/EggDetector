@@ -1,10 +1,10 @@
 \chapter{Nástroje}\label{chap:nastroje}
-Pøípravu a zpracování dat si mùžeme usnadnit pomocí nìkolika nástrojù. Zamìøíme se na hromadné stažení dat ze serveru \url{http://athena.pef.czu.cz/ptacionline/} a jejich \uv{proèištìní}. Dále si pøedstavíme nástroje, ve kterých obohatíme stažené snímky o informace potøebné k trénování neuronové sítì.
+Proces pøípravy a zpracování dat mùžeme usnadnit použitím nìkolika nástrojù. Zamìøíme se na hromadné stahování dat ze serveru \newline\url{http://athena.pef.czu.cz/ptacionline/} a jejich \uv{proèištìní}. Následnì pøedstavíme nástroje, ve kterých obohatíme stažené snímky o informace potøebné k trénování neuronové sítì.
 
 \section{Hromadné stahování dat}\label{sec:hromadne_stazeni_dat}
 \subsection{Získání dat}\label{subsec:hromadne_stazeni_dat}
 Abychom nemuseli stahovat snímky jeden po druhém manuálnì, pomùžeme si napsáním jednoduchého skriptu, který stáhne všechny snímky za nás. K tomu nám postaèí dva nástroje: \texttt{bash} a \texttt{wget}. Tento skript stáhne veškerá data, která jsou na serveru \url{http://athena.pef.czu.cz/ptacionline/} dostupná. Detailní dokumentace skriptu je k nalezení v pøíloze \ref{chap:cd}).
-\noindent\begin{lstlisting}[caption={Hromadné stažení dat ze serveru athena.pef.czu.cz.},label={alg:download},language=bash]
+\noindent\begin{lstlisting}[caption={Hromadné stahování dat ze serveru athena.pef.czu.cz.},label={alg:download},language=bash]
 #!/bin/bash
 
 DIRECTORY=data
@@ -16,16 +16,16 @@ wget -o log.txt -nv --show-progress -c -P "$DIRECTORY" -r -np -nH --cut-dirs=1 -
 \vspace{0.5cm}\noindent
 Struèné vysvìtlení pøíkazu \texttt{wget}, který používáme na poslední øádce skriptu \ref{alg:download}:
 \begin{itemize}
-	\item Všechny složky a podsložky dostupné na serveru budou staženy lokálnì do složky \texttt{\$DIRECTORY}.
-	\item \texttt{-o log.txt} vytvoøí záznam do souboru \texttt{log.txt}.
-	\item \texttt{-nv} zobrazuje pouze chyby, ne varování.
-	\item \texttt{--show-progress} ukáže progres stahování.
-	\item \texttt{-c} -- pokraèuj ve stahování nedokonèených souborù.
-	\item \texttt{-r} -- rekurzivnì stahuj podsložky.
-	\item \texttt{-np} -- nestahuj soubory v složkách výše, než \texttt{ptacionline}.
-	\item \texttt{-nH} -- nestahuj do složky, která se jmenuje stejnì jako doména, ale pøímo do \texttt{\$DIRECTORY}.
-	\item \texttt{--cut-dirs=1} -- ve složce \texttt{\$DIRECTORY} vynech první složku (\texttt{ptacionline}).
-	\item \texttt{-R index.html} -- nestahuj soubory \texttt{.html}.
+	\item Všechny složky a podsložky dostupné na serveru budou staženy do lokální složky \texttt{\$DIRECTORY}.
+	\item \texttt{-o log.txt} -- Vytvoøí záznam do souboru \texttt{log.txt}.
+	\item \texttt{-nv} -- Zobrazuje pouze chyby, ne varování.
+	\item \texttt{--show-progress} -- Ukáže progres stahování.
+	\item \texttt{-c} -- Pokraèuj ve stahování nedokonèených souborù.
+	\item \texttt{-r} -- Rekurzivnì stahuj podsložky.
+	\item \texttt{-np} -- Nestahuj soubory v složkách výše, než \texttt{ptacionline}.
+	\item \texttt{-nH} -- Nestahuj do složky, která se jmenuje stejnì jako doména, ale pøímo do \texttt{\$DIRECTORY}.
+	\item \texttt{--cut-dirs=1} -- Ve složce \texttt{\$DIRECTORY} vynech první složku (\texttt{ptacionline}).
+	\item \texttt{-R index.html} -- Nestahuj soubory \texttt{.html}.
 \end{itemize}
 
 \subsection{Èištìní dat}

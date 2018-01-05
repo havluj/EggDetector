@@ -16,7 +16,7 @@ V této bakaláøské práci se budeme zabıvat rozpoznáváním obrazu, pomocí kterého s
 	\item[identifikace:] rozpoznávání oblièeje nebo otisku prstu
 \end{description}
 
-V souèasné dobì jsou algoritmy umìlé inteligence nejefektivnìjším øešením rozpoznávání obrazu. Algoritmy zaloené na konvoluèních neuronovıch sítích se dokonce pøiblíily svou pøesností a efektivitou lidem\cite{imagenet}.
+V souèasné dobì jsou algoritmy umìlé inteligence nejefektivnìjším øešením rozpoznávání obrazu. Algoritmy zaloené na konvoluèních neuronovıch sítích se dokonce pøiblíily svou pøesností a efektivitou lidem~\cite{imagenet}.
 
 \section{Neuronové sítì}
 \begin{figure}[]
@@ -28,9 +28,9 @@ V souèasné dobì jsou algoritmy umìlé inteligence nejefektivnìjším øešením rozpoz
 \end{figure}
 Umìlá neuronová sí je softwarovı systém inspirovanı biologickımi neuronovımi sítìmi, které se nachází v lidskıch s zvíøecích mozcích. Neuronové sítì jsou bìnì pouívány napøíklad k rozpoznávání obrazu, filtrování spamu nebo pøedvídání vıvoje hodnoty akcií.
 
-Umìlé neuronové sítì obsahují neurony, které jsou mezi sebou propojeny. Neuron dostane vstup od pøedchozích neuronù, tento vstup zpracuje podle své interní logiky a vygeneruje vıstup, kterı je vstupem pro následující neurony. Takto vytvoøená neuronová sí je tedy \textbf{orientovanım váenım grafem}. Vstupem pro \uv{první øadu} neuronù jsou vstupní data, napøíklad jednotlivé pixely obrazu. Aktivace \uv{poslední øady} neuronù reprezentuje vısledek pro danı vstup~\cite{ann}. Struktura neuronové sítì a neuronu je znázornìna na obrázku \ref{fig:ann}, respektive \ref{fig:neuron}.
+Umìlé neuronové sítì obsahují neurony, které jsou mezi sebou propojeny. Vstupem kadého neuronu jsou vıstupy neuronù v pøedchozích vrstvách. Tento vstup je zpracován podle interní logiky neuronu a následnì je vygenerován vıstup, kterı se stává vstupem pro neurony v následujících vrstvách. Neuronová sí je tedy \textbf{orientovanım váenım grafem}. Vstupem pro \uv{první øadu} neuronù jsou vstupní data, napøíklad jednotlivé body\footnote{pixely} obrazu. Aktivace \uv{poslední øady} neuronù reprezentuje vısledek pro danı vstup~\cite{ann}. Struktura neuronové sítì a neuronu je znázornìna na obrázku \ref{fig:ann}, respektive \ref{fig:neuron}.
 
-Dnešní architektury neuronovıch sítí však mohou bıt mnohem komplexnìjší. Mohou se lišit poètem skrytıch vrstev, strukturou propojení neuronù (napøíklad cyklická propojení neuronù), skryté vrstvy mohou mít pamì, atd. Mezi nejznámìnší typy neuronovıch sítí patøí konvoluèní neuronové sítì, modulární neuronové sítì, Boltzmanna sí, sí s dlouhodobou / krátkodobou pamìtí a perceptrony. Struèné shrnutí jednotlivıch typù viz~\cite{mediumnn}.
+Dnešní architektury neuronovıch sítí však mohou bıt mnohem komplexnìjší. Mohou se lišit poètem skrytıch vrstev, strukturou propojení neuronù (napøíklad cyklická propojení neuronù), skryté vrstvy mohou mít pamì, atd. Mezi nejznámìnší typy neuronovıch sítí patøí konvoluèní neuronové sítì, modulární neuronové sítì, Boltzmannova sí, sí s dlouhodobou a krátkodobou pamìtí a perceptronové sítì. Struèné pøedstavení jednotlivıch typù viz~\cite{mediumnn}.
 
 V rámci této práce se zamìøíme pøedevším na pouítí hlubokıch konvoluèních neuronovıch sítí ke klasifikaci obrazu a detekci objektù.
  
@@ -43,7 +43,7 @@ V rámci této práce se zamìøíme pøedevším na pouítí hlubokıch konvoluèních neuro
 \end{figure}
 
 \section{TensorFlow}
-\uv{TensorFlow je otevøená softwarová knihovna\footnote{open source software} pro numerické vıpoèty pomocí metody \uv{data flow graph}}~\cite{abouttensorflow}. Knihovnu je moné pouít napøíklad pro rùzné matematické vıpoèty, tvorbu lineárních modelù a neuronovıch sítí. Pouitím knihovny získáme pøístup k sadì pøipravenıch algoritmù, které nám znaènì usnadní tvorbu neuronové sítì. K dispozici jsou napøíklad algoritmy pro trénování (hledání optimálních vah k jednotlivım hranám grafu), jako je napøíklad algoritmus \uv{stochastic gradient descent}. TensorFlow dìlá pouítí dostupnıch algoritmù opravdu jednoduché, viz algoritmus \ref{alg:graddescent}.
+\uv{TensorFlow je otevøená softwarová knihovna\footnote{open source software} pro numerické vıpoèty pomocí metody \uv{data flow graph}}~\cite{abouttensorflow}. Knihovnu je moné pouít napøíklad pro usnadnìní matematickıch vıpoètù, tvorbu lineárních modelù a neuronovıch sítí. Pouitím knihovny získáme pøístup k sadì pøipravenıch algoritmù, které nám znaènì usnadní tvorbu neuronové sítì. K dispozici jsou napøíklad algoritmy pro trénování (hledání optimálních vah k jednotlivım hranám grafu), jako je napøíklad algoritmus \uv{stochastic gradient descent}. TensorFlow dìlá pouítí dostupnıch algoritmù opravdu jednoduché, viz algoritmus \ref{alg:graddescent}.
 
 TensorFlow také znaènì usnadòuje tvorbu a konfiguraci struktury neuronové sítì, viz~\cite{tensoralgorithms}. V neposlední øadì mùeme pouit nespoèet skriptù pro práci s daty~\cite{create_tfrecord} nebo TensorFlow Object Detection API~\cite{tens_detection}.
 
