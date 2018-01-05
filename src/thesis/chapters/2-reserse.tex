@@ -16,8 +16,6 @@ V této bakaláøské práci se budeme zabývat rozpoznáváním obrazu, pomocí kterého s
 	\item[identifikace:] rozpoznávání oblièeje nebo otisku prstu
 \end{description}
 
-Existuje hned nìkolik zpùsobù, jak nauèit poèítaè \uv{vidìt}. Témìø vždy se musíme zamìøit na pøedzpracování obrazu, jeho vlastnosti a jeho segmentaci. Jako øešení pak mùžeme zvolit rùznou sadu deterministických algoritmù, napøíklad pro detekci hran nebo na samotné klasifikování segmentovaného obrazu. Všechny tyto algoritmy mají však jednu spoleènou nevýhodu -- formálnì popsat tvar nìjakého objektu a vytvoøit sadu pravidel, podle kterých poznáme, jestli se jedná o hledaný objekt, je velmi tìžké. Svìtelné podmínky nemusí být ideální, objekty se mohou pøekrývat, mohou být rùznì barevné, vzdálené nebo otoèené. Všechny tyto problémy znemožòují vytvoøení perfektního algoritmu manuálnì.
-
 V souèasné dobì jsou algoritmy umìlé inteligence nejefektivnìjším øešením rozpoznávání obrazu. Algoritmy založené na konvoluèních neuronových sítích se dokonce pøiblížily svou pøesností a efektivitou lidem\cite{imagenet}.
 
 \section{Neuronové sítì}
@@ -49,7 +47,6 @@ V rámci této práce se zamìøíme pøedevším na použítí hlubokých konvoluèních neuro
 
 TensorFlow také znaènì usnadòuje tvorbu a konfiguraci struktury neuronové sítì, viz~\cite{tensoralgorithms}. V neposlední øadì mùžeme použit nespoèet skriptù pro práci s daty~\cite{create_tfrecord} nebo TensorFlow Object Detection API~\cite{tens_detection}.
 
-\newpage
 \begin{lstlisting}[language=Python,caption={Použití algoritmu \uv{stochastic gradient descent} poskytovaný knihovnou TensorFlow.},label={alg:graddescent}]
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001)
 train_op = optimizer.minimize(loss=loss,
