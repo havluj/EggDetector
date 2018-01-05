@@ -1,7 +1,7 @@
 \chapter{Implementace detekování objektù}\label{chap:impl_detekce}
 V této kapitole se zamìøíme na implementaci neuronové sítì, která bude slouit k detekci objektù. V rámci této práce nás bude zajímat pouze jeden objekt: vejce. 
 
-Abychom mohli vytrénovat novı model, kterı je schopnı detekce vajec, je potøeba, abychom snímky a data pøevedli do speciálního formátu. Pro pouítí a validaci modelu budeme pouívat skript, u kterého bude vstupem obrázek libovolné velikosti. Internì bude zmenšen na velikost 300~x~300 bodù. Snímek bude reprezentován pole hodnot o velikosti 300~x~300~x~3 (snímek velikosti 300~x~300 bodù a zùstane barevnı -- kadı bod obsahuje 3 barevné sloky. Jakmile provedeme detekci objektù, musíme objekty klasifikovat do pøedem stanovenıch kategorií. Kategorie, do které budeme chtít snímky rozøadit, bude pouze \textbf{1}:
+Abychom mohli vytrénovat novı model, kterı je schopnı detekce vajec, je potøeba, abychom trénovací data pøevedli do speciálního formátu. K validaci modelu budeme pouívat skript, u kterého bude vstupem obrázek libovolné velikosti. Internì bude bude snímek reprezentován polem hodnot o velikosti 300~x~300~x~3 (snímek zmenšen na velikost 300~x~300 bodù a zùstane barevnı -- kadı bod obsahuje 3 barevné sloky). Jakmile provedeme detekci objektù, musíme detekované objekty klasifikovat a rozøadit do pøedem stanovenıch kategorií. Kategorie, do které budeme chtít snímky rozøadit, bude pouze \textbf{1}:
 \begin{description}[labelindent=1cm]
 	\item[Kategorie \uv{egg}:] Objekt vejce.
 \end{description}
@@ -38,7 +38,7 @@ Abychom mohli pouívat \texttt{TensorFlow Object Detection API}, je potøeba násl
 \end{enumerate}
 
 \section{Pøíprava dat}
-Nástrojem LabelImg (viz kapitola \ref{subsec:labelimg}) jsem oznaèil \textbf{1890} vajec. Data je potøeba rozdìlit na trénovací a testovací. Testovací data slouí k validaci a vyhodnocení úspìšnosti trénovaného modelu. Standardnì se data dìlí pøiblinì v pomìru 9:1 ve prospìch trénovacích dat. Data jsem rozdìlil následnovnì:
+Nástrojem LabelImg (viz kapitola \ref{subsec:labelimg}) jsem oznaèil \textbf{1890} vajec. Data je potøeba rozdìlit na trénovací a testovací. Testovací data slouí k validaci a vyhodnocení úspìšnosti trénovaného modelu. Standardnì se data dìlí pøiblinì v pomìru 9 trénovacích snímkù ku 1 testovacímu. Data jsem rozdìlil následnovnì:
 \begin{itemize}
 	\item \textbf{1701} vıskytù vajec jako trénovací data,
 	\item \textbf{189} vıskytù vajec jako data validaèní.
@@ -81,12 +81,10 @@ Projekt, ve kterém budeme celou implementaci tvoøit, bude mít následující strukt
 	}
 \end{figure}
 
-Stejná struktura je dostupná u pøiloeného zdrojového kódu v pøíloze \ref{chap:cd}, konkrétnì ve sloce \texttt{src/object-detection-training}.
-
-Všechny skripty, které pouíváme k trénování a validaci jsou dostupné v pøíloze \ref{chap:cd}.
+Stejná struktura je i na pøiloeném médiu (viz pøíloha \ref{chap:cd}), konkrétnì ve sloce \texttt{src/impl/object-detection-training}. Všechny skripty, které v této kapitole pouíváme k trénování a validaci neuronové sítì jsou také dostupné v pøíloze \ref{chap:cd}.
 
 \section{Trénování neuronové sítì}
-Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extrémnì} vıpoèetnì nároèné je vytrénovat. Uèení \uv{pøenosem modelu}\footnote{Transfer learning.} je technika, která ušetøí spoustu práce vyuitím ji pøed-trénovaného modelu a pøetrénováním pouze finálních vrstev~\cite{decaf}. Trénování sítì \uv{od nuly} je standardnì efektivnìjší, ale v mém testování jsem ve vısledcích rozdíl nepocítil. Proto jsem se rozhodl o pouítí ji pøedtrénovaného modelu.
+Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extrémnì} vıpoèetnì nároèné je vytrénovat. Uèení \uv{pøenosem modelu}\footnote{Transfer learning.} je technika, která ušetøí spoustu práce vyuitím ji pøed-trénovaného modelu a pøetrénováním pouze finálních vrstev~\cite{decaf}. Trénování sítì \uv{od nuly} je standardnì efektivnìjší, ale v rámci mého testování jsem ve vısledcích rozdíl nepocítil. Proto jsem se rozhodl o pouítí ji pøedtrénovaného modelu a metody \uv{transfer learning}.
 
 \subsection{Vıchozí model}
 V rámci této implementace jsem zkusil pouil tøi rùzné modely, které slouily jako startovní bod pro trénování. Nejlepší vısledky se dostavily pøi pouítí modelu \texttt{ssd\textunderscore mobilenet\textunderscore v1\textunderscore coco}\footnote{Ke staení na \url{http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2017_11_17.tar.gz} nebo v pøíloze \ref{chap:cd}.}~\cite{tensor_models}. Modely, které nebyly tak úspìšné jsou: \texttt{faster\_rcnn\_nas\_coco}\footnote{Ke staení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_2017_11_08.tar.gz}.} a \texttt{faster\_rcnn\_resnet101\_coco}\footnote{Ke staení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2017_11_08.tar.gz}.}. Staenı model umístíme do sloky \texttt{training} v pracovním adresáøi. Další modely, jejich rychlost a efektivita jsou zobrazeny na obrázku \ref{fig:tensor_models}.
@@ -104,30 +102,32 @@ Nyní je èas nakonfigurovat parametry, podle kterıch se bude neuronová sí øidit 
 Pro kadı typ aplikace jsou vhodné jiné parametry. Vıslednı konfiguraèní soubor pouitı spoleènì s modelem \texttt{ssd\_mobilenet\_v1\_coco} je vypsán v pøíloze \ref{chap:config_detection}.
 
 \subsection{Trénovací data}
-TensorFlow Object Detection API oèekává trénovací data ve formátu TFRecord~\cite{tfrecord}. Do pøílohy \ref{chap:cd} jsem pøiloil všechny skripty pro vygenerování tìchto souborù z trénovacích dat. Nyní máme pouze jednotlivé snímky a k ním XML soubory, které obsahují dodateèné informace o danıch snímcích. Cílem je dostat dva soubory: \texttt{train.record}, kterı obsahuje všechna potøebná data pro trénování a \texttt{test.record}, kterı obsahuje všechna data pro validaci a testování. Konverzní skript byl napsán podle pøedlohy \cite{create_tfrecord}. Abychom dostali dva poadované soubory, budeme postupovat v tìchto krocích:
+TensorFlow Object Detection API oèekává trénovací data ve formátu TFRecord~\cite{tfrecord}. Na pøiloené médium (viz pøíloha \ref{chap:cd}) jsem umístil všechny skripty pro vygenerování tìchto souborù z trénovacích dat. 
+
+Nejprve máme pouze jednotlivé snímky a k ním XML soubory, které obsahují dodateèné informace o danıch snímcích. Cílem je dostat dva soubory: \texttt{train.record}, kterı obsahuje všechna potøebná data pro trénování a \texttt{test.record}, kterı obsahuje všechna data pro validaci a testování. Konverzní skript byl napsán podle pøedlohy \cite{create_tfrecord}. Abychom dostali dva poadované soubory, budeme postupovat v tìchto krocích:
 \begin{enumerate}
 	\item Vygenerujeme dva CSV\footnote{Comma Separated Values.} soubory, které budou obsahovat informace o jednotlivıch detekcích v trénovacích a testovacích datech:
 	\begin{lstlisting}[language=bash] 
 	python3 xml_to_csv.py
 	\end{lstlisting}
-	\item Z kombinace CSV záznamu vygenerovaném v pøedchozím kroku a trénovacích snímku vytvoøíme soubor \texttt{train.record}: 
+	\item Z kombinace CSV záznamu vygenerovaném v pøedchozím kroku a trénovacích snímkù vytvoøíme soubor \texttt{train.record}: 
 	\begin{lstlisting}[language=bash]
 	python3 generate_tfrecord.py --csv_input=data/train_labels.csv --output_path=data/train.record
 	\end{lstlisting}
-	\item Z kombinace CSV záznamu vygenerovaném v prvním kroku a validaèních snímku vytvoøíme soubor \texttt{test.record}: 
+	\item Z kombinace CSV záznamu vygenerovaném v prvním kroku a validaèních snímkù vytvoøíme soubor \texttt{test.record}: 
 	\begin{lstlisting}[language=bash]
 	python3 generate_tfrecord.py --csv_input=data/test_labels.csv --output_path=data/test.record
 	\end{lstlisting}
 \end{enumerate}
 
 \subsection{Trénování}
-V tuto chvíli máme vše pøipraveno a mùeme zaèít samotné trénování. Je nutné se uvìdomit, e trénování modelu je velmi vıpoèetnì nároèné a je moné, e nebudeme mít lokálnì dostupnı dostateènì vıkonnı hardware, kterı by tuto úlohu zvládl v rozumném èase. Máme tedy tøi monosti, kde a jak model vytrénovat. Èas potøebnı k trénování je ovlivnìn mnostvím trénovacích dat, komplexitou modelu a hardwarovım vıkonem. 
+V tuto chvíli máme vše pøipraveno a mùeme zaèít samotné trénování neuronové sítì. Je nutné si uvìdomit, e trénování modelu je velmi vıpoèetnì nároèné a je moné, e nebudeme mít lokálnì dostupnı dostateènì vıkonnı hardware, kterı by tuto úlohu zvládl v rozumném èase. Máme tedy tøi monosti, kde a jak model vytrénovat. Èas potøebnı k trénování je ovlivnìn mnostvím trénovacích dat, komplexitou modelu a hardwarovım vıkonem. 
 
-První, nejjednoduší, ale nejménì vıkonná varianta je trénování na notebooku nebo stolním poèítaèi pomocí procesoru. Tento zpùsob je pomìrnì neefektivní -- napøíklad pøi pouití metody \uv{transfer learning} se model trénoval 6 dní èistého èasu, ne se stal pouitelnım. Trénování takového modelu bez pouití metody \uv{transfer learning} by trvalo tıdny. 
+První, nejjednoduší, ale nejménì vıkonná varianta, je trénování na notebooku nebo stolním poèítaèi pomocí procesoru. Tento zpùsob je pomìrnì neefektivní -- napøíklad pøi pouití metody \uv{transfer learning} se model trénoval 6 dní èistého èasu, ne se stal pouitelnım. Trénování takového modelu bez pouití metody \uv{transfer learning} by trvalo tıdny. 
 
-Druhá varianta, která je komplexnìjší na zprovoznìní je trénování na lokálním stroji pomocí grafické karty. Tato metoda je podstatnì více efektivní, ne trénování na procesoru poèítaèe. Na dvou desktopovıch grafickıch kartách \textit{Nvidia GeForce GTX 650} byl model pouitelnı po 7 hodinách pøi pouití metody \uv{transfer learning}. 
+Druhá varianta, která je komplexnìjší na zprovoznìní, je trénování na lokálním stroji pomocí grafické karty. Tato metoda je podstatnì více efektivní, ne trénování na procesoru poèítaèe. Na dvou desktopovıch grafickıch kartách \textit{Nvidia GeForce GTX 650} byl model pouitelnı po 7 hodinách pøi pouití metody \uv{transfer learning}. 
 
-Nejpraktiètìjší, ale nejsloitìjší na zprovoznìní je trénování na vzdálenıch serverech. Google poskytuje na platformì \textit{Google Cloud Platform} produkt \textit{ML Engine}~\cite{googlemlengine}, kterı je specializován mimo jiné i na trénování modelù -- tzn. je pouit optimální hardware. Spoleènost Google stojí za frameworkem TensorFlow i platformou \textit{ML Engine}, proto je jejich integrace relativnì dobøe vyøešená. Tento fakt dìlá tzv. \uv{cloud learning} nejefektnivnìjším øešením.
+Nejpraktiètìjší, ale nejsloitìjší na zprovoznìní, je trénování na vzdálenıch serverech. Google poskytuje na své platformì \textit{Google Cloud Platform} produkt \textit{ML Engine}~\cite{googlemlengine}, kterı je specializován mimo jiné i na trénování modelù -- tzn. e je pouit maximálnì optimalizovanı hardware. Spoleènost Google stojí za frameworkem TensorFlow i platformou \textit{ML Engine}, proto je jejich integrace relativnì dobøe vyøešená. Tento fakt dìlá tzv. \uv{cloud learning} nejefektnivnìjším øešením.
 
 \subsubsection{Monitorování prùbìhu trénování}
 TensorFlow obsahuje nástroj, kterım mùeme monitorovat prùbìh trénování modelu. Program spustíme následovnì:
@@ -153,12 +153,23 @@ Ve webovém prohlíeèi otevøeme adresu \url{http://localhost:8080} a budeme preze
 \subsubsection{Trénování modelu na lokálním hardware}
 Trénováním na jedné grafické kartì, více grafickıch kartách nebo na procesoru spouštímì vdy stejnım zpùsobem:
 \begin{lstlisting}[language=bash]
-python3 $OBJ_DET/train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/pipeline.config
+python3 $OBJ_DET/train.py \
+	--logtostderr \
+	--train_dir=training/ \
+	--pipeline_config_path=training/pipeline.config
 \end{lstlisting}
-Parametry mùeme specifikovat, jak a kolik grafickıch karet má bıt vyuito. Napøíklad pøi pouití dvou grafickıch karet jsem specifikoval tyto parametry: \texttt{--num\_clones=2 --ps\_tasks=1}. Více informací viz \cite{odtrainmultigpu}.
+Pouitím parametrù mùeme napøíklad specifikovat, jak a kolik grafickıch karet má bıt vyuito. Pro pouití dvou grafickıch karet jsem specifikoval parametry následovnì:
+\begin{lstlisting}[language=bash]
+python3 $OBJ_DET/train.py \
+	--logtostderr \
+	--train_dir=training/ \
+	--pipeline_config_path=training/pipeline.config \
+	--num_clones=2 \
+	--ps_tasks=1
+\end{lstlisting}
 
 \subsubsection{Trénování modelu na Google Cloud ML Engine~\cite{googlemlengine}}
-Abychom mohli model trénovat na Google Cloud ML Engine, je potøeba nìkolik krokù navíc. Vıbornı návod, kterı detailnì popisuje, jak zprovoznit trénování na Google platformì viz \cite{mediumodtgcp}.
+Abychom mohli model trénovat na Google Cloud ML Engine, je potøeba nìkolik krokù navíc. Pro vıbornı návod, kterı detailnì popisuje, jak zprovoznit trénování na Google platformì, viz \cite{mediumodtgcp}.
 
 \begin{figure}
 	\centering
@@ -190,7 +201,7 @@ tensorboard --logdir=gs://eggdata --port=8080
 \end{lstlisting}
 
 \section{Ovìøení funkènosti a vısledky}\label{sec:detekce_funkavysledky}
-Jakmile se rozhodneme ukonèit proces trénování, máme k dispozici nìkolik souborù, které jsou pouhımi záchytnımi body\footnote{Checkpoints.} pro další iterace. Tyto soubory se hodí, kdybychom chteli trénování obnovit tam, kde bylo naposledy ukonèeno. Nicménì pro práci s modelem a detekci vajec je potøeba tyto soubory pøevést na jeden statickı. Tomuto procesu se øiká \uv{zmraení grafu}. Graf exportujeme následovnì:
+Jakmile se rozhodneme ukonèit proces trénování, máme k dispozici nìkolik souborù, které jsou pouhımi záchytnımi body\footnote{Checkpoints.} pro další iterace. Tyto soubory se hodí, kdybychom chtìli trénování obnovit tam, kde bylo naposledy ukonèeno. Nicménì pro práci s modelem a detekci vajec je potøeba tyto soubory pøevést na jeden statickı. Tomuto procesu se øiká \uv{zmraení grafu}. Graf exportujeme následovnì:
 \begin{lstlisting}[language=bash]
 python3 export_inference_graph.py \
 	--input_type image_tensor \
@@ -200,11 +211,11 @@ python3 export_inference_graph.py \
 \end{lstlisting}
 Ve sloce \texttt{frozen\_graph} pøibyl soubor typu PB\footnote{Protocol Buffer.}. Tento soubor je vıslednım modelem, kterı mùeme pouít k validaci øešení.
 
-K validace pouijeme Python skript napsanı jako Jupyter Notebook~\cite{jupyter}.
+K validaci pouijeme Python skript napsanı ve formì Jupyter Notebook~\cite{jupyter}.
 \begin{lstlisting}[language=bash]
 jupyter notebook
 \end{lstlisting}
-Na pøehledové stránce otevøeme soubor \texttt{test.ipynb} a zvolíme \texttt{Cell \textrightarrow\space Run All}. Po chvíli jsou prezentovány vısledky. Ukázka vıstupu skriptu, ve kterém pouíváme nejúspìšnìjší model vytvoøenı metodou \uv{transfer learning} z modelu \texttt{ssd\_mobilenet\_v1\_coco} je vidìt na obrázcích \ref{fig:obresnotebook1}, \ref{fig:obresnotebook2} a \ref{fig:obresnotebook3}. Ménì úspìšnı model je zobrazen na obrázku \ref{fig:notsogoodtraining}.
+Na pøehledové stránce otevøeme soubor \texttt{test.ipynb} a zvolíme \texttt{Cell \textrightarrow\space Run All}. Po chvíli èekání jsou zobrazeny vısledky. Ukázka vıstupu skriptu, ve kterém pouíváme nejúspìšnìjší model vytvoøenı metodou \uv{transfer learning} vycházejícího z modelu \texttt{ssd\_mobilenet\_v1\_coco}, je vidìt na obrázcích \ref{fig:obresnotebook1}, \ref{fig:obresnotebook2} a \ref{fig:obresnotebook3}. Ménì úspìšnı model je zobrazen na obrázku \ref{fig:notsogoodtraining}.
 
 \begin{figure}[ht]
 	\centering
@@ -234,8 +245,8 @@ Na pøehledové stránce otevøeme soubor \texttt{test.ipynb} a zvolíme \texttt{Cell
 \section{Závìr}
 Dokázali jsme, e øešení popsané v této kapitole funguje. Z vısledkù vyplıvá, e správná konfigurace a vıchozí model dokáí znaènì ovlivnit vısledné chování modelu i pøes to, e ho vdy trénujeme stejnımi daty.
 
-Vısledky doruèené modelem, kterı byl vytrénován metodou \uv{trasfer learning} z modelu \texttt{ssd\_mobilenet\_v1\_coco} a pouívá konfiguraci \newline\texttt{training/pipeline.config}, jsou ze všech nejlepší. Proto jsem se rozhodl pouít právì tento model jako vısledek této kapitoly a na závìr ho porovnat implementací klasifikace obrazu (viz kapitola \ref{chap:impl_rozpoz}).
+Vısledky doruèené modelem, kterı byl vytrénován metodou \uv{trasfer learning} z modelu \texttt{ssd\_mobilenet\_v1\_coco} a pouívá konfiguraci \newline\texttt{training/pipeline.config}, jsou ze všech nejlepší. Proto bude tento model povaován za vıstup této kapitoly a na závìr bude porovnán s implementací klasifikace obrazu (viz kapitola \ref{chap:impl_rozpoz}).
 
-I pøes uspokojující vısledky øešení je zde prostor pro vylepšení. Více trénovacích a testovacích dat by zajistilo ještì lepší vısledky (vzorek pouitı v této kapitole obsahuje \textbf{1890 detekcí}). Pøedzpracování obrazu tak, aby nikdy nebyl pøíliš svìtlı nebo tmavı by zajisté vısledky zlepšilo také. Moná existuje i lepší kombinace konfigurace a vıchozího modelu.
+I pøes uspokojující vısledky øešení je zde prostor pro vylepšení. Více trénovacích a testovacích dat by zajistilo ještì lepší vısledky (vzorek pouitı v této kapitole obsahuje \textbf{1890 detekcí}). Pøedzpracování obrazu tak, aby nebyl nikdy pøíliš svìtlı nebo tmavı by zajisté pomohlo doruèit viditelné zlepšení vısledkù. Je moné, e existuje i efektivnìjší kombinace konfigurace a vıchozího modelu.
 
 Na závìr by bylo vhodné shrnout, e efektivita rozpoznávání vajec touto metodou je \textbf{velmi dobrá}. 
