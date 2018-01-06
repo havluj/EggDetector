@@ -1,38 +1,38 @@
 \chapter{Rešerše}\label{chap:reserse}
 
 \section{Poèítaèové vidìní}
-Poèítaèové vidìní je odvìtví poèítaèové vìdy, které se zabıvá získáváním informací z obrazu. Mùe se jednat o extrahování informací z videí, obrázkù nebo napøíklad lékaøskıch snímkù~\cite{computervision}. Nauèit poèítaè \uv{vidìt} není vùbec jednoduchı úkol, i pøes to, e pro náš mozek je získávání informací z obrazu pøirozené a jednoduché. Obraz, jak ho vidí poèítaè, je pouze posloupnost systematicky uspoøádanıch jednièek a nul. Motivací pro hledání tvarù nebo pøiøazování vıznamu této posloupnosti dat je automatizace úkolù, které doposud vykonávali lidé. Mezi typické vyuítí poèítaèového vidìní patøí napøíklad~\cite{concisecompvision}:
+Poèítaèové vidìní je odvìtví poèítaèové vìdy, které se zabıvá získáváním informací z~obrazu. Mùe se jednat o~extrahování informací z~videí, obrázkù nebo napøíklad lékaøskıch snímkù~\cite{computervision}. Nauèit poèítaè \uv{vidìt} není vùbec jednoduchı úkol, i pøes to, e pro náš mozek je získávání informací z~obrazu pøirozené a jednoduché. Obraz, jak ho vidí poèítaè, je pouze posloupnost systematicky uspoøádanıch jednièek a nul. Motivací pro hledání tvarù nebo pøiøazování vıznamu této posloupnosti dat je automatizace úkolù, které doposud vykonávali lidé. Mezi typické vyuítí poèítaèového vidìní patøí napøíklad~\cite{concisecompvision}:
 \begin{itemize}
 	\item autonomní vozidla,
-	\item analıza obrazu v bezpeènostní systémech,
+	\item analıza obrazu v~bezpeènostní systémech,
 	\item prùmysloví roboti,
 	\item rozpoznávání obrazu.
 \end{itemize}
 
-V této bakaláøské práci se budeme zabıvat rozpoznáváním obrazu, pomocí kterého se pokusíme automatizovat èást lidské práci vykonávané v rámci projektu Ptáci Online. Rozpoznávání obrazu mùeme rozèlenit do nìkolika kategorií podle typu problému~\cite{concisecompvision}, napøíklad:
+V~této bakaláøské práci se budeme zabıvat rozpoznáváním obrazu, pomocí kterého se pokusíme automatizovat èást lidské práci vykonávané v~rámci projektu Ptáci Online. Rozpoznávání obrazu mùeme rozèlenit do nìkolika kategorií podle typu problému~\cite{concisecompvision}, napøíklad:
 \begin{description}[labelindent=1cm,leftmargin=5.5cm,style=nextline]
 	\item[rozpoznávání obrazu:] neboli klasifikace obrazu -- zaøazení obrazu do jedné ze známıch kategorií (napø. na snímku je pes)
-	\item[detekce objektù:] autonomní vozy se snaí detekovat a následnì klasifikovat všechny objekty v jeho okolí
+	\item[detekce objektù:] autonomní vozy se snaí detekovat a následnì klasifikovat všechny objekty v~jeho okolí
 	\item[identifikace:] rozpoznávání oblièeje nebo otisku prstu
 \end{description}
 
-V souèasné dobì jsou algoritmy umìlé inteligence nejefektivnìjším øešením rozpoznávání obrazu. Algoritmy zaloené na konvoluèních neuronovıch sítích se dokonce pøiblíily svou pøesností a efektivitou lidem~\cite{imagenet}.
+V~souèasné dobì jsou algoritmy umìlé inteligence nejefektivnìjším øešením rozpoznávání obrazu. Algoritmy zaloené na konvoluèních neuronovıch sítích se dokonce pøiblíily svou pøesností a efektivitou lidem~\cite{imagenet}.
 
 \section{Neuronové sítì}
 \begin{figure}[]
 	\centering
 	\includegraphics[width=0.6\textwidth]{media/neuron.jpg}
-	\caption{Struktura a funkce neuronu v umìlé neuronové síti.}
+	\caption{Struktura a funkce neuronu v~umìlé neuronové síti.}
 	\caption*{\tiny{Zdroj: \url{https://cdn-images-1.medium.com/max/800/0*OHlzxsoDSEBXW0iI.jpg}~\cite{mediumnn}.}}
 	\label{fig:neuron}
 \end{figure}
-Umìlá neuronová sí je softwarovı systém inspirovanı biologickımi neuronovımi sítìmi, které se nachází v lidskıch s zvíøecích mozcích. Neuronové sítì jsou bìnì pouívány napøíklad k rozpoznávání obrazu, filtrování spamu nebo pøedvídání vıvoje hodnoty akcií.
+Umìlá neuronová sí je softwarovı systém inspirovanı biologickımi neuronovımi sítìmi, které se nachází v~lidskıch s~zvíøecích mozcích. Neuronové sítì jsou bìnì pouívány napøíklad k~rozpoznávání obrazu, filtrování spamu nebo pøedvídání vıvoje hodnoty akcií.
 
-Umìlé neuronové sítì obsahují neurony, které jsou mezi sebou propojeny. Vstupem kadého neuronu jsou vıstupy neuronù v pøedchozích vrstvách. Tento vstup je zpracován podle interní logiky neuronu a následnì je vygenerován vıstup, kterı se stává vstupem pro neurony v následujících vrstvách. Neuronová sí je tedy \textbf{orientovanım váenım grafem}. Vstupem pro \uv{první øadu} neuronù jsou vstupní data, napøíklad jednotlivé body\footnote{pixely} obrazu. Aktivace \uv{poslední øady} neuronù reprezentuje vısledek pro danı vstup~\cite{ann}. Struktura neuronové sítì a neuronu je znázornìna na obrázku \ref{fig:ann}, respektive \ref{fig:neuron}.
+Umìlé neuronové sítì obsahují neurony, které jsou mezi sebou propojeny. Vstupem kadého neuronu jsou vıstupy neuronù v~pøedchozích vrstvách. Tento vstup je zpracován podle interní logiky neuronu a následnì je vygenerován vıstup, kterı se stává vstupem pro neurony v~následujících vrstvách. Neuronová sí je tedy \textbf{orientovanım váenım grafem}. Vstupem pro \uv{první øadu} neuronù jsou vstupní data, napøíklad jednotlivé body\footnote{pixely} obrazu. Aktivace \uv{poslední øady} neuronù reprezentuje vısledek pro danı vstup~\cite{ann}. Struktura neuronové sítì a neuronu je znázornìna na obrázku \ref{fig:ann}, respektive \ref{fig:neuron}.
 
-Dnešní architektury neuronovıch sítí však mohou bıt mnohem komplexnìjší. Mohou se lišit poètem skrytıch vrstev, strukturou propojení neuronù (napøíklad cyklická propojení neuronù), skryté vrstvy mohou mít pamì, atd. Mezi nejznámìjší typy neuronovıch sítí patøí konvoluèní neuronové sítì, modulární neuronové sítì, Boltzmannova sí, sí s dlouhodobou a krátkodobou pamìtí a perceptronové sítì. Struèné pøedstavení jednotlivıch typù viz~\cite{mediumnn}.
+Dnešní architektury neuronovıch sítí však mohou bıt mnohem komplexnìjší. Mohou se lišit poètem skrytıch vrstev, strukturou propojení neuronù (napøíklad cyklická propojení neuronù), skryté vrstvy mohou mít pamì, atd. Mezi nejznámìjší typy neuronovıch sítí patøí konvoluèní neuronové sítì, modulární neuronové sítì, Boltzmannova sí, sí s~dlouhodobou a krátkodobou pamìtí a perceptronové sítì. Struèné pøedstavení jednotlivıch typù viz~\cite{mediumnn}.
 
-V rámci této práce se zamìøíme pøedevším na pouítí hlubokıch konvoluèních neuronovıch sítí ke klasifikaci obrazu a detekci objektù.
+V~rámci této práce se zamìøíme pøedevším na pouítí hlubokıch konvoluèních neuronovıch sítí ke klasifikaci obrazu a detekci objektù.
  
 \begin{figure}
 	\centering
@@ -43,9 +43,9 @@ V rámci této práce se zamìøíme pøedevším na pouítí hlubokıch konvoluèních neuro
 \end{figure}
 
 \section{TensorFlow}
-\uv{TensorFlow je otevøená softwarová knihovna\footnote{open source software} pro numerické vıpoèty pomocí metody \uv{data flow graph}}~\cite{abouttensorflow}. Knihovnu je moné pouít napøíklad pro usnadnìní matematickıch vıpoètù, tvorbu lineárních modelù a neuronovıch sítí. Pouitím knihovny získáme pøístup k sadì pøipravenıch algoritmù, které nám znaènì usnadní tvorbu neuronové sítì. K dispozici jsou napøíklad algoritmy pro trénování (hledání optimálních vah k jednotlivım hranám grafu), jako je napøíklad algoritmus \uv{stochastic gradient descent}. TensorFlow dìlá pouití dostupnıch algoritmù opravdu jednoduchım, viz algoritmus \ref{alg:graddescent}.
+\uv{TensorFlow je otevøená softwarová knihovna\footnote{open source software} pro numerické vıpoèty pomocí metody \uv{data flow graph}}~\cite{abouttensorflow}. Knihovnu je moné pouít napøíklad pro usnadnìní matematickıch vıpoètù, tvorbu lineárních modelù a neuronovıch sítí. Pouitím knihovny získáme pøístup k~sadì pøipravenıch algoritmù, které nám znaènì usnadní tvorbu neuronové sítì. K~dispozici jsou napøíklad algoritmy pro trénování (hledání optimálních vah k~jednotlivım hranám grafu), jako je napøíklad algoritmus \uv{stochastic gradient descent}. TensorFlow dìlá pouití dostupnıch algoritmù opravdu jednoduchım, viz algoritmus \ref{alg:graddescent}.
 
-TensorFlow také znaènì usnadòuje tvorbu a konfiguraci struktury neuronové sítì, viz~\cite{tensoralgorithms}. V neposlední øadì mùeme pouit nespoèet skriptù pro práci s daty~\cite{create_tfrecord} nebo TensorFlow Object Detection API~\cite{tens_detection}.
+TensorFlow také znaènì usnadòuje tvorbu a konfiguraci struktury neuronové sítì, viz~\cite{tensoralgorithms}. V~neposlední øadì mùeme pouit nespoèet skriptù pro práci s~daty~\cite{create_tfrecord} nebo TensorFlow Object Detection API~\cite{tens_detection}.
 
 \begin{lstlisting}[language=Python,caption={Pouití algoritmu \uv{stochastic gradient descent} poskytovanı knihovnou TensorFlow.},label={alg:graddescent}]
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001)

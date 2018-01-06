@@ -1,5 +1,5 @@
 \chapter{Implementace rozpoznávání obrazu}\label{chap:impl_rozpoz}
-V této kapitole se zamìøíme na implementaci neuronové sítì, která bude mít za cíl rozpoznat, do které kategorie snímek patøí. Jedná se tedy o klasifikaci do pøedem danıch kategorií. Vstupem pro naše skripty bude obrázek libovolné velikosti. Internì bude bude snímek reprezentován polem hodnot o velikosti 300~x~300~x~3 (snímek zmenšen na velikost 300~x~300 bodù a zùstane barevnı -- kadı bod obsahuje 3 barevné sloky). Kategorií, do kterıch budeme chtít snímky rozøadit, bude \textbf{jedenáct}:
+V~této kapitole se zamìøíme na implementaci neuronové sítì, která bude mít za cíl rozpoznat, do které kategorie snímek patøí. Jedná se tedy o~klasifikaci do pøedem danıch kategorií. Vstupem pro naše skripty bude obrázek libovolné velikosti. Internì bude bude snímek reprezentován polem hodnot o~velikosti 300~x~300~x~3 (snímek zmenšen na velikost 300~x~300 bodù a zùstane barevnı -- kadı bod obsahuje 3 barevné sloky). Kategorií, do kterıch budeme chtít snímky rozøadit, bude \textbf{jedenáct}:
 \begin{description}[labelindent=1cm]
 	\item[Kategorie \uv{0}:] Pro snímky, kde je poèet vajec roven \textbf{0}.
 	\item[Kategorie \uv{1}:] Pro snímky, kde je poèet vajec roven \textbf{1}.
@@ -14,7 +14,7 @@ V této kapitole se zamìøíme na implementaci neuronové sítì, která bude mít za cí
 	\item[Kategorie \uv{10}:] Pro snímky, kde je poèet vajec roven \textbf{10}.
 \end{description}
 	
-Celé øešení -- pøíprava dat, trénování neuronové sítì, testování funkènosti a mìøení pøesnosti budeme implementovat v programovacím jazyce Python~3.
+Celé øešení -- pøíprava dat, trénování neuronové sítì, testování funkènosti a mìøení pøesnosti budeme implementovat v~programovacím jazyce Python~3.
 
 \section{Pøíprava dat}
 Nástrojem \texttt{Tagger} (viz kapitola \ref{chap:tagger}) jsem oznaèil \textbf{6178 snímkù}. Všechny tyto snímky budou slouit jako trénovací nebo testovací data pro tuto kapitolu.
@@ -26,12 +26,12 @@ Souèasná struktura dat je následující:
 	\dirtree{%
 		.1 hnízdo1.
 		.2 záznam1.
-		.3 imgdata.xml\DTcomment{informace o poètu vajec v jednotlivıch snímcích}.
+		.3 imgdata.xml\DTcomment{informace o~poètu vajec v~jednotlivıch snímcích}.
 		.3 snímek1.png.
 		.3 snímek2.png.
 		.3 ....
 		.2 záznam2.
-		.3 imgdata.xml\DTcomment{informace o poètu vajec v jednotlivıch snímcích.}.
+		.3 imgdata.xml\DTcomment{informace o~poètu vajec v~jednotlivıch snímcích.}.
 		.3 snímek3.png.
 		.3 ....
 		.2 ....
@@ -64,14 +64,14 @@ Nová struktura dat, které potøebujeme docílit:
 		.2 ....
 	}
 \end{figure}
-Kadá kategorie má vlastní sloku. Do kadé kategorie patøí snímky s poètem vajec, kterı odpovídá dané kategorii. Jakmile máme trénovací data uspoøádaná do poadované struktury, je vše pøiprano pro trénování neuronové sítì.
+Kadá kategorie má vlastní sloku. Do kadé kategorie patøí snímky s~poètem vajec, kterı odpovídá dané kategorii. Jakmile máme trénovací data uspoøádaná do poadované struktury, je vše pøiprano pro trénování neuronové sítì.
 
 \section{Trénování neuronové sítì}
-Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extrémnì} vıpoèetnì nároèné je vytrénovat. Uèení \uv{pøenosem modelu}\footnote{Transfer learning.} je technika, která ušetøí spoustu práce vyuitím ji pøedtrénovaného modelu a pøetrénováním pouze finálních vrstev~\cite{decaf}. Více informací k efektivitì tohoto øešení viz~\cite{decaf}.
+Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extrémnì} vıpoèetnì nároèné je vytrénovat. Uèení \uv{pøenosem modelu}\footnote{Transfer learning.} je technika, která ušetøí spoustu práce vyuitím ji pøedtrénovaného modelu a pøetrénováním pouze finálních vrstev~\cite{decaf}. Více informací k~efektivitì tohoto øešení viz~\cite{decaf}.
 
-Pøedpokladem pro trénování neuronové sítì je nainstalovaná knihovna TensorFlow a všechny její závislosti~\cite{tensor_install}. Model, ze kterého budeme vycházet je \textbf{Inception-v4}\footnote{Dostupnı ke staení na: \url{http://download.tensorflow.org/models/inception_v4_2016_09_09.tar.gz}}~\cite{inceptionv4}, kterı byl vytrénován spoleèností Google na pøiblinì 1,2 mil. snímkù~\cite{v4trainingsize}. V soutìi ImageNet~\cite{imagenet} drí model Inception-v4 nejlepšího skóre: Top-1 Accuracy\footnote{Odpovìï modelu (ta s nejvyšší pravdìpodobností) pøesnì odpovídala oèekávanému vısledku.} 80.2\% a Top-5 Accuracy\footnote{Kterákoliv z 5 nejpravdìpodobnìjších odpovìdí modelu odpovídala oèekávanému vısledku.} 95.2\%~\cite{imagenetresults}.
+Pøedpokladem pro trénování neuronové sítì je nainstalovaná knihovna TensorFlow a všechny její závislosti~\cite{tensor_install}. Model, ze kterého budeme vycházet je \textbf{Inception-v4}\footnote{Dostupnı ke staení na: \url{http://download.tensorflow.org/models/inception_v4_2016_09_09.tar.gz}}~\cite{inceptionv4}, kterı byl vytrénován spoleèností Google na pøiblinì 1,2 mil. snímkù~\cite{v4trainingsize}. V~soutìi ImageNet~\cite{imagenet} drí model Inception-v4 nejlepšího skóre: Top-1 Accuracy\footnote{Odpovìï modelu (ta s~nejvyšší pravdìpodobností) pøesnì odpovídala oèekávanému vısledku.} 80.2\% a Top-5 Accuracy\footnote{Kterákoliv z~5 nejpravdìpodobnìjších odpovìdí modelu odpovídala oèekávanému vısledku.} 95.2\%~\cite{imagenetresults}.
 
-Googlem poskytovanı skript pro pøetrénování finálních vrstev nepodporuje nejnovìjší model Inception-v4. Staèí však pár modifikací a mùeme novı model pouít. Upravenı skript se nachází v pøíloze \ref{chap:cd}.
+Googlem poskytovanı skript pro pøetrénování finálních vrstev nepodporuje nejnovìjší model Inception-v4. Staèí však pár modifikací a mùeme novı model pouít. Upravenı skript se nachází v~pøíloze \ref{chap:cd}.
 
 \subsection{Struktura aplikace}
 Na disku vytvoøíme sloku \texttt{egg\_recognition}, ve které se budeme pohybovat. Budeme potøebovat tuto strukturu:
@@ -103,7 +103,7 @@ python3 retrain.py \
 	--random_scale=7
 	--random_brightness=4
 \end{lstlisting}
-Hodnoty parametrù \texttt{how\_many\_training\_steps}, \texttt{random\_brightness}, \newline\texttt{random\_scale} a \texttt{random\_crop} mùeme zmìnit. K hodnotám uvedenım vıše jsem dospìl opakovanım testováním, kde tyto hodnoty produkovaly nejlepší vısledky. Skript \texttt{retrain.py}~\cite{recog_retrain.py} poskytuje nejlepší dokumentaci všech dostupnıch parametrù.
+Hodnoty parametrù \texttt{how\_many\_training\_steps}, \texttt{random\_brightness}, \newline\texttt{random\_scale} a \texttt{random\_crop} mùeme zmìnit. K~hodnotám uvedenım vıše jsem dospìl opakovanım testováním, kde tyto hodnoty produkovaly nejlepší vısledky. Skript \texttt{retrain.py}~\cite{recog_retrain.py} poskytuje nejlepší dokumentaci všech dostupnıch parametrù.
 
 \section{Ovìøení funkènosti a vısledky}
 Vytrénovanı a vyexportovanı model mùeme otestovat pomocí veøejnì dostupného skriptu \texttt{label\_image.py}~\cite{recog_label_image.py}:
@@ -116,7 +116,7 @@ python3 ~/tensorflow/examples/image_retraining/label_image.py \
 	--image=test_image.jpg
 \end{lstlisting}
 
-\noindent Vısledek je prezentován v následujícím formátu (hodnoty mohou bıt odlišné):
+\noindent Vısledek je prezentován v~následujícím formátu (hodnoty mohou bıt odlišné):
 \begin{lstlisting}[language=bash]
 5 (score = 0.62071)
 4 (score = 0.44595)
@@ -126,10 +126,10 @@ python3 ~/tensorflow/examples/image_retraining/label_image.py \
 \end{lstlisting}
 
 \section{Závìr}
-Dokázali jsme, e øešení funguje. Pøi hromadném testu dat zjistíme, e tato implementace \textbf{není} pøíliš efektivní i pøesto, e náš trénovací vzorek dat je pomìrnì velkı (\textbf{6178 snímkù}). U ze samotného vısledku pøi vyhodnocení pouze jednoho snímku je vidìt, e si sí není jistá, do jaké kategorie danı snímek zaøadit. Všechny vısledky mají buï relativnì nízké skóre nebo naopak všechny pomìrnì vysoké. Bohuel se nedostáváme k vısledku, ve kterém by byla pouze jedna kategorie dominantní\footnote{Sí by jedné kategorii pøiøadila vysoké skóre (> 80\%) a zbytek kategorií by mìl skóre nízké.}.
+Dokázali jsme, e øešení funguje. Pøi hromadném testu dat zjistíme, e tato implementace \textbf{není} pøíliš efektivní i pøesto, e náš trénovací vzorek dat je pomìrnì velkı (\textbf{6178 snímkù}). U ze samotného vısledku pøi vyhodnocení pouze jednoho snímku je vidìt, e si sí není jistá, do jaké kategorie danı snímek zaøadit. Všechny vısledky mají buï relativnì nízké skóre nebo naopak všechny pomìrnì vysoké. Bohuel se nedostáváme k~vısledku, ve kterém by byla pouze jedna kategorie dominantní\footnote{Sí by jedné kategorii pøiøadila vysoké skóre (> 80\%) a zbytek kategorií by mìl skóre nízké.}.
 
-Nejvìtší problém spoèívá v \textbf{malıch rozdílech mezi jednotlivımi kategoriemi}. Vajíèka tvoøí pouze malou èást snímku, take rozdíl mezi jedním nebo dvìmi vajíèky je malı. \textbf{Vìtšina plochy snímku se stává šumem}, kterı \uv{mate} tuto implementaci. Kdyby kategorie reprezentovaly dvì velmi odlišné vìci, jako napøíklad auto a psa, bylo by vıraznì snazší snímek mezi tyto dvì dramaticky odlišné kategorie rozøadit.
+Nejvìtší problém spoèívá v~\textbf{malıch rozdílech mezi jednotlivımi kategoriemi}. Vajíèka tvoøí pouze malou èást snímku, take rozdíl mezi jedním nebo dvìmi vajíèky je malı. \textbf{Vìtšina plochy snímku se stává šumem}, kterı \uv{mate} tuto implementaci. Kdyby kategorie reprezentovaly dvì velmi odlišné vìci, jako napøíklad auto a psa, bylo by vıraznì snazší snímek mezi tyto dvì dramaticky odlišné kategorie rozøadit.
 
-Øešení by se stalo mnohem efektivnìjším v pøípadì, kdyby snímky, které sí vyhodnocuje, byly pøedem zpracované a upravené. Normalizace jasu a pøedevším oøezání snímku tak, aby na nìm zbyla pouze vajíèka, by dramaticky zvıšila efektivitu této implementace.
+Øešení by se stalo mnohem efektivnìjším v~pøípadì, kdyby snímky, které sí vyhodnocuje, byly pøedem zpracované a upravené. Normalizace jasu a pøedevším oøezání snímku tak, aby na nìm zbyla pouze vajíèka, by dramaticky zvıšila efektivitu této implementace.
 
-Tato kapitola neposkytla vısledky, ve které jsem doufal. Je zde ale prostor pro vylepšení, která by toto øešení mohla udìlat efektivnìjší ne detekce objektù popsaná v kapitole \ref{chap:impl_detekce}.
+Tato kapitola neposkytla vısledky, ve které jsem doufal. Je zde ale prostor pro vylepšení, která by toto øešení mohla udìlat efektivnìjší ne detekce objektù popsaná v~kapitole \ref{chap:impl_detekce}.

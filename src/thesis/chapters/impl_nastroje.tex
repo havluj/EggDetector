@@ -1,9 +1,9 @@
 \chapter{Nástroje}\label{chap:nastroje}
-Proces pøípravy a zpracování dat mùžeme usnadnit použitím nìkolika nástrojù. Zamìøíme se na hromadné stahování dat ze serveru \newline\url{http://athena.pef.czu.cz/ptacionline/} a jejich \uv{proèištìní}. Následnì pøedstavíme nástroje, ve kterých obohatíme stažené snímky o informace potøebné k trénování neuronové sítì.
+Proces pøípravy a zpracování dat mùžeme usnadnit použitím nìkolika nástrojù. Zamìøíme se na hromadné stahování dat ze serveru \newline\url{http://athena.pef.czu.cz/ptacionline/} a jejich \uv{proèištìní}. Následnì pøedstavíme nástroje, ve kterých obohatíme stažené snímky o~informace potøebné k~trénování neuronové sítì.
 
 \section{Hromadné stahování dat}\label{sec:hromadne_stazeni_dat}
 \subsection{Získání dat}\label{subsec:hromadne_stazeni_dat}
-Abychom nemuseli stahovat snímky jeden po druhém manuálnì, pomùžeme si napsáním jednoduchého skriptu, který stáhne všechny snímky za nás. K tomu nám postaèí dva nástroje: \texttt{bash} a \texttt{wget}. Tento skript stáhne veškerá data, která jsou na serveru \url{http://athena.pef.czu.cz/ptacionline/} dostupná. Detailní dokumentace skriptu je k nalezení v pøíloze \ref{chap:cd}).
+Abychom nemuseli stahovat snímky jeden po druhém manuálnì, pomùžeme si napsáním jednoduchého skriptu, který stáhne všechny snímky za nás. K~tomu nám postaèí dva nástroje: \texttt{bash} a \texttt{wget}. Tento skript stáhne veškerá data, která jsou na serveru \url{http://athena.pef.czu.cz/ptacionline/} dostupná. Detailní dokumentace skriptu je k~nalezení v~pøíloze \ref{chap:cd}).
 \noindent\begin{lstlisting}[caption={Hromadné stahování dat ze serveru athena.pef.czu.cz.},label={alg:download},language=bash]
 #!/bin/bash
 
@@ -22,29 +22,29 @@ Struèné vysvìtlení pøíkazu \texttt{wget}, který používáme na poslední øádce skri
 	\item \texttt{--show-progress} -- Ukáže progres stahování.
 	\item \texttt{-c} -- Pokraèuj ve stahování nedokonèených souborù.
 	\item \texttt{-r} -- Rekurzivnì stahuj podsložky.
-	\item \texttt{-np} -- Nestahuj soubory v složkách výše, než \texttt{ptacionline}.
+	\item \texttt{-np} -- Nestahuj soubory v~složkách výše, než \texttt{ptacionline}.
 	\item \texttt{-nH} -- Nestahuj do složky, která se jmenuje stejnì jako doména, ale pøímo do \texttt{\$DIRECTORY}.
 	\item \texttt{--cut-dirs=1} -- Ve složce \texttt{\$DIRECTORY} vynech první složku (\texttt{ptacionline}).
 	\item \texttt{-R index.html} -- Nestahuj soubory \texttt{.html}.
 \end{itemize}
 
 \subsection{Èištìní dat}
-Skript, který jsme pøedstavili v kapitole \ref{subsec:hromadne_stazeni_dat}, stáhne veškerá data z daného serveru. Z tìchto dat použijeme pouze snímky z ptaèích budek, ostatní data pro nás nejsou relevantní. Abychom se v datech mohli lépe orientovat a ušetøili místo na pevném disku, bylo by vhodné nepotøebná data smazat. Pro tento úèel naprogramujeme jednoduchý nástroj v programovacím jazyce \texttt{Java}, který všechna nepotøebná data smaže.
+Skript, který jsme pøedstavili v~kapitole \ref{subsec:hromadne_stazeni_dat}, stáhne veškerá data z~daného serveru. Z~tìchto dat použijeme pouze snímky z~ptaèích budek, ostatní data pro nás nejsou relevantní. Abychom se v~datech mohli lépe orientovat a ušetøili místo na pevném disku, bylo by vhodné nepotøebná data smazat. Pro tento úèel naprogramujeme jednoduchý nástroj v~programovacím jazyce \texttt{Java}, který všechna nepotøebná data smaže.
 
-Zdrojový kód a dokumentace nástroje \textbf{FolderTrimmer} je k nalezení v pøíloze \ref{chap:folder_trimmer}. Výsledný program staèí spustit a složku, která má být promazána, mu pøedat jako argument. Napøíklad: \texttt{run.sh /home/demo/eggs/data}.
+Zdrojový kód a dokumentace nástroje \textbf{FolderTrimmer} je k~nalezení v~pøíloze \ref{chap:folder_trimmer}. Výsledný program staèí spustit a složku, která má být promazána, mu pøedat jako argument. Napøíklad: \texttt{run.sh /home/demo/eggs/data}.
 
-FolderTrimmer funguje ve dvou režimech. První, základní režim, smaže všechny soubory jiného typu než PNG, TXT a XML. V pøípadì, že složka neobsahuje další složku nebo alespoò jeden soubor typu PNG, TXT nebo XML, bude smazána. Druhý režim funguje stejnì jako první, ale smaže všechny složky, které neobsahují soubor \textbf{imgdata.xml}. To umožní vymazání všech dat, které nejsou relevantní pro trénování neuronové sítì. První øežim spustíme pøíkazem \texttt{run.sh false "cesta\textunderscore ke\textunderscore slozce"}. Druhý režim spustíme pøíkazem \texttt{run.sh true "cesta\textunderscore ke\textunderscore slozce"}.
+FolderTrimmer funguje ve dvou režimech. První, základní režim, smaže všechny soubory jiného typu než PNG, TXT a XML. V~pøípadì, že složka neobsahuje další složku nebo alespoò jeden soubor typu PNG, TXT nebo XML, bude smazána. Druhý režim funguje stejnì jako první, ale smaže všechny složky, které neobsahují soubor \textbf{imgdata.xml}. To umožní vymazání všech dat, které nejsou relevantní pro trénování neuronové sítì. První øežim spustíme pøíkazem \texttt{run.sh false "cesta\textunderscore ke\textunderscore slozce"}. Druhý režim spustíme pøíkazem \texttt{run.sh true "cesta\textunderscore ke\textunderscore slozce"}.
 
 \section{Pøíprava trénovacích a testovacích dat}\label{sec:priprava_dat}
-Když máme všechna potøebná data stažená, je potøeba je pøipravit do takové podoby, abychom je mohli použít k trénování neuronové sítì. Pøíprava dat se liší podle typu implementace, který zvolíme. V pøípadì trénování neuronové sítì k detekci objektù, chceme k jednotlivým snímkùm pøidat informaci \textbf{kde}, \textbf{jaké velikosti} a \textbf{kolik} vajec se v nich nachází. V pøípadì trénování neuronové sítì pro rozpoznávání (klasifikaci) obrazu, je potøeba ke snímkùm pøidat informaci o \textbf{celkovém poètu vajec}.
+Když máme všechna potøebná data stažená, je potøeba je pøipravit do takové podoby, abychom je mohli použít k~trénování neuronové sítì. Pøíprava dat se liší podle typu implementace, který zvolíme. V~pøípadì trénování neuronové sítì k~detekci objektù, chceme k~jednotlivým snímkùm pøidat informaci \textbf{kde}, \textbf{jaké velikosti} a \textbf{kolik} vajec se v~nich nachází. V~pøípadì trénování neuronové sítì pro rozpoznávání (klasifikaci) obrazu, je potøeba ke snímkùm pøidat informaci o~\textbf{celkovém poètu vajec}.
 
 \subsection{Tagger}\label{chap:tagger}
 
-Nástroj \texttt{Tagger} slouží k manuálnímu oznaèování snímkù. Pracuje na úrovni složek, kde jednotlivé složky a v nich umístìné snímky reprezentují jednu videosekvenci. Uživatel pak mùže program spustit a pomìrnì rychle oznaèit, kolik vajec se na daných snímcích nachází. Tagger je webovou aplikací s jednoduchým uživatelským rozhraním. Uživatel je prezentován všemi snímky dané složky a má možnost u každého snímku specifikovat poèet vajec. Složky jsou vybírány automaticky. Jakmile uživatel uvedl poèet vajec u každého snímku, data odešle a je prezentován snímky z další složky. Tento proces se opakuje do té doby, dokud nebudou dostupné žádné složky s neoznaèenými snímky. Ukázka uživatelského rozhraní je vidìt na obrázku \ref{fig:tagger}.
+Nástroj \texttt{Tagger} slouží k~manuálnímu oznaèování snímkù. Pracuje na úrovni složek, kde jednotlivé složky a v~nich umístìné snímky reprezentují jednu videosekvenci. Uživatel pak mùže program spustit a pomìrnì rychle oznaèit, kolik vajec se na daných snímcích nachází. Tagger je webovou aplikací s~jednoduchým uživatelským rozhraním. Uživatel je prezentován všemi snímky dané složky a má možnost u~každého snímku specifikovat poèet vajec. Složky jsou vybírány automaticky. Jakmile uživatel uvedl poèet vajec u~každého snímku, data odešle a je prezentován snímky z~další složky. Tento proces se opakuje do té doby, dokud nebudou dostupné žádné složky s~neoznaèenými snímky. Ukázka uživatelského rozhraní je vidìt na obrázku \ref{fig:tagger}.
 
-Výstupem programu jsou soubory \texttt{imgdata.xml}, které obsahují informace o poètu vajec na jednotlivých snímcích. Tato data jsou pak používána pro trénování neuronové sítì k rozpoznávání obrazu, kde poèet vajec reprezentuje možné výstupy neuronové sítì. Takto oznaèené snímky se dají použít i pro validaci jakéholiv øešení -- finální softwarové knihovnì pøedáme složku se snímky, knihovna vyhodnotí výsledky a my je poté mùžeme porovnat s výsledky, které jsme manuálnì nasbírali. Ukázkový soubor \texttt{imgdata.xml} je pøiložen v pøíloze \ref{list:imgdata}.
+Výstupem programu jsou soubory \texttt{imgdata.xml}, které obsahují informace o~poètu vajec na jednotlivých snímcích. Tato data jsou pak používána pro trénování neuronové sítì k~rozpoznávání obrazu, kde poèet vajec reprezentuje možné výstupy neuronové sítì. Takto oznaèené snímky se dají použít i pro validaci jakéholiv øešení -- finální softwarové knihovnì pøedáme složku se snímky, knihovna vyhodnotí výsledky a my je poté mùžeme porovnat s~výsledky, které jsme manuálnì nasbírali. Ukázkový soubor \texttt{imgdata.xml} je pøiložen v~pøíloze \ref{list:imgdata}.
 
-Program je napsán v programovacím jazyce Java. Detailní popis nástroje se nachází v pøíloze \ref{chap:tagger}. Jedná se o webovou aplikaci, která je postavena na technologii Spring~Boot~\cite{springboot}. Výpis \ref{alg:scan_folder} ukazuje algoritmus pro selekci vhodných složek.
+Program je napsán v~programovacím jazyce Java. Detailní popis nástroje se nachází v~pøíloze \ref{chap:tagger}. Jedná se o~webovou aplikaci, která je postavena na technologii Spring~Boot~\cite{springboot}. Výpis \ref{alg:scan_folder} ukazuje algoritmus pro selekci vhodných složek.
 
 \begin{lstlisting}[caption={Výbìr vhodných složek pro trénování nástrojem Tagger.},label={alg:scan_folder}]
 public static ArrayList<String> scanFolder(String location) {
@@ -85,11 +85,13 @@ public static ArrayList<String> scanFolder(String location) {
 \end{lstlisting}
 
 \subsection{LabelImg~\cite{labelimg}}\label{subsec:labelimg}
-Trénovací data pro detekci objektù vyžadují jiný formát než data pro rozpoznávání obrazu. Na jednotlivých snímcích je potøeba oznaèit pozici všech vajec. Pøesnì za tímto úèelem byl vytvoøen nástroj LabelImg~\cite{labelimg}. Uživatel si pøi spuštìní programu zvolí složku, ve které se nachází snímky pøipravené k oznaèení. Uživatel má možnost zadat typy objektù, které chce na snímcích oznaèovat. V našem pøípadì se jedná pouze o jeden typ objektu -- vejce\footnote{Ve skuteènosti se náš objekt (label) jmenuje \texttt{egg}.}. Poté je uživateli prezentován snímek, na kterém má možnost objekty manuálnì ohranièit (viz obrázek \ref{fig:labelimg}).
+Trénovací data pro detekci objektù vyžadují jiný formát než data pro rozpoznávání obrazu. Na jednotlivých snímcích je potøeba oznaèit pozici všech vajec. Pøesnì za tímto úèelem byl vytvoøen nástroj LabelImg~\cite{labelimg}. Uživatel si pøi spuštìní programu zvolí složku, ve které se nachází snímky pøipravené k~oznaèení. Uživatel má možnost zadat typy objektù, které chce na snímcích oznaèovat. V~našem pøípadì se jedná pouze o~jeden typ objektu -- vejce\footnote{Ve skuteènosti se náš objekt (label) jmenuje \texttt{egg}.}. Poté je uživateli prezentován snímek, na kterém má možnost objekty manuálnì ohranièit (viz obrázek \ref{fig:labelimg}).
 
 Níže je pøiložen ukázkový výstup programu LabelImg.
 
 \lstinputlisting[language=XML,label={list:labelimg},caption={Ukázkový výstup programu LabelImg.}]{media/labelimg.xml}
+\vspace{2cm}
+
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{media/labelimg.png}

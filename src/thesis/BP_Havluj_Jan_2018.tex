@@ -106,7 +106,7 @@
 \newcommand{\cotg}{\mathop{\mathrm{cotg}}} %cesky cotangens
 
 \department{Katedra softwarového inženýrství}
-\title{Detekce objektù v ptaèích hnízdech pomocí neuronových sítí}
+\title{Detekce objektù v~ptaèích hnízdech pomocí neuronových sítí}
 \authorGN{Jan} %(køestní) jméno (jména) autora
 \authorFN{Havlùj} %pøíjmení autora
 \authorWithDegrees{Jan Havlùj} %jméno autora vèetnì souèasných akademických titulù
@@ -118,12 +118,12 @@
 \website{https://github.com/havluj/EggDetector}
 
 \abstractCS{
-	Tato práce se zabývá návrhem a tvorbou softwarové knihovny pro detekci objektù v obraze použitím neuronových sítí. 
+	Tato práce se zabývá návrhem a tvorbou softwarové knihovny pro detekci objektù v~obraze použitím neuronových sítí. 
 	
-	V první èásti jsme seznámeni s cílem práce a detailní specifikací požadavkù. Druhá èást se vìnuje teorii poèítaèového vidìní, neuronových sítí a TensorFlow. Následnì je na základì získaných teoretických znalostí a specifikace požadavkù vypracována analýza možného øešení. Dle analýzy jsou navržena a implementována dvì øešení. První implementace se zamìøuje na detekci objektù, druhá na rozpoznávání a klasifikaci obrazu. V poslední èásti práce je vybráno efektivnìjší øešení, které je øádnì ovìøeno a otestováno.
+	V~první èásti jsme seznámeni s~cílem práce a detailní specifikací požadavkù. Druhá èást se vìnuje teorii poèítaèového vidìní, neuronových sítí a TensorFlow. Následnì je na základì získaných teoretických znalostí a specifikace požadavkù vypracována analýza možného øešení. Dle analýzy jsou navržena a implementována dvì øešení. První implementace se zamìøuje na detekci objektù, druhá na rozpoznávání a klasifikaci obrazu. V~poslední èásti práce je vybráno efektivnìjší øešení, které je øádnì ovìøeno a otestováno.
 	
-	Výsledkem je softwarová knihovna, která umožòuje automaticky rozpoznávat poèet vajec v daném videu. Celý program je implementován v jazyce Java a je možné ho integrovat do projektu BirdObserver.}
-\keywordsCS{neuronové sítì, poèítaèové vidìní, detekce objektù, strojové uèení, uèení s uèitelem, rozpoznávání obrazu, detekce vajec, ptaèí hnízda, Java, TensorFlow}
+	Výsledkem je softwarová knihovna, která umožòuje automaticky rozpoznávat poèet vajec v~daném videu. Celý program je implementován v~jazyce Java a je možné ho integrovat do projektu BirdObserver.}
+\keywordsCS{neuronové sítì, poèítaèové vidìní, detekce objektù, strojové uèení, uèení s~uèitelem, rozpoznávání obrazu, detekce vajec, ptaèí hnízda, Java, TensorFlow}
 
 \abstractEN{
 	This thesis focuses on designing and creating a software library that is able to detect objects in images using neural networks.
@@ -140,13 +140,13 @@
 % \newacronym{FIT}{FIT}{Fakulta informa{\v c}n{\' i}ch technologi{\' i}}
 
 \begin{introduction}
-	Projekt Ptáci Online byl spuštìn Fakultou životního prostøedí Èeské zemìdìlské univerzity v Praze roku 2014. Hlavním cílem projektu je poskytnout vìdecká data, ve formì videa z ptaèích budek, široké veøejnosti~\cite{oProjektu}. Projekt se tìší pomìrnì velké popularitì~\cite{ptaciVMediich} a aktuálnì spolupracuje s více než dvìma desítkami spolupracovníkù. Mezi nì patøí lidé z akademické sféry, soukromého sektoru, ale i z Ministerstva životního prostøedí Èeské republiky~\cite{oProjektu}. Vzhledem k množství poøizovaných záznamù by bylo žádoucí získávat informace z videa automaticky pomocí algoritmù umìlé inteligence. Pøedmìtem této práce je vytvoøit algoritmus, který je schopen urèit poèet vajec v hnízdì v daném videozáznamu.\newline\indent
-	Existuje hned nìkolik zpùsobù, jak nauèit poèítaè \uv{vidìt}. Témìø vždy se musíme zamìøit na pøedzpracování obrazu, jeho vlastnosti a jeho segmentaci. Jako øešení pak mùžeme zvolit rùznou sadu deterministických algoritmù, napøíklad pro detekci hran nebo na samotné klasifikování segmentovaného obrazu. Všechny tyto algoritmy mají však jednu spoleènou nevýhodu. Formálnì popsat tvar nìjakého objektu a vytvoøit sadu pravidel, podle kterých poznáme, zda-li se jedná o hledaný objekt, je velmi tìžké.	Svìtelné podmínky nemusí být ideální, objekty se mohou pøekrývat, mohou být rùznì barevné, vzdálené nebo otoèené. Všechny tyto problémy znemožòují vytvoøení perfektního algoritmu manuálnì.
-	Lepším øešením je použití algoritmù umìlé inteligence, jako jsou napøíklad umìlé neuronové sítì. Mùžeme manuálnì vytvoøit algoritmus, který dokáže \uv{vytrénovat} druhý, obecný, algoritmus k vyøešení konkrétního problému. V této práci se budeme soustøedit na použití neuronových sítí pro vyøešení problémù poèítaèového vidìní.
+	Projekt Ptáci Online byl spuštìn Fakultou životního prostøedí Èeské zemìdìlské univerzity v~Praze roku 2014. Hlavním cílem projektu je poskytnout vìdecká data, ve formì videa z~ptaèích budek, široké veøejnosti~\cite{oProjektu}. Projekt se tìší pomìrnì velké popularitì~\cite{ptaciVMediich} a aktuálnì spolupracuje s~více než dvìma desítkami spolupracovníkù. Mezi nì patøí lidé z~akademické sféry, soukromého sektoru, ale i z~Ministerstva životního prostøedí Èeské republiky~\cite{oProjektu}. Vzhledem k~množství poøizovaných záznamù by bylo žádoucí získávat informace z~videa automaticky pomocí algoritmù umìlé inteligence. Pøedmìtem této práce je vytvoøit algoritmus, který je schopen urèit poèet vajec v~hnízdì v~daném videozáznamu.\newline\indent
+	Existuje hned nìkolik zpùsobù, jak nauèit poèítaè \uv{vidìt}. Témìø vždy se musíme zamìøit na pøedzpracování obrazu, jeho vlastnosti a jeho segmentaci. Jako øešení pak mùžeme zvolit rùznou sadu deterministických algoritmù, napøíklad pro detekci hran nebo na samotné klasifikování segmentovaného obrazu. Všechny tyto algoritmy mají však jednu spoleènou nevýhodu. Formálnì popsat tvar nìjakého objektu a vytvoøit sadu pravidel, podle kterých poznáme, zda-li se jedná o~hledaný objekt, je velmi tìžké.	Svìtelné podmínky nemusí být ideální, objekty se mohou pøekrývat, mohou být rùznì barevné, vzdálené nebo otoèené. Všechny tyto problémy znemožòují vytvoøení perfektního algoritmu manuálnì.
+	Lepším øešením je použití algoritmù umìlé inteligence, jako jsou napøíklad umìlé neuronové sítì. Mùžeme manuálnì vytvoøit algoritmus, který dokáže \uv{vytrénovat} druhý, obecný, algoritmus k~vyøešení konkrétního problému. V~této práci se budeme soustøedit na použití neuronových sítí pro vyøešení problémù poèítaèového vidìní.
 
 	
 	\section{Struktura práce}
-	Práce je rozdìlena do 4 èástí. První èást obsahuje stanovení cílù a specifikaci funkèních i nefunkèních požadavkù. V další èásti diskutujeme teorii poèítaèového vidìní, neuronových sítí a knihovny TensorFlow. Tøetí, analytická èást, se zamìøuje na výbìr vhodných technologií a postupù pro tvorbu implementace. Ètvrtá, praktická èást, je rozdìlena do nìkolika kapitol. Nejprve popisuje použití a vývoj všech potøebných nástrojù. V dalších kapitolách jsou popsány dva rùzné zpùsoby implementace, jejich porovnání, otestování a validace. Na závìr je vybrána efektivnìjší implementace, dle které je vytvoøena softwarová knihovna pro urèení poètu vajec v hnízdì.
+	Práce je rozdìlena do 4 èástí. První èást obsahuje stanovení cílù a specifikaci funkèních i nefunkèních požadavkù. V~další èásti diskutujeme teorii poèítaèového vidìní, neuronových sítí a knihovny TensorFlow. Tøetí, analytická èást, se zamìøuje na výbìr vhodných technologií a postupù pro tvorbu implementace. Ètvrtá, praktická èást, je rozdìlena do nìkolika kapitol. Nejprve popisuje použití a vývoj všech potøebných nástrojù. V~dalších kapitolách jsou popsány dva rùzné zpùsoby implementace, jejich porovnání, otestování a validace. Na závìr je vybrána efektivnìjší implementace, dle které je vytvoøena softwarová knihovna pro urèení poètu vajec v~hnízdì.
 \end{introduction}
 
 \include{chapters/1-cil}
@@ -159,19 +159,19 @@
 \include{chapters/7-overeni}
 
 \begin{conclusion}
-	Cílem této práce byl návrh a implementace softwarové knihovny pro urèení poètu vajec v ptaèích hnízdech. Byla sepsána detailní specifikace funkèních a nefunkèních požadavkù, které popisují požadovanou formu knihovny. Prerekvizitou pro implementaci samotné knihovny bylo vyøešení úlohy \uv{rozpoznávání vajec v obraze}.
+	Cílem této práce byl návrh a implementace softwarové knihovny pro urèení poètu vajec v~ptaèích hnízdech. Byla sepsána detailní specifikace funkèních a nefunkèních požadavkù, které popisují požadovanou formu knihovny. Prerekvizitou pro implementaci samotné knihovny bylo vyøešení úlohy \uv{rozpoznávání vajec v~obraze}.
 	
-	Ètenáøi byla prezentována veškerá potøebná teorie o strojovém uèení, neuronových sítích a nástroji TensorFlow. Na základì získaných teoretických znalostí byla provedena analýza funkèních a nefunkèních požadavkù; projektu Ptáci Online; souèasného stavu øešení a struktury vstupních dat. Následnì byly navrženy dva smìry implementace, kterými bychom mohli úlohu rozpoznávání vajec vyøešit. V poslední èásti analýzy byly zvoleny vhodné principy a technologie a bylo navrženo uživatelské rozhraní knihovny.
+	Ètenáøi byla prezentována veškerá potøebná teorie o~strojovém uèení, neuronových sítích a nástroji TensorFlow. Na základì získaných teoretických znalostí byla provedena analýza funkèních a nefunkèních požadavkù; projektu Ptáci Online; souèasného stavu øešení a struktury vstupních dat. Následnì byly navrženy dva smìry implementace, kterými bychom mohli úlohu rozpoznávání vajec vyøešit. V~poslední èásti analýzy byly zvoleny vhodné principy a technologie a bylo navrženo uživatelské rozhraní knihovny.
 	
-	V další kapitole byl ètenáø seznámen se všemi nástroji, které jsou potøebné k dokonèení implementace. Navrhl a naimplementoval jsem dva plnohodnotné nástroje pro práci s daty a nespoèet drobných skriptù pro jejich zpracování. Pomocí tìchto nástrojù jsem manuálnì pøipravil \textbf{8068} trénovacích dat -- oznaèení vajec na snímcích -- které byly následnì použity k trénování neuronových sítí.
+	V~další kapitole byl ètenáø seznámen se všemi nástroji, které jsou potøebné k~dokonèení implementace. Navrhl a naimplementoval jsem dva plnohodnotné nástroje pro práci s~daty a nespoèet drobných skriptù pro jejich zpracování. Pomocí tìchto nástrojù jsem manuálnì pøipravil \textbf{8068} trénovacích dat -- oznaèení vajec na snímcích -- které byly následnì použity k~trénování neuronových sítí.
 	
-	Prvním øešením pro detekci vajec byla implementace realizována technikou \uv{detekce objektù v obraze}. Tato implementace pøinesla velmi dobré výsledky a proto jsem se ji rozhodl použít jako základ pro výslednou knihovnu. Druhý styl implementace nebyl tak efektivní, a proto jsem se rozhodl ho nepoužít. Nicménì i tento styl implementace je zajímavý a mùže sloužit jako užiteèný základ pro ètenáøe, který se bude zabývat rozpoznáváním obrazu.
+	Prvním øešením pro detekci vajec byla implementace realizována technikou \uv{detekce objektù v~obraze}. Tato implementace pøinesla velmi dobré výsledky a proto jsem se ji rozhodl použít jako základ pro výslednou knihovnu. Druhý styl implementace nebyl tak efektivní, a proto jsem se rozhodl ho nepoužít. Nicménì i tento styl implementace je zajímavý a mùže sloužit jako užiteèný základ pro ètenáøe, který se bude zabývat rozpoznáváním obrazu.
 	
-	Nakonec byla implementována samotná knihovna v programovacím jazyce Java, která je schopna automaticky rozpoznat poèet vajec v hnízdì. Knihovnu jsem øádnì otestoval a zmìøil její efektivitu.
+	Nakonec byla implementována samotná knihovna v~programovacím jazyce Java, která je schopna automaticky rozpoznat poèet vajec v~hnízdì. Knihovnu jsem øádnì otestoval a zmìøil její efektivitu.
 	
-	Do budoucna by bylo vhodné systém rozšíøit o zpracovaní obrazu pøed samotnou detekcí vajec. Napøíklad normalizace jasu, kontrastu a expozice by pomohla výsledky znaènì zlepšit. Je zde také prostror pro pøípravu více trénovacích dat a vylepšení konfigurace neuronové sítì.
+	Do budoucna by bylo vhodné systém rozšíøit o~zpracovaní obrazu pøed samotnou detekcí vajec. Napøíklad normalizace jasu, kontrastu a expozice by pomohla výsledky znaènì zlepšit. Je zde také prostror pro pøípravu více trénovacích dat a vylepšení konfigurace neuronové sítì.
 	
-	Cíl této práce byl v plné míøe naplnìn, vèetnì všech funkèních a nefunkèních požadavkù. Nejvìtším pøínosem práce je systém pro detekci objektù v obraze. Vzhledem k návrhu systému staèí, aby byl pøipraven dostateènì velký vzorek trénovacích dat pro jakýkoliv objekt a mùžeme použít tentýž systém napøíklad pro detekci mláïat v hnízdech. Tato práce také slouží jako vhodný základ pro ètenáøe, kterého zajímá øešení problémù poèítaèového vidìní pomocí neuronových sítí a nástroje TensorFlow.
+	Cíl této práce byl v~plné míøe naplnìn, vèetnì všech funkèních a nefunkèních požadavkù. Nejvìtším pøínosem práce je systém pro detekci objektù v~obraze. Vzhledem k~návrhu systému staèí, aby byl pøipraven dostateènì velký vzorek trénovacích dat pro jakýkoliv objekt a mùžeme použít tentýž systém napøíklad pro detekci mláïat v~hnízdech. Tato práce také slouží jako vhodný základ pro ètenáøe, kterého zajímá øešení problémù poèítaèového vidìní pomocí neuronových sítí a nástroje TensorFlow.
 \end{conclusion}
 
 \bibliographystyle{csn690}
@@ -201,20 +201,20 @@
 \include{chapters/trimmer/source}
 
 \chapter{Konfigurace detekování objektù}\label{chap:config_detection}
-Výsledný konfiguraèní soubor použitý spoleènì s modelem \newline\texttt{ssd\_mobilenet\_v1\_coco}:
-\lstinputlisting[language=json,caption={Konfiguraèní soubor pro detekci vajec v ptaèích hnízdech.}]{media/pipeline.config}
+Výsledný konfiguraèní soubor použitý spoleènì s~modelem \newline\texttt{ssd\_mobilenet\_v1\_coco}:
+\lstinputlisting[language=json,caption={Konfiguraèní soubor pro detekci vajec v~ptaèích hnízdech.}]{media/pipeline.config}
 
 \chapter{Test efektivity knihovny}\label{chap:test_efektivity}
-\lstinputlisting[caption={Test k vyhodnocení efektivy výsledné knihovny.}]{media/SuccessRateTest.java}
+\lstinputlisting[caption={Test k~vyhodnocení efektivy výsledné knihovny.}]{media/SuccessRateTest.java}
 
 
 \chapter{Použité programy}
 % \printglossaries
 \begin{description}
-	\item[TexStudio] psaní bakaláøské práce v \LaTeX\space a pøeklad do PDF
+	\item[TexStudio] psaní bakaláøské práce v~\LaTeX\space a pøeklad do PDF
 	\item[Notepad++] úprava textových souborù
 	\item[gedit] úprava textových souborù
-	\item[IntelliJ IDEA Ultimate] psaní implementace v jazyce Java
+	\item[IntelliJ IDEA Ultimate] psaní implementace v~jazyce Java
 	\item[GIT] verzování kódu
 	\item[JDK8] kompilace, ladìní a testování Java knihovny
 	\item[Python 3] zpracování dat, trénování neuronových sítí
@@ -224,14 +224,14 @@ Výsledný konfiguraèní soubor použitý spoleènì s modelem \newline\texttt{ssd\_mob
 	\item[TexDoclet] generování dokumentace do \LaTeX
 	\item[wget] hromadné stahování dat
 	\item[bash] pomocné skripty pro zautomatizování práce
-	\item[awk] hromadná oprava drobných chyb v datech
+	\item[awk] hromadná oprava drobných chyb v~datech
 \end{description}
 
 \chapter{Obsah pøiloženého média}\label{chap:cd}
 \begin{figure}
 	\dirtree{%
 		.1 bin\DTcomment{adresáø se spustitelnou formou implementace}.
-		.1 doc\DTcomment{adresáø s dokumentací implementace}.
+		.1 doc\DTcomment{adresáø s~dokumentací implementace}.
 		.1 text\DTcomment{text práce}.
 		.2 thesis.pdf\DTcomment{text práce ve formátu PDF}.
 		.1 src.

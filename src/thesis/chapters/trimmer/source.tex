@@ -1,7 +1,7 @@
 \chapter{Folder Trimmer}\label{chap:folder_trimmer}
 Tato pøíloha obsahuje zdrojový kód a zpùsob použití nástroje \texttt{FolderTrimmer}. Kompletní dokumentace a zdrojový kód je dostupný na pøiloženém médiu (viz pøíloha \ref{chap:cd}).
 
-\section{Dokumentace (v AJ)}
+\section{Dokumentace (v~AJ)}
 Folder trimmer is a command line tool for deleting useless data the download script downloads.
 
 \subsection{What does it do}
@@ -54,7 +54,8 @@ public class FolderTrimmer {
 	
 	private static void findAndDeleteEmptyDirs(File dir) {
 		final boolean[] shouldBeDeleted = {true};
-		final boolean leaveOnlyTaggedData = System.getProperty("leaveonlytagged").equalsIgnoreCase("true");
+		final boolean leaveOnlyTaggedData = System.getProperty("leaveonlytagged")
+		    .equalsIgnoreCase("true");
 		
 		File[] toBeProcessed = dir.listFiles((file, s) -> {
 			File workingFile = new File(file, s);

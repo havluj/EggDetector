@@ -1,10 +1,10 @@
 \chapter{Ovìøení implementace}\label{chap:overeniatestovani}
-V této kapitole se zamìøíme testování, validaci a mìøení efektivity implementace knihovny popsané v kapitole \ref{chap:javaknihovna}. Všechny testy jsou implementovány v jazyce Java pomomcí testovacího frameworku JUnit~\cite{junitdoc}. Zdrojové kódy testù jsou dostupné v pøíloze \ref{chap:cd}.
+V~této kapitole se zamìøíme testování, validaci a mìøení efektivity implementace knihovny popsané v~kapitole \ref{chap:javaknihovna}. Všechny testy jsou implementovány v~jazyce Java pomomcí testovacího frameworku JUnit~\cite{junitdoc}. Zdrojové kódy testù jsou dostupné v~pøíloze \ref{chap:cd}.
 
 \section{Testování funkènosti}
 Abychom dokázali, že souèasná implementace knihovny funguje, byly sestaveny dva \uv{jednotkové testy}\footnote{Unit testing.}. 
 
-První test využívá pìt snímkù pøiložených ke zdrojovým kódùm testù. Nejdøíve porovnává pøedem známý poèet vajec v tìchto snímcích s poètem, který vypoèítá knihovna. Následnì je porovnán výsledný poèet vajec, který byl vypoèítán z tìchto pìt snímkù.
+První test využívá pìt snímkù pøiložených ke zdrojovým kódùm testù. Nejdøíve porovnává pøedem známý poèet vajec v~tìchto snímcích s~poètem, který vypoèítá knihovna. Následnì je porovnán výsledný poèet vajec, který byl vypoèítán z~tìchto pìt snímkù.
 
 \begin{lstlisting}[caption={Testování softwarové knihovny EggDetector.}]
 public class PackagedDataTest {
@@ -42,7 +42,7 @@ public class PackagedDataTest {
 }
 \end{lstlisting}
 
-Druhý test porovnává výsledky knihovny s manuálnì oznaèenými daty nástrojem \texttt{Tagger} (viz kapitola \ref{chap:tagger}). Vstupem je pouze jedna složka s libovolným poètem snímkù.
+Druhý test porovnává výsledky knihovny s~manuálnì oznaèenými daty nástrojem \texttt{Tagger} (viz kapitola \ref{chap:tagger}). Vstupem je pouze jedna složka s~libovolným poètem snímkù.
 
 \section{Testování distribuce}
 Abychom otestovali, že knihovna splòuje funkèní požadavek na distribuci, vytvoøíme nový projekt, ve kterém se pokusíme knihovnu použít. 
@@ -71,12 +71,12 @@ System.out.println("individual scores: " + sequenceClassifier.getIndividualCount
 eggDetector.closeSession();
 \end{lstlisting}
 
-Lze vidìt, že distribuce funguje. Zdrojové kódy externího projektu se nachází v pøíloze \ref{chap:cd} ve složce \texttt{src/impl/libtest}.
+Lze vidìt, že distribuce funguje. Zdrojové kódy externího projektu se nachází v~pøíloze \ref{chap:cd} ve složce \texttt{src/impl/libtest}.
 
 \section{Mìøení efektivity implementace}\label{sec:efektivita_knihovny}
 Pro urèení efektivity naší implementace využijeme manuálnì oznaèených \textbf{6178 snímkù} nástrojem Tagger. Porovnáme také výsledky pøi rùzných nastaveních \uv{thresholdu} knihovny (viz kapitola \ref{sec:impl_impl}).
 
-Zdrojový kód testu je vypsán v pøíloze \ref{chap:test_efektivity}. Knihovnu otestujeme pìtkrát na stejných datech s pìti rùznými nastaveními \uv{thresholdu}. V testech se zamìøíme na dvì metriky. První metrikou je pomìr je procentuální úspìšnosti knihovny. Tu získáme následujícím zpùsobem:
+Zdrojový kód testu je vypsán v~pøíloze \ref{chap:test_efektivity}. Knihovnu otestujeme pìtkrát na stejných datech s~pìti rùznými nastaveními \uv{thresholdu}. V~testech se zamìøíme na dvì metriky. První metrikou je pomìr je procentuální úspìšnosti knihovny. Tu získáme následujícím zpùsobem:
 \begin{equation*}
 	\boxed{
 	\begin{gathered}
@@ -94,9 +94,9 @@ Druhou metrikou je rozdíl mezi oèekávaným poètem vajec a výsledkem, který dostan
 	}
 \end{equation*}
 
-Druhá metrika je lepším nástrojem pro mìøení efektivity, protože øíká, o kolik vajec se knihovna \uv{spletla}. Z toho vyplývá, že \textbf{èím nižší èíslo, tím lepší efektivita}.
+Druhá metrika je lepším nástrojem pro mìøení efektivity, protože øíká, o~kolik vajec se knihovna \uv{spletla}. Z~toho vyplývá, že \textbf{èím nižší èíslo, tím lepší efektivita}.
 
-\subsection{Test efektivity s nastavením hranice na 60\%}
+\subsection{Test efektivity s~nastavením hranice na 60\%}
 \begin{lstlisting}[language=bash]
 Found 186 directories.
 EggDetector evaluated 57 directories correctly.
@@ -105,7 +105,7 @@ Egg count of all folders added together: 982.
 Distance (|real eggs - found eggs|): 409 eggs (smaller is better).
 \end{lstlisting}
 
-\subsection{Test efektivity s nastavením hranice na 50\%}
+\subsection{Test efektivity s~nastavením hranice na 50\%}
 \begin{lstlisting}[language=bash]
 Found 186 directories.
 EggDetector evaluated 59 directories correctly.
@@ -114,7 +114,7 @@ Egg count of all folders added together: 982.
 Distance (|real eggs - found eggs|): 367 eggs (smaller is better).
 \end{lstlisting}
 
-\subsection{Test efektivity s nastavením hranice na 40\%}
+\subsection{Test efektivity s~nastavením hranice na 40\%}
 \begin{lstlisting}[language=bash]
 Found 186 directories.
 EggDetector evaluated 62 directories correctly.
@@ -123,7 +123,7 @@ Egg count of all folders added together: 982.
 Distance (|real eggs - found eggs|): 336 eggs (smaller is better).
 \end{lstlisting}
 
-\subsection{Test efektivity s nastavením hranice na 30\%}
+\subsection{Test efektivity s~nastavením hranice na 30\%}
 \begin{lstlisting}[language=bash]
 Found 186 directories.
 EggDetector evaluated 62 directories correctly.
@@ -132,7 +132,7 @@ Egg count of all folders added together: 982.
 Distance (|real eggs - found eggs|): 311 eggs (smaller is better).
 \end{lstlisting}
 
-\subsection{Test efektivity s nastavením hranice na 20\%}
+\subsection{Test efektivity s~nastavením hranice na 20\%}
 \begin{lstlisting}[language=bash]
 Found 186 directories.
 EggDetector evaluated 46 directories correctly.
@@ -142,4 +142,4 @@ Distance (|real eggs - found eggs|): 340 eggs (smaller is better).
 \end{lstlisting}
 
 \section{Shrnutí kapitoly}
-V této kapitole bylo dokázáno, že implementace knihovny funguje a je možné jíi použít formou závislostí z jiného projektu. Mìøením efektivity knihovny jsme došli k závìru, že nejlepším nastavením hranice pro detekci objektù je \textbf{30\%}. Knihovnu tedy upravíme tak, aby toto nastavení používala jako výchozí hodnotu.
+V~této kapitole bylo dokázáno, že implementace knihovny funguje a je možné jíi použít formou závislostí z~jiného projektu. Mìøením efektivity knihovny jsme došli k~závìru, že nejlepším nastavením hranice pro detekci objektù je \textbf{30\%}. Knihovnu tedy upravíme tak, aby toto nastavení používala jako výchozí hodnotu.
