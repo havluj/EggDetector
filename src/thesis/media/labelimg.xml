@@ -17,18 +17,6 @@
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>422</xmin>
-			<ymin>323</ymin>
-			<xmax>500</xmax>
-			<ymax>386</ymax>
-		</bndbox>
-	</object>
-	<object>
-		<name>egg</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
 			<xmin>462</xmin>
 			<ymin>379</ymin>
 			<xmax>544</xmax>

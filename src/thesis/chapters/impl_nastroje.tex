@@ -39,12 +39,6 @@ FolderTrimmer funguje ve dvou režimech. První, základní režim, smaže všechny sou
 Když máme všechna potøebná data stažená, je potøeba je pøipravit do takové podoby, abychom je mohli použít k trénování neuronové sítì. Pøíprava dat se liší podle typu implementace, který zvolíme. V pøípadì trénování neuronové sítì k detekci objektù, chceme k jednotlivým snímkùm pøidat informaci \textbf{kde}, \textbf{jaké velikosti} a \textbf{kolik} vajec se v nich nachází. V pøípadì trénování neuronové sítì pro rozpoznávání (klasifikaci) obrazu, je potøeba ke snímkùm pøidat informaci o \textbf{celkovém poètu vajec}.
 
 \subsection{Tagger}\label{chap:tagger}
-\begin{figure}[ht]
-	\centering
-	\includegraphics[height=\textheight-1cm]{media/tagger.png}
-	\caption{Tagger -- hromadné urèování poètu vajec.}
-	\label{fig:tagger}
-\end{figure}
 
 Nástroj \texttt{Tagger} slouží k manuálnímu oznaèování snímkù. Pracuje na úrovni složek, kde jednotlivé složky a v nich umístìné snímky reprezentují jednu videosekvenci. Uživatel pak mùže program spustit a pomìrnì rychle oznaèit, kolik vajec se na daných snímcích nachází. Tagger je webovou aplikací s jednoduchým uživatelským rozhraním. Uživatel je prezentován všemi snímky dané složky a má možnost u každého snímku specifikovat poèet vajec. Složky jsou vybírány automaticky. Jakmile uživatel uvedl poèet vajec u každého snímku, data odešle a je prezentován snímky z další složky. Tento proces se opakuje do té doby, dokud nebudou dostupné žádné složky s neoznaèenými snímky. Ukázka uživatelského rozhraní je vidìt na obrázku \ref{fig:tagger}.
 
@@ -96,10 +90,16 @@ Trénovací data pro detekci objektù vyžadují jiný formát než data pro rozpoznáván
 Níže je pøiložen ukázkový výstup programu LabelImg.
 
 \lstinputlisting[language=XML,label={list:labelimg},caption={Ukázkový výstup programu LabelImg.}]{media/labelimg.xml}
-
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{media/labelimg.png}
 	\caption{Uživatelské rozhraní nástroje LabelImg.}
 	\label{fig:labelimg}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[height=\textheight-1cm]{media/tagger.png}
+	\caption{Tagger -- hromadné urèování poètu vajec.}
+	\label{fig:tagger}
 \end{figure}
