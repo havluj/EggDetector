@@ -1,7 +1,7 @@
 \chapter{Implementace detekování objektù}\label{chap:impl_detekce}
 V této kapitole se zamìøíme na implementaci neuronové sítì, která bude sloužit k detekci objektù. V rámci této práce nás bude zajímat pouze jeden objekt: vejce. 
 
-Abychom mohli vytrénovat nový model, který je schopný detekce vajec, je potøeba, abychom trénovací data pøevedli do speciálního formátu. K validaci modelu budeme používat skript, u kterého bude vstupem obrázek libovolné velikosti. Internì bude bude snímek reprezentován polem hodnot o velikosti 300~x~300~x~3 (snímek zmenšen na velikost 300~x~300 bodù a zùstane barevný -- každý bod obsahuje 3 barevné složky). Jakmile provedeme detekci objektù, musíme detekované objekty klasifikovat a rozøadit do pøedem stanovených kategorií. Kategorie, do které budeme chtít snímky rozøadit, bude pouze \textbf{1}:
+Abychom mohli vytrénovat nový model, který je schopný detekce vajec, je potøeba, abychom trénovací data pøevedli do speciálního formátu. K validaci modelu budeme používat skript, u kterého bude vstupem obrázek libovolné velikosti. Internì bude bude snímek reprezentován polem hodnot o velikosti 300~x~300~x~3 (snímek zmenšen na velikost 300~x~300 bodù a zùstane barevný -- každý bod obsahuje 3 barevné složky). Jakmile provedeme detekci objektù, musíme detekované objekty klasifikovat a rozøadit do pøedem stanovených kategorií. Kategorie, do které budeme chtít snímky rozøadit, bude pouze \textbf{jedna}:
 \begin{description}[labelindent=1cm]
 	\item[Kategorie \uv{egg}:] Objekt vejce.
 \end{description}
@@ -38,7 +38,7 @@ Abychom mohli používat \texttt{TensorFlow Object Detection API}, je potøeba násl
 \end{enumerate}
 
 \section{Pøíprava dat}
-Nástrojem LabelImg (viz kapitola \ref{subsec:labelimg}) jsem oznaèil \textbf{1890} vajec. Data je potøeba rozdìlit na trénovací a testovací. Testovací data slouží k validaci a vyhodnocení úspìšnosti trénovaného modelu. Standardnì se data dìlí pøibližnì v pomìru 9 trénovacích snímkù ku 1 testovacímu. Data jsem rozdìlil následnovnì:
+Nástrojem LabelImg (viz kapitola \ref{subsec:labelimg}) jsem oznaèil \textbf{1890} vajec. Data je potøeba rozdìlit na trénovací a testovací. Testovací data slouží k validaci a vyhodnocení úspìšnosti trénovaného modelu. Standardnì se data dìlí pøibližnì v pomìru devìt trénovacích snímkù k jednomu testovacímu. Data jsem rozdìlil následnovnì:
 \begin{itemize}
 	\item \textbf{1701} výskytù vajec jako trénovací data,
 	\item \textbf{189} výskytù vajec jako data validaèní.
@@ -84,15 +84,15 @@ Projekt, ve kterém budeme celou implementaci tvoøit, bude mít následující strukt
 Stejná struktura je i na pøiloženém médiu (viz pøíloha \ref{chap:cd}), konkrétnì ve složce \texttt{src/impl/object-detection-training}. Všechny skripty, které v této kapitole používáme k trénování a validaci neuronové sítì jsou také dostupné v pøíloze \ref{chap:cd}.
 
 \section{Trénování neuronové sítì}
-Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extrémnì} výpoèetnì nároèné je vytrénovat. Uèení \uv{pøenosem modelu}\footnote{Transfer learning.} je technika, která ušetøí spoustu práce využitím již pøed-trénovaného modelu a pøetrénováním pouze finálních vrstev~\cite{decaf}. Trénování sítì \uv{od nuly} je standardnì efektivnìjší, ale v rámci mého testování jsem ve výsledcích rozdíl nepocítil. Proto jsem se rozhodl o použítí již pøedtrénovaného modelu a metody \uv{transfer learning}.
+Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extrémnì} výpoèetnì nároèné je vytrénovat. Uèení \uv{pøenosem modelu}\footnote{Transfer learning.} je technika, která ušetøí spoustu práce využitím již pøedtrénovaného modelu a pøetrénováním pouze finálních vrstev~\cite{decaf}. Trénování sítì \uv{od nuly} je standardnì efektivnìjší, ale v rámci mého testování jsem ve výsledcích rozdíl nepocítil. Proto jsem se rozhodl o použití již pøedtrénovaného modelu a metody \uv{transfer learning}.
 
 \subsection{Výchozí model}
-V rámci této implementace jsem zkusil použil tøi rùzné modely, které sloužily jako startovní bod pro trénování. Nejlepší výsledky se dostavily pøi použítí modelu \texttt{ssd\textunderscore mobilenet\textunderscore v1\textunderscore coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2017_11_17.tar.gz} nebo v pøíloze \ref{chap:cd}.}~\cite{tensor_models}. Modely, které nebyly tak úspìšné jsou: \texttt{faster\_rcnn\_nas\_coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_2017_11_08.tar.gz}.} a \texttt{faster\_rcnn\_resnet101\_coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2017_11_08.tar.gz}.}. Stažený model umístíme do složky \texttt{training} v pracovním adresáøi. Další modely, jejich rychlost a efektivita jsou zobrazeny na obrázku \ref{fig:tensor_models}.
+V rámci této implementace jsem zkusil použít tøi rùzné modely, které sloužily jako startovní bod pro trénování. Nejlepší výsledky se dostavily pøi použití modelu \texttt{ssd\textunderscore mobilenet\textunderscore v1\textunderscore coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2017_11_17.tar.gz} nebo v pøíloze \ref{chap:cd}.}~\cite{tensor_models}. Modely, které nebyly tak úspìšné jsou: \texttt{faster\_rcnn\_nas\_coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_2017_11_08.tar.gz}.} a \texttt{faster\_rcnn\_resnet101\_coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2017_11_08.tar.gz}.}. Stažený model umístíme do složky \texttt{training} v pracovním adresáøi. Další modely, jejich rychlost a efektivita jsou zobrazeny na obrázku \ref{fig:tensor_models}.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\textwidth]{media/tensor_models.png}
-	\caption{Pøed-trénované modely poskytované spoleèností Google.}
+	\caption{Pøedtrénované modely poskytované spoleèností Google.}
 	\label{fig:tensor_models}
 \end{figure}
 
@@ -104,7 +104,7 @@ Pro každý typ aplikace jsou vhodné jiné parametry. Výsledný konfiguraèní soubor 
 \subsection{Trénovací data}
 TensorFlow Object Detection API oèekává trénovací data ve formátu TFRecord~\cite{tfrecord}. Na pøiložené médium (viz pøíloha \ref{chap:cd}) jsem umístil všechny skripty pro vygenerování tìchto souborù z trénovacích dat. 
 
-Nejprve máme pouze jednotlivé snímky a k ním XML soubory, které obsahují dodateèné informace o daných snímcích. Cílem je dostat dva soubory: \texttt{train.record}, který obsahuje všechna potøebná data pro trénování a \texttt{test.record}, který obsahuje všechna data pro validaci a testování. Konverzní skript byl napsán podle pøedlohy \cite{create_tfrecord}. Abychom dostali dva požadované soubory, budeme postupovat v tìchto krocích:
+Nejprve máme pouze jednotlivé snímky a k nim XML soubory, které obsahují dodateèné informace o daných snímcích. Cílem je dostat dva soubory: \texttt{train.record}, který obsahuje všechna potøebná data pro trénování a \texttt{test.record}, který obsahuje všechna data pro validaci a testování. Konverzní skript byl napsán podle pøedlohy \cite{create_tfrecord}. Abychom dostali dva požadované soubory, budeme postupovat v tìchto krocích:
 \begin{enumerate}
 	\item Vygenerujeme dva CSV\footnote{Comma Separated Values.} soubory, které budou obsahovat informace o jednotlivých detekcích v trénovacích a testovacích datech:
 	\begin{lstlisting}[language=bash] 
@@ -121,9 +121,9 @@ Nejprve máme pouze jednotlivé snímky a k ním XML soubory, které obsahují dodateè
 \end{enumerate}
 
 \subsection{Trénování}
-V tuto chvíli máme vše pøipraveno a mùžeme zaèít samotné trénování neuronové sítì. Je nutné si uvìdomit, že trénování modelu je velmi výpoèetnì nároèné a je možné, že nebudeme mít lokálnì dostupný dostateènì výkonný hardware, který by tuto úlohu zvládl v rozumném èase. Máme tedy tøi možnosti, kde a jak model vytrénovat. Èas potøebný k trénování je ovlivnìn množstvím trénovacích dat, komplexitou modelu a hardwarovým výkonem. 
+V tuto chvíli máme vše pøipraveno a mùžeme zaèít samotné trénování neuronové sítì. Je dùležité si uvìdomit, že trénování modelu je velmi výpoèetnì nároèné a je možné, že nebudeme mít lokálnì dostupný dostateènì výkonný hardware, který by tuto úlohu zvládl v rozumném èase. Máme tedy tøi možnosti, kde a jak model vytrénovat. Èas potøebný k trénování je ovlivnìn množstvím trénovacích dat, komplexitou modelu a hardwarovým výkonem. 
 
-První, nejjednoduší, ale nejménì výkonná varianta, je trénování na notebooku nebo stolním poèítaèi pomocí procesoru. Tento zpùsob je pomìrnì neefektivní -- napøíklad pøi použití metody \uv{transfer learning} se model trénoval 6 dní èistého èasu, než se stal použitelným. Trénování takového modelu bez použití metody \uv{transfer learning} by trvalo týdny. 
+První, nejjednodušší, ale nejménì výkonná varianta, je trénování na notebooku nebo stolním poèítaèi pomocí procesoru. Tento zpùsob je pomìrnì neefektivní -- napøíklad pøi použití metody \uv{transfer learning} se model trénoval 6 dní èistého èasu, než se stal použitelným. Trénování takového modelu bez použití metody \uv{transfer learning} by trvalo týdny. 
 
 Druhá varianta, která je komplexnìjší na zprovoznìní, je trénování na lokálním stroji pomocí grafické karty. Tato metoda je podstatnì více efektivní, než trénování na procesoru poèítaèe. Na dvou desktopových grafických kartách \textit{Nvidia GeForce GTX 650} byl model použitelný po 7 hodinách pøi použití metody \uv{transfer learning}. 
 
@@ -169,7 +169,7 @@ python3 $OBJ_DET/train.py \
 \end{lstlisting}
 
 \subsubsection{Trénování modelu na Google Cloud ML Engine~\cite{googlemlengine}}
-Abychom mohli model trénovat na Google Cloud ML Engine, je potøeba nìkolik krokù navíc. Pro výborný návod, který detailnì popisuje, jak zprovoznit trénování na Google platformì, viz \cite{mediumodtgcp}.
+Abychom mohli model trénovat na Google Cloud ML Engine, je potøeba nìkolik krokù navíc. Pro detailní popis, jak zprovoznit trénování na Google platformì, viz \cite{mediumodtgcp}.
 
 \begin{figure}
 	\centering
@@ -180,7 +180,7 @@ Abychom mohli model trénovat na Google Cloud ML Engine, je potøeba nìkolik krokù
 	\label{fig:cloudml}
 \end{figure}
 
-Jakmile máme pøipravené naše uložištì (viz obr. \ref{fig:cloudmlbucket}), mùžeme spustit \uv{vzdálený trénink}:
+Jakmile máme pøipravené naše úložištì (viz obr. \ref{fig:cloudmlbucket}), mùžeme spustit \uv{vzdálený trénink}:
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=bash]
@@ -195,7 +195,7 @@ gcloud ml-engine jobs submit training object_detection_${version_unique_ID} \
 			gs://eggdata/data/faster_rcnn_resnet101_coco.config
 \end{lstlisting}
 \end{minipage}
-Prùbìh trénování je zaznamenáván do \uv{logu}, který je videt na obrázku \ref{fig:cloudmllog}. Samozøejmì mùžeme použít i nástroj TensorBoard stejnì, jako kdybychom model trénovali lokálnì:
+Prùbìh trénování je zaznamenáván do \uv{logu}, který je vidìt na obrázku \ref{fig:cloudmllog}. Samozøejmì mùžeme použít i nástroj TensorBoard stejnì, jako kdybychom model trénovali lokálnì:
 \begin{lstlisting}[language=bash]
 tensorboard --logdir=gs://eggdata --port=8080
 \end{lstlisting}
@@ -220,7 +220,7 @@ Na pøehledové stránce otevøeme soubor \texttt{test.ipynb} a zvolíme \texttt{Cell
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{media/obresnotebook1.png}
-	\caption{Model je schopný detekovat všech 9 vajec i pøes to, že nìkterá vejce jsou sotva viditelná.}
+	\caption{Model je schopný detekovat všech devìt vajec i bez ohledu na to, že nìkterá vejce jsou sotva viditelná.}
 	\label{fig:obresnotebook1}
 \end{figure}
 \begin{figure}[ht]
@@ -243,10 +243,10 @@ Na pøehledové stránce otevøeme soubor \texttt{test.ipynb} a zvolíme \texttt{Cell
 \end{figure}
 
 \section{Závìr}
-Dokázali jsme, že øešení popsané v této kapitole funguje. Z výsledkù vyplývá, že správná konfigurace a výchozí model dokáží znaènì ovlivnit výsledné chování modelu i pøes to, že ho vždy trénujeme stejnými daty.
+Dokázali jsme, že øešení popsané v této kapitole funguje. Z výsledkù vyplývá, že správná konfigurace a výchozí model dokáží znaènì ovlivnit výsledné chování modelu i pøesto, že ho vždy trénujeme stejnými daty.
 
 Výsledky doruèené modelem, který byl vytrénován metodou \uv{trasfer learning} z modelu \texttt{ssd\_mobilenet\_v1\_coco} a používá konfiguraci \newline\texttt{training/pipeline.config}, jsou ze všech nejlepší. Proto bude tento model považován za výstup této kapitoly a na závìr bude porovnán s implementací klasifikace obrazu (viz kapitola \ref{chap:impl_rozpoz}).
 
-I pøes uspokojující výsledky øešení je zde prostor pro vylepšení. Více trénovacích a testovacích dat by zajistilo ještì lepší výsledky (vzorek použitý v této kapitole obsahuje \textbf{1890 detekcí}). Pøedzpracování obrazu tak, aby nebyl nikdy pøíliš svìtlý nebo tmavý by zajisté pomohlo doruèit viditelné zlepšení výsledkù. Je možné, že existuje i efektivnìjší kombinace konfigurace a výchozího modelu.
+I pøes uspokojující výsledky øešení je zde prostor pro vylepšení. Více trénovacích a testovacích dat by zajistilo ještì lepší výsledky (vzorek použitý v této kapitole obsahuje \textbf{1890 detekcí}). Pøedzpracování obrazu tak, aby nebyl nikdy pøíliš svìtlý nebo tmavý, by zajisté pomohlo doruèit viditelné zlepšení výsledkù. Je možné, že existuje i efektivnìjší kombinace konfigurace a výchozího modelu.
 
 Na závìr by bylo vhodné shrnout, že efektivita rozpoznávání vajec touto metodou je \textbf{velmi dobrá}. 

@@ -29,7 +29,7 @@ Struèné vysvìtlení pøíkazu \texttt{wget}, který používáme na poslední øádce skri
 \end{itemize}
 
 \subsection{Èištìní dat}
-Skript, který jsme pøedstavili v kapitole \ref{subsec:hromadne_stazeni_dat}, stáhne veškerá data z daného serveru. Mezi takovými daty jsou snímky, které jsou pro nás užiteèné, ale zbytek stažených dat je pro nás zbyteèný. Abychom se v datech mohli lépe orientovat a ušetøili místo na pevném disku, bylo by vhodné nepotøebná data smazat. Pro tento úèel naprogramujeme jednoduchý nástroj v programovacím jazyce \texttt{Java}, který všechna nepotøebná data smaže.
+Skript, který jsme pøedstavili v kapitole \ref{subsec:hromadne_stazeni_dat}, stáhne veškerá data z daného serveru. Z tìchto dat použijeme pouze snímky z ptaèích budek, ostatní data pro nás nejsou relevantní. Abychom se v datech mohli lépe orientovat a ušetøili místo na pevném disku, bylo by vhodné nepotøebná data smazat. Pro tento úèel naprogramujeme jednoduchý nástroj v programovacím jazyce \texttt{Java}, který všechna nepotøebná data smaže.
 
 Zdrojový kód a dokumentace nástroje \textbf{FolderTrimmer} je k nalezení v pøíloze \ref{chap:folder_trimmer}. Výsledný program staèí spustit a složku, která má být promazána, mu pøedat jako argument. Napøíklad: \texttt{run.sh /home/demo/eggs/data}.
 
@@ -46,11 +46,11 @@ Když máme všechna potøebná data stažená, je potøeba je pøipravit do takové podob
 	\label{fig:tagger}
 \end{figure}
 
-Nástroj \texttt{Tagger} slouží k manuálnímu oznaèování snímkù. Pracuje na úrovni složek, kde jednotlivé složky a v nich umístìné snímky reprezentují jednu videosekvenci. Uživatel pak mùže program spustit a pomìrnì rychle oznaèit, kolik vajec se na daných snímcích nachází. Tagger je webovou aplikací s jednoduchým uživatelským rozhraním. Uživatel je prezentován všemi snímky v dané složky a má možnost u každého snímku specifikovat poèet vajec. Složky jsou vybírány automaticky. Jakmile uživatel uvedl poèet vajec u každého snímku, data odešle a je prezentován snímky z další složky. Tento proces se opakuje do té doby, než nebudou dostupné žádné složky s neoznaèenými snímky. Ukázka uživatelského rozhraní je vidìt na obrázku \ref{fig:tagger}.
+Nástroj \texttt{Tagger} slouží k manuálnímu oznaèování snímkù. Pracuje na úrovni složek, kde jednotlivé složky a v nich umístìné snímky reprezentují jednu videosekvenci. Uživatel pak mùže program spustit a pomìrnì rychle oznaèit, kolik vajec se na daných snímcích nachází. Tagger je webovou aplikací s jednoduchým uživatelským rozhraním. Uživatel je prezentován všemi snímky dané složky a má možnost u každého snímku specifikovat poèet vajec. Složky jsou vybírány automaticky. Jakmile uživatel uvedl poèet vajec u každého snímku, data odešle a je prezentován snímky z další složky. Tento proces se opakuje do té doby, dokud nebudou dostupné žádné složky s neoznaèenými snímky. Ukázka uživatelského rozhraní je vidìt na obrázku \ref{fig:tagger}.
 
-Výstupem programu jsou soubory \texttt{imgdata.xml}, které obsahují informace o poètu vajec na jednotlivých snímcích. Tyto data jsou pak používána pro trénování neuronové sítì k rozpoznávání obrazu, kde poèet vajec reprezentuje možné výstupy neuronové sítì. Takto oznaèené snímky se dají použít i pro validaci jakéholiv øešení -- finální softwarové knihovnì pøedáme složku se snímky, knihovna vyhodnotí výsledky a my je poté mùžeme porovnat s výsledky, které jsme manuálnì nasbírali. Ukázkový soubor \texttt{imgdata.xml} je pøiložen v pøíloze \ref{list:imgdata}.
+Výstupem programu jsou soubory \texttt{imgdata.xml}, které obsahují informace o poètu vajec na jednotlivých snímcích. Tato data jsou pak používána pro trénování neuronové sítì k rozpoznávání obrazu, kde poèet vajec reprezentuje možné výstupy neuronové sítì. Takto oznaèené snímky se dají použít i pro validaci jakéholiv øešení -- finální softwarové knihovnì pøedáme složku se snímky, knihovna vyhodnotí výsledky a my je poté mùžeme porovnat s výsledky, které jsme manuálnì nasbírali. Ukázkový soubor \texttt{imgdata.xml} je pøiložen v pøíloze \ref{list:imgdata}.
 
-Program je napsán v programovacím jazyce Java. Detailní popis nástroje se nachází v pøíloze \ref{chap:tagger}. Jedná se o webovou aplikaci, která je postavená na technologii Spring~Boot~\cite{springboot}. Výpis \ref{alg:scan_folder} ukazuje algoritmus pro selekci vhodných složek.
+Program je napsán v programovacím jazyce Java. Detailní popis nástroje se nachází v pøíloze \ref{chap:tagger}. Jedná se o webovou aplikaci, která je postavena na technologii Spring~Boot~\cite{springboot}. Výpis \ref{alg:scan_folder} ukazuje algoritmus pro selekci vhodných složek.
 
 \begin{lstlisting}[caption={Výbìr vhodných složek pro trénování nástrojem Tagger.},label={alg:scan_folder}]
 public static ArrayList<String> scanFolder(String location) {
@@ -91,7 +91,7 @@ public static ArrayList<String> scanFolder(String location) {
 \end{lstlisting}
 
 \subsection{LabelImg~\cite{labelimg}}\label{subsec:labelimg}
-Trénovací data pro detekci objektù vyžadují jiný formát než data pro rozpoznávání obrazu. Na jednotlivých snímcích je potøeba oznaèit pozici všech vajec. Pøesnì za tímto úèelem byl vytvoøen nástroj LabelImg~\cite{labelimg}. Uživatel si pøi spuštìní programu zvolí složku, ve které se nachází snímky pøipravené k oznaèení. Uživatel má možnost zadat typy objektù, které chce na snímcích oznaèovat. V našem pøípadì se jedná pouze o jeden typ objektu -- vejce\footnote{Ve skuteènosti se náš objekt (label) jmenuje \texttt{egg}.}. Poté je uživatel prezentován se snímkem, kde má možnost objekty manuálnì ohranièit (viz obrázek \ref{fig:labelimg}).
+Trénovací data pro detekci objektù vyžadují jiný formát než data pro rozpoznávání obrazu. Na jednotlivých snímcích je potøeba oznaèit pozici všech vajec. Pøesnì za tímto úèelem byl vytvoøen nástroj LabelImg~\cite{labelimg}. Uživatel si pøi spuštìní programu zvolí složku, ve které se nachází snímky pøipravené k oznaèení. Uživatel má možnost zadat typy objektù, které chce na snímcích oznaèovat. V našem pøípadì se jedná pouze o jeden typ objektu -- vejce\footnote{Ve skuteènosti se náš objekt (label) jmenuje \texttt{egg}.}. Poté je uživateli prezentován snímek, na kterém má možnost objekty manuálnì ohranièit (viz obrázek \ref{fig:labelimg}).
 
 Níže je pøiložen ukázkový výstup programu LabelImg.
 

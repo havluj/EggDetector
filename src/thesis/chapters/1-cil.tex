@@ -1,7 +1,7 @@
 \chapter{Cíl práce}
 Cílem teoretické èásti práce je seznámit se s technologiemi a principy, které jsou dnes standardnì pouívány k øešení problémù spjatıch s poèítaèovım vidìním a strojovım uèením. Zamìøíme se pøedevším na umìlé neuronové sítì, jejich historii, souèasnı vıvoj a hlavnì na principy jejich fungování. Na základì získanıch teoretickıch znalostí je vypracována analıza øešení, která mùe bıt povaována za vıstup teoretické èásti. Cílem analızy je jednak selekce vhodnıch principù a technologií pro implementaci øešení, ale i zpracování technickıch poadavkù zároveò s popsáním souèasného stavu.
 
-Cílem praktické èásti je implementovat øešení, které bude dostateènì rychlé a spolehlivé. Vıstupem bude softwarová knihovna, která bude umoòovat rozpoznávat poèet vajec v hnízdì na jednotlivıch snímcích i na sekvencích videa. Souèástí knihovny bude neuronová sí, která bude øešit samotnou detekci vajec. Tento pøístup umoní recyklaci vısledného programu s minimální modifikací pro øešení podobnıch problémù, jako napøíklad urèení druhu ptáka, poètu mláïat nebo predaci hnízda.
+Cílem praktické èásti je implementovat øešení, které bude dostateènì rychlé a spolehlivé. Vıstupem bude softwarová knihovna, která bude umoòovat rozpoznávání poètu vajec v hnízdì na jednotlivıch snímcích i na sekvencích videa. Souèástí knihovny bude neuronová sí, která bude øešit samotnou detekci vajec. Tento pøístup umoní recyklaci vısledného programu s minimální modifikací pro øešení podobnıch problémù, jako napøíklad urèení druhu ptáka, poètu mláïat nebo predaci hnízda.
 
 Následující seznam funkèních a nefunkèních poadavkù slouí jako pøesnı popis poadovené formy vısledné knihovny. Tento seznam byl vytvoøen ve spolupráci s vedoucím práce.
 
@@ -14,11 +14,11 @@ Následující seznam funkèních a nefunkèních poadavkù slouí jako pøesnı popis po
 	\item[F1] Systém bude distribuovanı formou Java knihovny v archivu JAR\footnote{Zkratka pro Java ARchive. \uv{JAR je kompresní souborovı formát, pouívanı platformou Java, zaloenı na ZIP kompresi.}\cite{javajar}}.
 	\item[F2] Knihovna bude distribuována ve dvou verzích:
 	\begin{itemize}
-		\item JAR archiv obsahující jak pøeloenı zdrojovı kód knihovny, tak i všechny závislosti\footnote{Zdrojovı kód mùe pouívat funkce poskytované jinımi softwarovımi knihovnami.}, které jsou knihovnou vyadovány.
+		\item JAR archiv obsahující, jak pøeloenı zdrojovı kód knihovny, tak i všechny závislosti\footnote{Zdrojovı kód mùe pouívat funkce poskytované jinımi softwarovımi knihovnami.}, které jsou knihovnou vyadovány.
 		\item JAR archiv obsahující pouze pøeloenı zdrojovı kód knihovny bez externích závislostí. Do archivu bude pøibalen konfiguraèní soubor pro systém Maven\cite{maven} s definicí závislostí.
 	\end{itemize}
 	\item[F3] Knihovna musí umìt pracovat se strukturou dat na serveru \newline\url{http://athena.pef.czu.cz/ptacionline/}.
-	\item[F4] Knihovna musí umìt urèit poèet vajec v hnízdì pro kady jednotlivı snímek.
-	\item[F5] Knihovna musí umìt urèit poèet vajec v hnízdì pro sloku jako celek. Sloka se skládá ze sekvence obázkù, které reprezentují jednu videosekvenci.
+	\item[F4] Knihovna musí umìt urèit poèet vajec v hnízdì pro kadı jednotlivı snímek.
+	\item[F5] Knihovna musí umìt urèit poèet vajec v hnízdì pro sloku jako celek. Sloka se skládá ze sekvence obrázkù, která reprezentuje jednu videosekvenci.
 	\item[F6] Snímky mohou bıt ve formátu JPEG\footnote{Joint Photographic Experts Group.} a PNG\footnote{Portable Network Graphics.}.
 \end{description}
