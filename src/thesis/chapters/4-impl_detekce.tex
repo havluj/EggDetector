@@ -1,7 +1,7 @@
 \chapter{Implementace detekování objektù}\label{chap:impl_detekce}
 V~této kapitole se zamìøíme na implementaci neuronové sítì, která bude sloužit k~detekci objektù. V~rámci této práce nás bude zajímat pouze jeden objekt: vejce. 
 
-Abychom mohli vytrénovat nový model, který je schopný detekce vajec, je potøeba, abychom trénovací data pøevedli do speciálního formátu. K~validaci modelu budeme používat skript, u~kterého bude vstupem obrázek libovolné velikosti. Internì bude bude snímek reprezentován polem hodnot o~velikosti 300~x~300~x~3 (snímek zmenšen na velikost 300~x~300 bodù a zùstane barevný -- každý bod obsahuje 3 barevné složky). Jakmile provedeme detekci objektù, musíme detekované objekty klasifikovat a rozøadit do pøedem stanovených kategorií. Kategorie, do které budeme chtít snímky rozøadit, bude pouze \textbf{jedna}:
+Abychom mohli vytrénovat nový model, který je schopný detekce vajec, je potøeba, abychom trénovací data pøevedli do speciálního formátu. K~validaci modelu budeme používat skript, u~kterého bude vstupem obrázek libovolné velikosti. Internì bude bude snímek reprezentován vektorem o~velikosti 300~x~300~x~3 (snímek zmenšen na velikost 300~x~300 bodù a zùstane barevný -- každý bod obsahuje 3 barevné složky). Formát a tvorba tohoto vektoru viz algoritmus \ref{alg:vektor}. Jakmile provedeme detekci objektù, musíme detekované objekty klasifikovat a rozøadit do pøedem stanovených kategorií. Kategorie, do které budeme chtít snímky rozøadit, bude pouze \textbf{jedna}:
 \begin{description}[labelindent=1cm]
 	\item[Kategorie \uv{egg}:] Objekt vejce.
 \end{description}
@@ -12,7 +12,7 @@ Celé øešení -- pøíprava dat, trénování neuronové sítì, testování funkènosti a mì
 Abychom mohli používat \texttt{TensorFlow Object Detection API}, je potøeba následnì pøipravit vývojové prostøedí:
 \begin{enumerate}
 	\item Nainstalovat \texttt{Python~3} a \texttt{pip3}.
-	\item Stáhnout repositoø s~TensorFlow modely:
+	\item Získat knihovnu TensorFlow spoleènì s~dostupnými modely ze sdíleného úložištì:
 	\begin{lstlisting}[language=bash]
 	git clone https://github.com/tensorflow/models
 	\end{lstlisting}
@@ -84,7 +84,7 @@ Projekt, ve kterém budeme celou implementaci tvoøit, bude mít následující strukt
 Stejná struktura je i na pøiloženém médiu (viz pøíloha \ref{chap:cd}), konkrétnì ve složce \texttt{src/impl/object-detection-training}. Všechny skripty, které v~této kapitole používáme k~trénování a validaci neuronové sítì jsou také dostupné v~pøíloze \ref{chap:cd}.
 
 \section{Trénování neuronové sítì}
-Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extrémnì} výpoèetnì nároèné je vytrénovat. Uèení \uv{pøenosem modelu}\footnote{Transfer learning.} je technika, která ušetøí spoustu práce využitím již pøedtrénovaného modelu a pøetrénováním pouze finálních vrstev~\cite{decaf}. Trénování sítì \uv{od nuly} je standardnì efektivnìjší, ale v~rámci mého testování jsem ve výsledcích rozdíl nepocítil. Proto jsem se rozhodl o~použití již pøedtrénovaného modelu a metody \uv{transfer learning}.
+Moderní modely pro rozpoznávání obrazu mají miliony parametrù a je \textbf{extrémnì} výpoèetnì nároèné je vytrénovat. Uèení \uv{pøenosem modelu}\footnote{Transfer learning.} je technika, která ušetøí nároènou práci využitím již pøedtrénovaného modelu a pøetrénováním pouze finálních vrstev~\cite{decaf}. Trénování sítì \uv{od nuly} je standardnì efektivnìjší, ale v~rámci mého testování jsem ve výsledcích rozdíl nezaznamenal. Proto jsem se rozhodl o~použití již pøedtrénovaného modelu a metody \uv{transfer learning}.
 
 \subsection{Výchozí model}
 V~rámci této implementace jsem zkusil použít tøi rùzné modely, které sloužily jako startovní bod pro trénování. Nejlepší výsledky se dostavily pøi použití modelu \texttt{ssd\textunderscore mobilenet\textunderscore v1\textunderscore coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2017_11_17.tar.gz} nebo v~pøíloze \ref{chap:cd}.}~\cite{tensor_models}. Modely, které nebyly tak úspìšné jsou: \texttt{faster\_rcnn\_nas\_coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_2017_11_08.tar.gz}.} a \texttt{faster\_rcnn\_resnet101\_coco}\footnote{Ke stažení na \url{http://download.tensorflow.org/models/object_detection/faster_rcnn_nas_coco_2017_11_08.tar.gz}.}. Stažený model umístíme do složky \texttt{training} v~pracovním adresáøi. Další modely, jejich rychlost a efektivita jsou zobrazeny na obrázku \ref{fig:tensor_models}.
@@ -201,7 +201,7 @@ tensorboard --logdir=gs://eggdata --port=8080
 \end{lstlisting}
 
 \section{Ovìøení funkènosti a výsledky}\label{sec:detekce_funkavysledky}
-Jakmile se rozhodneme ukonèit proces trénování, máme k~dispozici nìkolik souborù, které jsou pouhými záchytnými body\footnote{Checkpoints.} pro další iterace. Tyto soubory se hodí, kdybychom chtìli trénování obnovit tam, kde bylo naposledy ukonèeno. Nicménì pro práci s~modelem a detekci vajec je potøeba tyto soubory pøevést na jeden statický. Tomuto procesu se øiká \uv{zmražení grafu}. Graf exportujeme následovnì:
+V pøípadì, že se rozhodneme ukonèit proces trénování, máme k~dispozici nìkolik souborù, které jsou pouhými záchytnými body\footnote{Checkpoints.} pro další iterace. Tyto soubory je vhodné uchovat, abychom mìli možnost trénování obnovit tam, kde bylo naposledy ukonèeno. Nicménì pro práci s~modelem a detekci vajec je potøeba tyto soubory pøevést na jeden statický. Tomuto procesu se øiká \uv{zmražení grafu}. Graf exportujeme následovnì:
 \begin{lstlisting}[language=bash]
 python3 export_inference_graph.py \
 	--input_type image_tensor \
@@ -242,8 +242,8 @@ Na pøehledové stránce otevøeme soubor \texttt{test.ipynb} a zvolíme \texttt{Cell
 	\label{fig:notsogoodtraining}
 \end{figure}
 
-\section{Závìr}
-Dokázali jsme, že øešení popsané v~této kapitole funguje. Z~výsledkù vyplývá, že správná konfigurace a výchozí model dokáží znaènì ovlivnit výsledné chování modelu i pøesto, že ho vždy trénujeme stejnými daty.
+\section{Závìr}\label{sec:implzaver}
+Dokázali jsme, že øešení popsané v~této kapitole funguje. Z~výsledkù vyplývá, že správná konfigurace (topologie) a výchozí model dokáží znaènì ovlivnit výsledné chování modelu i pøesto, že ho vždy trénujeme stejnými daty.
 
 Výsledky doruèené modelem, který byl vytrénován metodou \uv{trasfer learning} z~modelu \texttt{ssd\_mobilenet\_v1\_coco} a používá konfiguraci \newline\texttt{training/pipeline.config}, jsou ze všech nejlepší. Proto bude tento model považován za výstup této kapitoly a na závìr bude porovnán s~implementací klasifikace obrazu (viz kapitola \ref{chap:impl_rozpoz}).
 

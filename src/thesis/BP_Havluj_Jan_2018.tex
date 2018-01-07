@@ -118,7 +118,7 @@
 \website{https://github.com/havluj/EggDetector}
 
 \abstractCS{
-	Tato práce se zabývá návrhem a tvorbou softwarové knihovny pro detekci objektù v~obraze použitím neuronových sítí. 
+	Tato práce se zabývá návrhem a tvorbou softwarové knihovny pro detekci objektù v~obraze s~ použitím neuronových sítí. 
 	
 	V~první èásti jsme seznámeni s~cílem práce a detailní specifikací požadavkù. Druhá èást se vìnuje teorii poèítaèového vidìní, neuronových sítí a TensorFlow. Následnì je na základì získaných teoretických znalostí a specifikace požadavkù vypracována analýza možného øešení. Dle analýzy jsou navržena a implementována dvì øešení. První implementace se zamìøuje na detekci objektù, druhá na rozpoznávání a klasifikaci obrazu. V~poslední èásti práce je vybráno efektivnìjší øešení, které je øádnì ovìøeno a otestováno.
 	
@@ -141,7 +141,7 @@
 
 \begin{introduction}
 	Projekt Ptáci Online byl spuštìn Fakultou životního prostøedí Èeské zemìdìlské univerzity v~Praze roku 2014. Hlavním cílem projektu je poskytnout vìdecká data, ve formì videa z~ptaèích budek, široké veøejnosti~\cite{oProjektu}. Projekt se tìší pomìrnì velké popularitì~\cite{ptaciVMediich} a aktuálnì spolupracuje s~více než dvìma desítkami spolupracovníkù. Mezi nì patøí lidé z~akademické sféry, soukromého sektoru, ale i z~Ministerstva životního prostøedí Èeské republiky~\cite{oProjektu}. Vzhledem k~množství poøizovaných záznamù by bylo žádoucí získávat informace z~videa automaticky pomocí algoritmù umìlé inteligence. Pøedmìtem této práce je vytvoøit algoritmus, který je schopen urèit poèet vajec v~hnízdì v~daném videozáznamu.\newline\indent
-	Existuje hned nìkolik zpùsobù, jak nauèit poèítaè \uv{vidìt}. Témìø vždy se musíme zamìøit na pøedzpracování obrazu, jeho vlastnosti a jeho segmentaci. Jako øešení pak mùžeme zvolit rùznou sadu deterministických algoritmù, napøíklad pro detekci hran nebo na samotné klasifikování segmentovaného obrazu. Všechny tyto algoritmy mají však jednu spoleènou nevýhodu. Formálnì popsat tvar nìjakého objektu a vytvoøit sadu pravidel, podle kterých poznáme, zda-li se jedná o~hledaný objekt, je velmi tìžké.	Svìtelné podmínky nemusí být ideální, objekty se mohou pøekrývat, mohou být rùznì barevné, vzdálené nebo otoèené. Všechny tyto problémy znemožòují vytvoøení perfektního algoritmu manuálnì.
+	Existuje nìkolik zpùsobù, jak nauèit poèítaè \uv{vidìt}. Témìø vždy se musíme zamìøit na pøedzpracování obrazu, jeho vlastnosti a jeho segmentaci. Jako øešení pak mùžeme zvolit rùznou sadu deterministických algoritmù, napøíklad pro detekci hran nebo na samotné klasifikování segmentovaného obrazu. Všechny tyto algoritmy mají však jednu spoleènou nevýhodu. Formálnì popsat tvar nìjakého objektu a vytvoøit sadu pravidel, podle kterých poznáme, zda-li se jedná o~hledaný objekt, je velmi tìžké.	Svìtelné podmínky nemusí být ideální, objekty se mohou pøekrývat, mohou být rùznì barevné, vzdálené nebo otoèené. Všechny tyto problémy znemožòují vytvoøení perfektního algoritmu manuálnì.
 	Lepším øešením je použití algoritmù umìlé inteligence, jako jsou napøíklad umìlé neuronové sítì. Mùžeme manuálnì vytvoøit algoritmus, který dokáže \uv{vytrénovat} druhý, obecný, algoritmus k~vyøešení konkrétního problému. V~této práci se budeme soustøedit na použití neuronových sítí pro vyøešení problémù poèítaèového vidìní.
 
 	
@@ -163,11 +163,11 @@
 	
 	Ètenáøi byla prezentována veškerá potøebná teorie o~strojovém uèení, neuronových sítích a nástroji TensorFlow. Na základì získaných teoretických znalostí byla provedena analýza funkèních a nefunkèních požadavkù; projektu Ptáci Online; souèasného stavu øešení a struktury vstupních dat. Následnì byly navrženy dva smìry implementace, kterými bychom mohli úlohu rozpoznávání vajec vyøešit. V~poslední èásti analýzy byly zvoleny vhodné principy a technologie a bylo navrženo uživatelské rozhraní knihovny.
 	
-	V~další kapitole byl ètenáø seznámen se všemi nástroji, které jsou potøebné k~dokonèení implementace. Navrhl a naimplementoval jsem dva plnohodnotné nástroje pro práci s~daty a nespoèet drobných skriptù pro jejich zpracování. Pomocí tìchto nástrojù jsem manuálnì pøipravil \textbf{8068} trénovacích dat -- oznaèení vajec na snímcích -- které byly následnì použity k~trénování neuronových sítí.
+	V~další kapitole byl ètenáø seznámen se všemi nástroji, které jsou potøebné k~dokonèení implementace. Navrhl a naimplementoval jsem dva plnohodnotné nástroje pro práci s~daty a rùzné skripty pro jejich zpracování. Pomocí tìchto nástrojù jsem manuálnì pøipravil \textbf{8068} trénovacích dat -- oznaèení vajec na snímcích -- které byly následnì použity k~trénování neuronových sítí.
 	
-	Prvním øešením pro detekci vajec byla implementace realizována technikou \uv{detekce objektù v~obraze}. Tato implementace pøinesla velmi dobré výsledky a proto jsem se ji rozhodl použít jako základ pro výslednou knihovnu. Druhý styl implementace nebyl tak efektivní, a proto jsem se rozhodl ho nepoužít. Nicménì i tento styl implementace je zajímavý a mùže sloužit jako užiteèný základ pro ètenáøe, který se bude zabývat rozpoznáváním obrazu.
+	Prvním øešením pro detekci vajec byla implementace realizována technikou \uv{detekce objektù v~obraze}. Tato implementace pøinesla velmi dobré výsledky a proto jsem se ji rozhodl použít jako základ pro výslednou knihovnu (viz sekce~\ref{sec:implzaver}). Druhý styl implementace nebyl tak efektivní, a proto jsem se rozhodl ho nepoužít (viz sekce~\ref{sec:zaverklas}). Nicménì i tento styl implementace je zajímavý a mùže sloužit jako užiteèný základ pro ètenáøe, který se bude zabývat rozpoznáváním obrazu.
 	
-	Nakonec byla implementována samotná knihovna v~programovacím jazyce Java, která je schopna automaticky rozpoznat poèet vajec v~hnízdì. Knihovnu jsem øádnì otestoval a zmìøil její efektivitu.
+	Nakonec byla v kapitole \ref{chap:javaknihovna} implementována samotná knihovna v~programovacím jazyce Java, která je schopna automaticky rozpoznat poèet vajec v~hnízdì. Knihovnu jsem øádnì otestoval a zmìøil její efektivitu (viz kapitola~\ref{chap:overeniatestovani}).
 	
 	Do budoucna by bylo vhodné systém rozšíøit o~zpracovaní obrazu pøed samotnou detekcí vajec. Napøíklad normalizace jasu, kontrastu a expozice by pomohla výsledky znaènì zlepšit. Je zde také prostror pro pøípravu více trénovacích dat a vylepšení konfigurace neuronové sítì.
 	

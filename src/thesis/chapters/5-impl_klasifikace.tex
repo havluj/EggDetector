@@ -1,5 +1,5 @@
 \chapter{Implementace rozpoznávání obrazu}\label{chap:impl_rozpoz}
-V~této kapitole se zamìøíme na implementaci neuronové sítì, která bude mít za cíl rozpoznat, do které kategorie snímek patøí. Jedná se tedy o~klasifikaci do pøedem danıch kategorií. Vstupem pro naše skripty bude obrázek libovolné velikosti. Internì bude bude snímek reprezentován polem hodnot o~velikosti 300~x~300~x~3 (snímek zmenšen na velikost 300~x~300 bodù a zùstane barevnı -- kadı bod obsahuje 3 barevné sloky). Kategorií, do kterıch budeme chtít snímky rozøadit, bude \textbf{jedenáct}:
+V~této kapitole se zamìøíme na implementaci neuronové sítì, která bude mít za cíl rozpoznat, do které kategorie snímek patøí. Jedná se tedy o~klasifikaci do pøedem danıch kategorií. Vstupem pro naše skripty bude obrázek libovolné velikosti. Internì bude bude snímek reprezentován vektorem o~velikosti 300~x~300~x~3 (snímek zmenšen na velikost 300~x~300 bodù a zùstane barevnı -- kadı bod obsahuje 3 barevné sloky). Formát a tvorba tohoto vektoru viz algoritmus \ref{alg:vektor}. Kategorií, do kterıch budeme chtít snímky rozøadit, bude \textbf{jedenáct}:
 \begin{description}[labelindent=1cm]
 	\item[Kategorie \uv{0}:] Pro snímky, kde je poèet vajec roven \textbf{0}.
 	\item[Kategorie \uv{1}:] Pro snímky, kde je poèet vajec roven \textbf{1}.
@@ -125,7 +125,7 @@ python3 ~/tensorflow/examples/image_retraining/label_image.py \
 9 (score = 0.00032)
 \end{lstlisting}
 
-\section{Závìr}
+\section{Závìr}\label{sec:zaverklas}
 Dokázali jsme, e øešení funguje. Pøi hromadném testu dat zjistíme, e tato implementace \textbf{není} pøíliš efektivní i pøesto, e náš trénovací vzorek dat je pomìrnì velkı (\textbf{6178 snímkù}). U ze samotného vısledku pøi vyhodnocení pouze jednoho snímku je vidìt, e si sí není jistá, do jaké kategorie danı snímek zaøadit. Všechny vısledky mají buï relativnì nízké skóre nebo naopak všechny pomìrnì vysoké. Bohuel se nedostáváme k~vısledku, ve kterém by byla pouze jedna kategorie dominantní\footnote{Sí by jedné kategorii pøiøadila vysoké skóre (> 80\%) a zbytek kategorií by mìl skóre nízké.}.
 
 Nejvìtší problém spoèívá v~\textbf{malıch rozdílech mezi jednotlivımi kategoriemi}. Vajíèka tvoøí pouze malou èást snímku, take rozdíl mezi jedním nebo dvìmi vajíèky je malı. \textbf{Vìtšina plochy snímku se stává šumem}, kterı \uv{mate} tuto implementaci. Kdyby kategorie reprezentovaly dvì velmi odlišné vìci, jako napøíklad auto a psa, bylo by vıraznì snazší snímek mezi tyto dvì dramaticky odlišné kategorie rozøadit.

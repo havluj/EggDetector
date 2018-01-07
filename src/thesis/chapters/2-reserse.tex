@@ -1,22 +1,22 @@
 \chapter{Rešerše}\label{chap:reserse}
 
 \section{Poèítaèové vidìní}
-Poèítaèové vidìní je odvìtví poèítaèové vìdy, které se zabıvá získáváním informací z~obrazu. Mùe se jednat o~extrahování informací z~videí, obrázkù nebo napøíklad lékaøskıch snímkù~\cite{computervision}. Nauèit poèítaè \uv{vidìt} není vùbec jednoduchı úkol, i pøes to, e pro náš mozek je získávání informací z~obrazu pøirozené a jednoduché. Obraz, jak ho vidí poèítaè, je pouze posloupnost systematicky uspoøádanıch jednièek a nul. Motivací pro hledání tvarù nebo pøiøazování vıznamu této posloupnosti dat je automatizace úkolù, které doposud vykonávali lidé. Mezi typické vyuítí poèítaèového vidìní patøí napøíklad~\cite{concisecompvision}:
+Poèítaèové vidìní je odvìtví poèítaèové vìdy, které se zabıvá získáváním informací z~obrazu. Mùe se jednat o~extrahování informací z~videí, obrázkù nebo napøíklad lékaøskıch snímkù~\cite{computervision}. Nauèit poèítaè \uv{vidìt} není vùbec jednoduchı úkol, i pøes to, e pro náš mozek je získávání informací z~obrazu pøirozené a jednoduché. Obraz, jak ho vidí poèítaè, je pouze posloupnost systematicky uspoøádanıch jednièek a nul. Motivací pro hledání tvarù nebo pøiøazování vıznamu této posloupnosti dat je automatizace úkolù, které doposud vykonávali lidé. Poèítaèovì vidìt znamená èíst matici pixelù\footnote{Body, které tvoøí obraz.}, které mají rùznou intenzitu. Veškeré operace poèítaèového vidìní jsou zaloeny na analıze sousedství pixelù, jejich jasu, èi barevného spektra. Mezi typické vyuítí poèítaèového vidìní patøí napøíklad~\cite{concisecompvision}:
 \begin{itemize}
 	\item autonomní vozidla,
 	\item analıza obrazu v~bezpeènostní systémech,
-	\item prùmysloví roboti,
+	\item prùmyslové roboty,
 	\item rozpoznávání obrazu.
 \end{itemize}
 
-V~této bakaláøské práci se budeme zabıvat rozpoznáváním obrazu, pomocí kterého se pokusíme automatizovat èást lidské práci vykonávané v~rámci projektu Ptáci Online. Rozpoznávání obrazu mùeme rozèlenit do nìkolika kategorií podle typu problému~\cite{concisecompvision}, napøíklad:
+V~této bakaláøské práci se budeme zabıvat pouitím nástrojù k~ rozpoznávání obrazu. Tyto nástroje nám umoní automatizovat úkoly, které by jinak museli vykonávat lidé. Rozpoznávání obrazu mùeme rozèlenit do nìkolika kategorií podle typu problému~\cite{concisecompvision}, napøíklad:
 \begin{description}[labelindent=1cm,leftmargin=5.5cm,style=nextline]
-	\item[rozpoznávání obrazu:] neboli klasifikace obrazu -- zaøazení obrazu do jedné ze známıch kategorií (napø. na snímku je pes)
+	\item[rozpoznávání obrazu:] neboli klasifikace obrazu -- zaøazení obrazu do jedné ze známıch kategorií (napøíklad na snímku je pes)
 	\item[detekce objektù:] autonomní vozy se snaí detekovat a následnì klasifikovat všechny objekty v~jeho okolí
 	\item[identifikace:] rozpoznávání oblièeje nebo otisku prstu
 \end{description}
 
-V~souèasné dobì jsou algoritmy umìlé inteligence nejefektivnìjším øešením rozpoznávání obrazu. Algoritmy zaloené na konvoluèních neuronovıch sítích se dokonce pøiblíily svou pøesností a efektivitou lidem~\cite{imagenet}.
+V~souèasné dobì jsou algoritmy umìlé inteligence~\cite{pavl_ai} nejefektivnìjším øešením rozpoznávání obrazu. Algoritmy zaloené na konvoluèních neuronovıch sítích se dokonce pøiblíily svou pøesností a efektivitou lidem~\cite{imagenet}.
 
 \section{Neuronové sítì}
 \begin{figure}[]
@@ -28,7 +28,8 @@ V~souèasné dobì jsou algoritmy umìlé inteligence nejefektivnìjším øešením rozpoz
 \end{figure}
 Umìlá neuronová sí je softwarovı systém inspirovanı biologickımi neuronovımi sítìmi, které se nachází v~lidskıch s~zvíøecích mozcích. Neuronové sítì jsou bìnì pouívány napøíklad k~rozpoznávání obrazu, filtrování spamu nebo pøedvídání vıvoje hodnoty akcií.
 
-Umìlé neuronové sítì obsahují neurony, které jsou mezi sebou propojeny. Vstupem kadého neuronu jsou vıstupy neuronù v~pøedchozích vrstvách. Tento vstup je zpracován podle interní logiky neuronu a následnì je vygenerován vıstup, kterı se stává vstupem pro neurony v~následujících vrstvách. Neuronová sí je tedy \textbf{orientovanım váenım grafem}. Vstupem pro \uv{první øadu} neuronù jsou vstupní data, napøíklad jednotlivé body\footnote{pixely} obrazu. Aktivace \uv{poslední øady} neuronù reprezentuje vısledek pro danı vstup~\cite{ann}. Struktura neuronové sítì a neuronu je znázornìna na obrázku \ref{fig:ann}, respektive \ref{fig:neuron}.
+Umìlé neuronové sítì obsahují neurony, které jsou mezi sebou propojeny. Vstupem kadého neuronu jsou vıstupy neuronù v~pøedchozích vrstvách. Tento vstup je zpracován podle interní logiky neuronu a následnì je vygenerován vıstup, kterı se stává vstupem pro neurony v~následujících vrstvách. Typická interní logika neuronu pracuje s~váenımi vstupy a vnitøní, tzv. excitaèní, funkcí. Tato funkce èasto funguje tak, e pokud souèet váenıch vstupù pøekroèí urèitou hranici pøi prùchodu touto funkcí, neuron se \uv{excituje} a vydá odpovìï. Uèení, neboli trénování neuronové sítì, pøedstavuje proces hledální optimálních vah a spojù jednotlivıch neuronù. V~rámci trénování mùeme mìnit i~topologii sítì. Neuronová sí je tedy \textbf{orientovanım váenım grafem}. Vstupem pro \uv{první øadu} neuronù jsou vstupní data, napøíklad jednotlivé body\footnote{pixely} obrazu. Aktivace \uv{poslední øady} neuronù reprezentuje vısledek pro danı vstup~\cite{ann}. Struktura neuronové sítì a neuronu je znázornìna na obrázku \ref{fig:ann}, respektive \ref{fig:neuron}.
+
 
 Dnešní architektury neuronovıch sítí však mohou bıt mnohem komplexnìjší. Mohou se lišit poètem skrytıch vrstev, strukturou propojení neuronù (napøíklad cyklická propojení neuronù), skryté vrstvy mohou mít pamì, atd. Mezi nejznámìjší typy neuronovıch sítí patøí konvoluèní neuronové sítì, modulární neuronové sítì, Boltzmannova sí, sí s~dlouhodobou a krátkodobou pamìtí a perceptronové sítì. Struèné pøedstavení jednotlivıch typù viz~\cite{mediumnn}.
 
