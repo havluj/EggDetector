@@ -1,8 +1,8 @@
 \chapter{Implementace Java knihovny}\label{chap:javaknihovna}
-Pøedmìtem této kapitoly je tvorba softwarové knihovny, která je cílem této práce. Nejdøíve porovnáme vısledky dvou implementací z~kapitoly \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}. Jako další krok budeme diskutovat, jakım zpùsobem integrovat vybranou implementaci do programovacího jazyka \texttt{Java}. Následnì se zamìøíme na uivatelské rozhraní knihovny a její implementaci. Na závìr vyøešíme distribuci knihovny nástrojem pro správu, øízení a automatizaci buildù aplikací.
+Pøedmìtem této kapitoly je tvorba softwarové knihovny, která je cílem této práce. Nejdøíve porovnáme vısledky dvou implementací z~kapitoly \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz}. Jako další krok budeme diskutovat, jakım zpùsobem integrovat vybranou implementaci do programovacího jazyka \texttt{Java}. Následnì se zamìøíme na uivatelské rozhraní knihovny a její implementaci. Na závìr vyøešíme distribuci knihovny nástrojem pro správu, øízení a automatizaci sestavování aplikací.
 
 \section{Srovnání implementací neuronovıch sítí a volba øešení}
-Vzhledem k~vısledkùm popsanıch v~závìrech kapitol \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz} je zøejmé, e detekce objektù popsaná v~kapitole \ref{chap:impl_detekce} je podstatnì efektivnìjší implementací.
+Vzhledem k~vısledkùm popsanıch v~závìrech kapitol \ref{chap:impl_detekce} a \ref{chap:impl_rozpoz} je zøejmé, e detekce objektù, popsaná v~kapitole \ref{chap:impl_detekce}, je podstatnì efektivnìjší implementací.
 
 Nicménì, vısledná knihovna je navrena tak, e kdykoliv mùe bıt styl øešení zmìnìn bez toho, ani by muselo bıt modifikováno uivatelské rozhraní.
 
@@ -17,7 +17,7 @@ TensorFlow poskytuje API pro jazyk Java. Abychom ho mohli pouívat, staèí pøidat
 	<version>1.4.0</version>
 </dependency>
 \end{lstlisting}
-Java API, které TensorFlow poskytuje, je pomìrnì nízkoúrovòové~\cite{tensorflowjavaapi}. Pro usnadnìní práce pouijeme wrapper\footnote{Tøída, která \uv{obalí} jinou tøídu a pøidá jí funkènost.}, kterı se inspiruje rozhraním, které TensorFlow poskytuje pro platformu Android.
+Java API, poskytované knihovnou TensorFlow, je pomìrnì nízkoúrovòové~\cite{tensorflowjavaapi}. Pro usnadnìní práce pouijeme wrapper\footnote{Tøída, která \uv{obalí} jinou tøídu a pøidá jí funkènost.} inspirovanı rozhraním, které TensorFlow poskytuje pro platformu Android.
 
 \section{Uivatelské rozhraní knihovny}
 Pøi tvorbì uivatelského rozhraní vycházíme z~prvotního návrhu, kterı vznikl analızou funkèních poadavkù (viz algoritmus \ref{alg:prvni_navrh}). Kompletní dokumentace API, které knihovna uivateli poskytuje je dostupná v~pøíloze \ref{chap:dokumentaceapi}. Nejlepším zdrojem ukázek pouití knihovny jsou testy, které diskutujeme v~kapitole \ref{chap:overeniatestovani}.
@@ -25,7 +25,7 @@ Pøi tvorbì uivatelského rozhraní vycházíme z~prvotního návrhu, kterı vznikl ana
 \section{Implementace}\label{sec:impl_impl}
 Kompletní zdrojové kódy implementace jsou dostupné v~pøíloze \ref{chap:cd}. Knihovnu zkompilujeme nástrojem Maven: \texttt{mvn clean package -DskipTests}.
 
-Neuronová sí, která se stará o~detekci a klasifikaci objektù na jednotlivıch snímcích vrací vısledek jako mnoinu detekcí. Kadá detekce se skládá z~informací o~umístìní objektu, typu objektu a pravdìpodobnosti v~procentech, e se opravdu o~danı objekt jedná. Je tedy nutné stanovit hranici\footnote{Threshold.}, která slouí jako mezník, zda-li je vısledek relevantní, èi nikoliv. Jestlie nastavíme hranici napøíklad na 30\%, knihovna vrátí pouze detekované objekty, o~kterıch si je jistá alespoò na 30\%. Kdybychom nastavili hranici na 0\%, knihovna by vrátila všechny moné detekce nalezené v~obrázku. Celkovı poèet detekcí na snímku je limitován na sto. V~kapitole \ref{sec:efektivita_knihovny} se zamìøíme na to, jak nastavení hranice dokáe ovlivnit efektivitu knihovny.
+Neuronová sí, která se stará o~detekci a klasifikaci objektù na jednotlivıch snímcích, vrací vısledek jako mnoinu detekcí. Kadá detekce se skládá z~informací o~umístìní objektu, typu objektu a pravdìpodobnosti v~procentech, e se opravdu o~danı objekt jedná. Je tedy nutné stanovit hranici\footnote{Threshold.}, která slouí jako mezník, zda-li je vısledek relevantní, èi nikoliv. Jestlie nastavíme hranici napøíklad na 30\%, knihovna vrátí pouze detekované objekty, o~kterıch si je jistá alespoò na 30\%. Kdybychom nastavili hranici na 0\%, knihovna by vrátila všechny moné detekce nalezené v~obrázku. Celkovı poèet detekcí na snímku je limitován na sto. V~kapitole \ref{sec:efektivita_knihovny} se zamìøíme na to, jak nastavení hranice dokáe ovlivnit efektivitu knihovny.
 
 \begin{lstlisting}[caption={Získání finálního poètu vajec pro celou sloku pomocí dat z~jednotlivıch snímkù.},label={alg:celkovypocetvajec}]
 public Integer getFinalCount() {

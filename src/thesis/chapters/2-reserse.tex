@@ -26,7 +26,7 @@ V~souèasné dobì jsou algoritmy umìlé inteligence~\cite{pavl_ai} nejefektivnìjším
 	\caption*{\tiny{Zdroj: \url{https://cdn-images-1.medium.com/max/800/0*OHlzxsoDSEBXW0iI.jpg}~\cite{mediumnn}.}}
 	\label{fig:neuron}
 \end{figure}
-Umìlá neuronová sí je softwarovı systém inspirovanı biologickımi neuronovımi sítìmi, které se nachází v~lidskıch s~zvíøecích mozcích. Neuronové sítì jsou bìnì pouívány napøíklad k~rozpoznávání obrazu, filtrování spamu nebo pøedvídání vıvoje hodnoty akcií.
+Umìlá neuronová sí je softwarovı systém inspirovanı biologickımi neuronovımi sítìmi, které se nachází v~lidskıch a~zvíøecích mozcích. Neuronové sítì jsou bìnì pouívány napøíklad k~rozpoznávání obrazu, filtrování spamu nebo pøedvídání vıvoje hodnoty akcií.
 
 Umìlé neuronové sítì obsahují neurony, které jsou mezi sebou propojeny. Vstupem kadého neuronu jsou vıstupy neuronù v~pøedchozích vrstvách. Tento vstup je zpracován podle interní logiky neuronu a následnì je vygenerován vıstup, kterı se stává vstupem pro neurony v~následujících vrstvách. Typická interní logika neuronu pracuje s~váenımi vstupy a vnitøní, tzv. excitaèní, funkcí. Tato funkce èasto funguje tak, e pokud souèet váenıch vstupù pøekroèí urèitou hranici pøi prùchodu touto funkcí, neuron se \uv{excituje} a vydá odpovìï. Uèení, neboli trénování neuronové sítì, pøedstavuje proces hledální optimálních vah a spojù jednotlivıch neuronù. V~rámci trénování mùeme mìnit i~topologii sítì. Neuronová sí je tedy \textbf{orientovanım váenım grafem}. Vstupem pro \uv{první øadu} neuronù jsou vstupní data, napøíklad jednotlivé body\footnote{pixely} obrazu. Aktivace \uv{poslední øady} neuronù reprezentuje vısledek pro danı vstup~\cite{ann}. Struktura neuronové sítì a neuronu je znázornìna na obrázku \ref{fig:ann}, respektive \ref{fig:neuron}.
 
@@ -44,9 +44,9 @@ V~rámci této práce se zamìøíme pøedevším na pouítí hlubokıch konvoluèních neuro
 \end{figure}
 
 \section{TensorFlow}
-\uv{TensorFlow je otevøená softwarová knihovna\footnote{open source software} pro numerické vıpoèty pomocí metody \uv{data flow graph}}~\cite{abouttensorflow}. Knihovnu je moné pouít napøíklad pro usnadnìní matematickıch vıpoètù, tvorbu lineárních modelù a neuronovıch sítí. Pouitím knihovny získáme pøístup k~sadì pøipravenıch algoritmù, které nám znaènì usnadní tvorbu neuronové sítì. K~dispozici jsou napøíklad algoritmy pro trénování (hledání optimálních vah k~jednotlivım hranám grafu), jako je napøíklad algoritmus \uv{stochastic gradient descent}. TensorFlow dìlá pouití dostupnıch algoritmù opravdu jednoduchım, viz algoritmus \ref{alg:graddescent}.
+\uv{TensorFlow je otevøená softwarová knihovna\footnote{Open source software.} pro numerické vıpoèty pomocí metody \uv{data flow graph}}~\cite{abouttensorflow}. Knihovnu je moné pouít napøíklad pro usnadnìní matematickıch vıpoètù, tvorbu lineárních modelù a neuronovıch sítí. Pouitím knihovny získáme pøístup k~sadì pøipravenıch algoritmù, které nám znaènì usnadní tvorbu neuronové sítì. K~dispozici jsou napøíklad algoritmy pro trénování (hledání optimálních vah k~jednotlivım hranám grafu), jako je napøíklad algoritmus \uv{stochastic gradient descent}. TensorFlow dìlá pouití dostupnıch algoritmù opravdu jednoduchım, viz algoritmus \ref{alg:graddescent}.
 
-TensorFlow také znaènì usnadòuje tvorbu a konfiguraci struktury neuronové sítì, viz~\cite{tensoralgorithms}. V~neposlední øadì mùeme pouit nespoèet skriptù pro práci s~daty~\cite{create_tfrecord} nebo TensorFlow Object Detection API~\cite{tens_detection}.
+TensorFlow také znaènì usnadòuje tvorbu a konfiguraci struktury neuronové sítì, viz~\cite{tensoralgorithms}. V~neposlední øadì mùeme pouít skripty pro práci s~daty~\cite{create_tfrecord} nebo TensorFlow Object Detection API~\cite{tens_detection}.
 
 \begin{lstlisting}[language=Python,caption={Pouití algoritmu \uv{stochastic gradient descent} poskytovanı knihovnou TensorFlow.},label={alg:graddescent}]
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001)

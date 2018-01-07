@@ -6,7 +6,7 @@ V~této kapitole se zamìøíme na strukturu projektu Ptáci Online, problémy spojené
 \section{Projekt Ptáci Online}
 \uv{Cílem projektu je popularizovat ochranu ptákù v~blízkosti lidskıch sídel, jejich hnízdìní, vèetnì jeho monitoringu, s~vyuitím speciálního technického zaøízení tzv. \uv{chytré ptaèí budky}.}~\cite{mzp_ptaci_online}
 
-Tyto \uv{chytré ptaèí budky} slouí k~monitorování hnízdícího ptactva. Kadá budka obsahuje jednu nebo dvì kamery s~noèním pøísvitem. Ve vletovém otvoru budky je umístìna svìtelná brána, ktera spustí natáèení kamer pøi detekci pohybu. Dále je do budky vestavìn venkovní a vnitøní teplotní senzor, mikrofon a senzor venkovního osvìtlení, kterı reguluje funkci pøísvitu kamer. Pøenos nasbíranıch dat z~budky probíhá pøes ethernetovı PoE\footnote{Power over Ethernet.} kabel. Tento kabel zajišuje i napájení veškeré elektroniky uvnitø budky.~\cite{oProjektu} Jak vypadá záznam z~budky je vidìt na obr. \ref{fig:ukazka_budka}.
+Tyto \uv{chytré ptaèí budky} slouí k~monitorování hnízdícího ptactva. Kadá budka obsahuje jednu nebo dvì kamery s~noèním pøísvitem. Ve vletovém otvoru budky je umístìna svìtelná brána, která spustí natáèení kamer pøi detekci pohybu. Dále je do budky vestavìn venkovní a vnitøní teplotní senzor, mikrofon a senzor venkovního osvìtlení, kterı reguluje funkci pøísvitu kamer. Pøenos nasbíranıch dat z~budky probíhá pøes ethernetovı PoE\footnote{Power over Ethernet.} kabel. Tento kabel zajišuje i napájení veškeré elektroniky uvnitø budky.~\cite{oProjektu} Jak vypadá záznam z~budky je vidìt na obr. \ref{fig:ukazka_budka}.
 
 \begin{figure}
 	\centering
@@ -29,7 +29,7 @@ Akademiètí pracovnící potøebují shromádit velké mnoství dat, ale taková èinnos
 
 Jedna z~informací, která nás mùe zajímat, je poèet vajec v~hnízdì. Brigádník musí video otevøít, shlédnout a najít èást, kde jsou vejce zøetelnì viditelná (viz obr. \ref{fig:viditelna_vejce}). Poté vejce spoèítá a vısledek zapíše do tabulky. Jeliko je nutné získat co nejvíce dat, brigádníci tento proces vykonávají co nejrychleji. To vede k~chybám, napø. chybnì spoèítanı poèet vajec nebo zapsání vısledku na špatnı øádek tabulky.
 
-Je snahou vytvoøit systémy, které by tyto úkoly mohly provádìt automaticky. Pøíkladem takového systému je napøíklad práce od Pavla Šumy, kterı se snaí automaticky zjistit poèet mláïat v~hnízdì~\cite{mladata}. Dalším pøíkladem je~\cite{pavlicek_agr} nebo i~tato práce.
+Je snahou vytvoøit systémy, které by tyto úkoly mohly provádìt automaticky. Pøíkladem takového systému je napøíklad práce od Pavla Šumy, kterı se snaí automaticky zjistit poèet mláïat v~hnízdì~\cite{mladata}. Dalším pøíkladem je	práce Ing. Josefa Pavlíèka, Ph.D a spol.~\cite{pavlicek_agr} nebo i~tato práce.
 
 \begin{figure}
 	\centering
@@ -47,7 +47,7 @@ Je snahou vytvoøit systémy, které by tyto úkoly mohly provádìt automaticky. Pøík
 \textit{Knihovna musí pracovat v~reálném èase. Po zadání vstupních dat je vısledek oèekáván maximálnì v~jednotkách sekund.}
 
 \vspace{0.5cm}
-Z~vlastností neuronovıch sítí vyplıvá, e vyhodnocení vstupních dat bude témìø okamité. Samotnı prùchod snímku grafem, resp. prùchod snímku neuronovou sítí není pøíliš èasovì nároènı. Nutnou podmínkou však je dostupnı soubor obsahující popis struktury neuronové sítì. Trénování, nebo-li hledání optimálního nastavení vah tak, aby vıstupní chyba sítì byla co nejmenší, je velmi vıpoèetnì nároèná èinnost, která musí bıt dokonèena \textbf{pøed} pouitím knihovny.
+Z~vlastností neuronovıch sítí vyplıvá, e vyhodnocení vstupních dat bude témìø okamité. Samotnı prùchod snímku grafem, resp. prùchod snímku neuronovou sítí, není pøíliš èasovì nároènı. Nutnou podmínkou však je dostupnı soubor obsahující popis struktury neuronové sítì. Trénování, nebo-li hledání optimálního nastavení vah tak, aby vıstupní chyba sítì byla co nejmenší, je velmi vıpoèetnì nároèná èinnost, která musí bıt dokonèena \textbf{pøed} pouitím knihovny.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -66,7 +66,7 @@ Neuronové sítì mùeme naprogramovat v~libovolném programovacím jazyce. Tato podm
 \end{itemize}}
 
 \vspace{0.5cm}
-Distribuci pøeloeného zdrojového kódu vyøešíme pomocí nástroje pro správu, øízení a automatizaci buildù aplikací. Maven je pro nás nejvhodnìjší volbou, vzhledem k~druhé èásti podmínky -- do archivu bude pøibalen konfiguraèní soubor pro systém Maven s~definicí závislostí.
+Distribuci pøeloeného zdrojového kódu vyøešíme pomocí nástroje pro správu, øízení a automatizaci sestavování aplikací. Maven je pro nás nejvhodnìjší volbou, vzhledem k~druhé èásti podmínky -- do archivu bude pøibalen konfiguraèní soubor pro systém Maven s~definicí závislostí.
 
 \subsection{F3}
 \textit{Knihovna musí umìt pracovat se strukturou dat na serveru \newline\url{http://athena.pef.czu.cz/ptacionline/}.}
@@ -91,7 +91,7 @@ System.out.println("final count: " + sequenceClassifier.getFinalCount());
 // Mùeme zjistit poèet vajec v jednotlivıch snímcích.
 System.out.println("individual scores: " + sequenceClassifier.getIndividualCounts());
 
-// Ukonèíme EggDetector - uvolníme informace o~neuronové
+// Ukonèíme EggDetector - uvolníme informace o neuronové
 // sítì z pamìti. Instance EggDetectoru se stane nepouitelná.
 eggDetector.closeSession();
 \end{lstlisting}
@@ -186,6 +186,6 @@ Abychom byli schopni novì vytvoøená trénovací data pouít k~trénování neuronové 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Shrnutí kapitoly}
-V~této kapitole byl analyzován projekt Ptáci Online -- byly pøedstaveny jeho cíle a popsán souèasnı stav, jakım jsou sbírána a zpracovávána data. Byly adresovány všechny funkèní i nefunkèní poadavky s~ohledem na strukturu projektu a dat. Byla navrena dvì moná konkurenèní øešení, u~kterıch není pøedem jasné, které z~nich je efektivnìjší a pøinese lepší vısledky. Nezbıvá tedy nic jiného, ne implementovat obì dvì øešení a jejich vısledky porovnat. Na závìr jsme se zamìøili na vıbìr vhodnıch principù a nástrojù potøebnıch k~úspìšné implementaci. Byla vybrána platforma knihovny, knihovna pro práci s~neuronovımi sítìmi a velká škála nástrojù pro pøípravu dat.
+V~této kapitole byl analyzován projekt Ptáci Online -- byly pøedstaveny jeho cíle a popsán souèasnı stav, jakım jsou sbírána a zpracovávána data. Byly adresovány všechny funkèní i nefunkèní poadavky s~ohledem na strukturu projektu a dat. Byla navrena dvì moná konkurenèní øešení, u~kterıch není pøedem jasné, které z~nich je efektivnìjší a pøinese lepší vısledky. Nezbıvá tedy nic jiného, ne implementovat obì dvì øešení a jejich vısledky porovnat. Na závìr jsme se zamìøili na vıbìr vhodnıch principù a nástrojù potøebnıch k~úspìšné implementaci. Byla vybrána platforma knihovny, knihovna pro práci s~neuronovımi sítìmi a nástroje pro pøípravu dat.
 
 V~dalších kapitolách se zamìøíme na tvorbu a pouití všech nástrojù pouitıch v~rámci této práce. Ale pøedevším budeme diskutovat oba dva zpùsoby implementace, které nakonec porovnáme. 

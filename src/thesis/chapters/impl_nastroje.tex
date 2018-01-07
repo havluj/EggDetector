@@ -33,16 +33,16 @@ Skript, který jsme pøedstavili v~kapitole \ref{subsec:hromadne_stazeni_dat}, stá
 
 Zdrojový kód a dokumentace nástroje \textbf{FolderTrimmer} je k~nalezení v~pøíloze \ref{chap:folder_trimmer}. Výsledný program staèí spustit a složku, která má být promazána, mu pøedat jako argument. Napøíklad: \texttt{run.sh /home/demo/eggs/data}.
 
-FolderTrimmer funguje ve dvou režimech. První, základní režim, smaže všechny soubory jiného typu než PNG, TXT a XML. V~pøípadì, že složka neobsahuje další složku nebo alespoò jeden soubor typu PNG, TXT nebo XML, bude smazána. Druhý režim funguje stejnì jako první, ale smaže všechny složky, které neobsahují soubor \textbf{imgdata.xml}. To umožní vymazání všech dat, které nejsou relevantní pro trénování neuronové sítì. První øežim spustíme pøíkazem \texttt{run.sh false "cesta\textunderscore ke\textunderscore slozce"}. Druhý režim spustíme pøíkazem \texttt{run.sh true "cesta\textunderscore ke\textunderscore slozce"}.
+FolderTrimmer funguje ve dvou režimech. První, základní režim, smaže všechny soubory jiného typu než PNG, TXT a XML. V~pøípadì, že složka neobsahuje další složku nebo alespoò jeden soubor typu PNG, TXT nebo XML, bude smazána. Druhý režim funguje stejnì jako první, ale smaže všechny složky, které neobsahují soubor \textbf{imgdata.xml}. To umožní vymazání všech dat, která nejsou relevantní pro trénování neuronové sítì. První øežim spustíme pøíkazem \texttt{run.sh false "cesta\textunderscore ke\textunderscore slozce"}. Druhý režim spustíme pøíkazem \texttt{run.sh true "cesta\textunderscore ke\textunderscore slozce"}.
 
 \section{Pøíprava trénovacích a testovacích dat}\label{sec:priprava_dat}
-Když máme k dispozici všechna potøebná data, je potøeba je pøipravit do takové podoby, abychom je mohli použít k~trénování neuronové sítì. Pøíprava dat se liší podle typu implementace, který zvolíme. V~pøípadì trénování neuronové sítì k~detekci objektù, chceme k~jednotlivým snímkùm pøidat informaci \textbf{kde}, \textbf{jaké velikosti} a \textbf{kolik} vajec se v~nich nachází. V~pøípadì trénování neuronové sítì pro rozpoznávání (klasifikaci) obrazu, je potøeba ke snímkùm pøidat informaci o~\textbf{celkovém poètu vajec}.
+Když máme k dispozici všechna potøebná data, je potøeba je pøipravit do takové podoby, abychom je mohli použít k~trénování neuronové sítì. Pøíprava dat se liší podle typu implementace, který zvolíme. V~pøípadì trénování neuronové sítì k~detekci objektù chceme k~jednotlivým snímkùm pøidat informaci \textbf{kde}, \textbf{jaké velikosti} a \textbf{kolik} vajec se v~nich nachází. V~pøípadì trénování neuronové sítì pro rozpoznávání (klasifikaci) obrazu je potøeba ke snímkùm pøidat informaci o~\textbf{celkovém poètu vajec}.
 
 \subsection{Tagger}\label{chap:tagger}
 
 Nástroj \texttt{Tagger} slouží k~manuálnímu oznaèování snímkù. Pracuje na úrovni složek, kde jednotlivé složky a v~nich umístìné snímky reprezentují jednu videosekvenci. Uživatel pak mùže program spustit a pomìrnì rychle oznaèit, kolik vajec se na daných snímcích nachází. Tagger je webovou aplikací s~jednoduchým uživatelským rozhraním. Uživatel je prezentován všemi snímky dané složky a má možnost u~každého snímku specifikovat poèet vajec. Složky jsou vybírány automaticky. Jakmile uživatel uvedl poèet vajec u~každého snímku, data odešle a je prezentován snímky z~další složky. Tento proces se opakuje do té doby, dokud nebudou dostupné žádné složky s~neoznaèenými snímky. Ukázka uživatelského rozhraní je vidìt na obrázku \ref{fig:tagger}.
 
-Výstupem programu jsou soubory \texttt{imgdata.xml}, které obsahují informace o~poètu vajec na jednotlivých snímcích. Tato data jsou pak používána pro trénování neuronové sítì k~rozpoznávání obrazu, kde poèet vajec reprezentuje možné výstupy neuronové sítì. Takto oznaèené snímky se dají použít i pro validaci jakéholiv øešení -- finální softwarové knihovnì pøedáme složku se snímky, knihovna vyhodnotí výsledky a my je poté mùžeme porovnat s~výsledky, které jsme manuálnì nasbírali. Ukázkový soubor \texttt{imgdata.xml} je pøiložen v~pøíloze \ref{list:imgdata}.
+Výstupem programu jsou soubory \texttt{imgdata.xml}, které obsahují informace o~poètu vajec na jednotlivých snímcích. Tato data jsou pak používána pro trénování neuronové sítì k~rozpoznávání obrazu, kde poèet vajec reprezentuje možné výstupy neuronové sítì. Takto oznaèené snímky se dají použít i pro validaci jakéhokoliv øešení -- finální softwarové knihovnì pøedáme složku se snímky, knihovna vyhodnotí výsledky a my je poté mùžeme porovnat s~výsledky, které jsme manuálnì nasbírali. Ukázkový soubor \texttt{imgdata.xml} je pøiložen v~pøíloze \ref{list:imgdata}.
 
 Program je napsán v~programovacím jazyce Java. Detailní popis nástroje se nachází v~pøíloze \ref{chap:tagger}. Jedná se o~webovou aplikaci, která je postavena na technologii Spring~Boot~\cite{springboot}. Výpis \ref{alg:scan_folder} ukazuje algoritmus pro selekci vhodných složek.
 
@@ -58,18 +58,15 @@ public static ArrayList<String> scanFolder(String location) {
 	final Pattern pattern = Pattern.compile("\\d{8}_\\d{6}_\\d{3}_D");
 	List arr = Arrays.asList(locFile.list((File file, String name) -> {
 		File workingDir = new File(file.getAbsolutePath() + File.separator + name);
-		// needs to be a dir in a correct format
 		if (!workingDir.isDirectory() && !pattern.matcher(name).matches()) {
 			return false;
 		}
 		
-		// if already tagged (contains imgdata.xml file)
 		File imgDataFile = new File(workingDir, "imgdata.xml");
 		if (imgDataFile.exists()) {
 			return false;
 		}
 		
-		// contains any pictures
 		if (workingDir.list((f, n) -> {
 			File workingFile = new File(f.getAbsolutePath() + File.separator + n);
 			return workingFile.isFile() && FilenameUtils.getExtension(n).equals("png");

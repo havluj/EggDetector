@@ -1,7 +1,7 @@
 \chapter{Implementace detekování objektù}\label{chap:impl_detekce}
 V~této kapitole se zamìøíme na implementaci neuronové sítì, která bude slouit k~detekci objektù. V~rámci této práce nás bude zajímat pouze jeden objekt: vejce. 
 
-Abychom mohli vytrénovat novı model, kterı je schopnı detekce vajec, je potøeba, abychom trénovací data pøevedli do speciálního formátu. K~validaci modelu budeme pouívat skript, u~kterého bude vstupem obrázek libovolné velikosti. Internì bude bude snímek reprezentován vektorem o~velikosti 300~x~300~x~3 (snímek zmenšen na velikost 300~x~300 bodù a zùstane barevnı -- kadı bod obsahuje 3 barevné sloky). Formát a tvorba tohoto vektoru viz algoritmus \ref{alg:vektor}. Jakmile provedeme detekci objektù, musíme detekované objekty klasifikovat a rozøadit do pøedem stanovenıch kategorií. Kategorie, do které budeme chtít snímky rozøadit, bude pouze \textbf{jedna}:
+Abychom mohli vytrénovat novı model, kterı je schopnı detekce vajec, je potøeba, abychom trénovací data pøevedli do speciálního formátu. K~validaci modelu budeme pouívat skript, u~kterého bude vstupem obrázek libovolné velikosti. Internì bude snímek reprezentován vektorem o~velikosti 300~x~300~x~3 (snímek zmenšen na velikost 300~x~300 bodù a zùstane barevnı -- kadı bod obsahuje 3 barevné sloky). Formát a tvorba tohoto vektoru viz algoritmus \ref{alg:vektor}. Jakmile provedeme detekci objektù, musíme detekované objekty klasifikovat a rozøadit do pøedem stanovenıch kategorií. Kategorie, do které budeme chtít snímky rozøadit, bude pouze \textbf{jedna}:
 \begin{description}[labelindent=1cm]
 	\item[Kategorie \uv{egg}:] Objekt vejce.
 \end{description}
@@ -97,7 +97,7 @@ V~rámci této implementace jsem zkusil pouít tøi rùzné modely, které slouily ja
 \end{figure}
 
 \subsection{Konfigurace}
-Nyní je èas nakonfigurovat parametry, podle kterıch se bude neuronová sí øidit pøi uèení. TensorFlow Object Detection API pouívá soubory \texttt{protobuf} ke konfiguraci trénovacího a evaluaèního procesu. Konfiguraèní soubor je rozdìlen do 5 èástí: \texttt{model}, \texttt{train\_config}, \texttt{eval\_config}, \texttt{train\_input\_config} a \texttt{eval\_input\_config}~\cite{tensor_od_config}.
+Nyní je èas nakonfigurovat parametry, podle kterıch se bude neuronová sí øídit pøi uèení. TensorFlow Object Detection API pouívá soubory \texttt{protobuf} ke konfiguraci trénovacího a evaluaèního procesu. Konfiguraèní soubor je rozdìlen do pìti èástí: \texttt{model}, \texttt{train\_config}, \texttt{eval\_config}, \texttt{train\_input\_config} a \texttt{eval\_input\_config}~\cite{tensor_od_config}.
 
 Pro kadı typ aplikace jsou vhodné jiné parametry. Vıslednı konfiguraèní soubor pouitı spoleènì s~modelem \texttt{ssd\_mobilenet\_v1\_coco} je vypsán v~pøíloze \ref{chap:config_detection}.
 
@@ -110,11 +110,11 @@ Nejprve máme pouze jednotlivé snímky a k~nim XML soubory, které obsahují dodateè
 	\begin{lstlisting}[language=bash] 
 	python3 xml_to_csv.py
 	\end{lstlisting}
-	\item Z~kombinace CSV záznamu vygenerovaném v~pøedchozím kroku a trénovacích snímkù vytvoøíme soubor \texttt{train.record}: 
+	\item Z~kombinace CSV záznamu, vygenerovaném v~pøedchozím kroku, a trénovacích snímkù vytvoøíme soubor \texttt{train.record}: 
 	\begin{lstlisting}[language=bash]
 	python3 generate_tfrecord.py --csv_input=data/train_labels.csv --output_path=data/train.record
 	\end{lstlisting}
-	\item Z~kombinace CSV záznamu vygenerovaném v~prvním kroku a validaèních snímkù vytvoøíme soubor \texttt{test.record}: 
+	\item Z~kombinace CSV záznamu, vygenerovaném v~prvním kroku, a validaèních snímkù vytvoøíme soubor \texttt{test.record}: 
 	\begin{lstlisting}[language=bash]
 	python3 generate_tfrecord.py --csv_input=data/test_labels.csv --output_path=data/test.record
 	\end{lstlisting}
@@ -123,11 +123,11 @@ Nejprve máme pouze jednotlivé snímky a k~nim XML soubory, které obsahují dodateè
 \subsection{Trénování}
 V~tuto chvíli máme vše pøipraveno a mùeme zaèít samotné trénování neuronové sítì. Je dùleité si uvìdomit, e trénování modelu je velmi vıpoèetnì nároèné a je moné, e nebudeme mít lokálnì dostupnı dostateènì vıkonnı hardware, kterı by tuto úlohu zvládl v~rozumném èase. Máme tedy tøi monosti, kde a jak model vytrénovat. Èas potøebnı k~trénování je ovlivnìn mnostvím trénovacích dat, komplexitou modelu a hardwarovım vıkonem. 
 
-První, nejjednodušší, ale nejménì vıkonná varianta, je trénování na notebooku nebo stolním poèítaèi pomocí procesoru. Tento zpùsob je pomìrnì neefektivní -- napøíklad pøi pouití metody \uv{transfer learning} se model trénoval 6 dní èistého èasu, ne se stal pouitelnım. Trénování takového modelu bez pouití metody \uv{transfer learning} by trvalo tıdny. 
+První, nejjednodušší, ale nejménì vıkonná varianta, je trénování na notebooku nebo stolním poèítaèi pomocí procesoru. Tento zpùsob je pomìrnì neefektivní -- napøíklad pøi pouití metody \uv{transfer learning} se model trénoval šest dní èistého èasu, ne se stal pouitelnım. Trénování takového modelu bez pouití metody \uv{transfer learning} by trvalo tıdny. 
 
 Druhá varianta, která je komplexnìjší na zprovoznìní, je trénování na lokálním stroji pomocí grafické karty. Tato metoda je podstatnì více efektivní, ne trénování na procesoru poèítaèe. Na dvou desktopovıch grafickıch kartách \textit{Nvidia GeForce GTX 650} byl model pouitelnı po 7 hodinách pøi pouití metody \uv{transfer learning}. 
 
-Nejpraktiètìjší, ale nejsloitìjší na zprovoznìní, je trénování na vzdálenıch serverech. Google poskytuje na své platformì \textit{Google Cloud Platform} produkt \textit{ML Engine}~\cite{googlemlengine}, kterı je specializován mimo jiné i na trénování modelù -- tzn. e je pouit maximálnì optimalizovanı hardware. Spoleènost Google stojí za frameworkem TensorFlow i platformou \textit{ML Engine}, proto je jejich integrace relativnì dobøe vyøešená. Tento fakt dìlá tzv. \uv{cloud learning} nejefektnivnìjším øešením.
+Nejpraktiètìjší, ale nejsloitìjší na zprovoznìní, je trénování na vzdálenıch serverech. Google poskytuje na své platformì \textit{Google Cloud Platform} produkt \textit{ML Engine}~\cite{googlemlengine}, kterı je specializován mimo jiné i na trénování modelù -- tzn. e je pouit optimalizovanı hardware. Spoleènost Google stojí za frameworkem TensorFlow i platformou \textit{ML Engine}, proto je jejich integrace relativnì dobøe vyøešená. Tento fakt dìlá tzv. \uv{cloud learning} nejefektnivnìjším øešením.
 
 \subsubsection{Monitorování prùbìhu trénování}
 TensorFlow obsahuje nástroj, kterım mùeme monitorovat prùbìh trénování modelu. Program spustíme následovnì:
@@ -180,8 +180,7 @@ Abychom mohli model trénovat na Google Cloud ML Engine, je potøeba nìkolik krokù
 	\label{fig:cloudml}
 \end{figure}
 
-Jakmile máme pøipravené naše úloištì (viz obr. \ref{fig:cloudmlbucket}), mùeme spustit \uv{vzdálenı trénink}:
-
+Jakmile máme pøipravené naše úloištì (viz obr. \ref{fig:cloudmlbucket}), mùeme spustit \uv{vzdálenı trénink}:\newline
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=bash]
 gcloud ml-engine jobs submit training object_detection_${version_unique_ID} \
@@ -215,7 +214,7 @@ K~validaci pouijeme Python skript napsanı ve formì Jupyter Notebook~\cite{jupyt
 \begin{lstlisting}[language=bash]
 jupyter notebook
 \end{lstlisting}
-Na pøehledové stránce otevøeme soubor \texttt{test.ipynb} a zvolíme \texttt{Cell \textrightarrow\space Run All}. Po chvíli èekání jsou zobrazeny vısledky. Ukázka vıstupu skriptu, ve kterém pouíváme nejúspìšnìjší model vytvoøenı metodou \uv{transfer learning} vycházejícího z~modelu \texttt{ssd\_mobilenet\_v1\_coco}, je vidìt na obrázcích \ref{fig:obresnotebook1}, \ref{fig:obresnotebook2} a \ref{fig:obresnotebook3}. Ménì úspìšnı model je zobrazen na obrázku \ref{fig:notsogoodtraining}.
+Na pøehledové stránce otevøeme soubor \texttt{test.ipynb} a zvolíme \texttt{Cell \textrightarrow\space Run All}. Poté jsou zobrazeny vısledky. Ukázka vıstupu skriptu, ve kterém pouíváme nejúspìšnìjší model vytvoøenı metodou \uv{transfer learning} vycházejícího z~modelu \texttt{ssd\_mobilenet\_v1\_coco}, je vidìt na obrázcích \ref{fig:obresnotebook1}, \ref{fig:obresnotebook2} a \ref{fig:obresnotebook3}. Ménì úspìšnı model je zobrazen na obrázku \ref{fig:notsogoodtraining}.
 
 \begin{figure}[ht]
 	\centering

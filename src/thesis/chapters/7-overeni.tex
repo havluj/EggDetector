@@ -1,10 +1,10 @@
 \chapter{Ovìøení implementace}\label{chap:overeniatestovani}
-V~této kapitole se zamìøíme testování, validaci a mìøení efektivity implementace knihovny popsané v~kapitole \ref{chap:javaknihovna}. Všechny testy jsou implementovány v~jazyce Java pomomcí testovacího frameworku JUnit~\cite{junitdoc}. Zdrojové kódy testù jsou dostupné v~pøíloze \ref{chap:cd}.
+V~této kapitole se zamìøíme na testování, validaci a mìøení efektivity implementace knihovny popsané v~kapitole \ref{chap:javaknihovna}. Všechny testy jsou implementovány v~jazyce Java pomomcí testovacího frameworku JUnit~\cite{junitdoc}. Zdrojové kódy testù jsou dostupné v~pøíloze \ref{chap:cd}.
 
 \section{Testování funkènosti}
 Abychom dokázali, že souèasná implementace knihovny funguje, byly sestaveny dva \uv{jednotkové testy}\footnote{Unit testing.}. 
 
-První test využívá pìt snímkù pøiložených ke zdrojovým kódùm testù. Nejdøíve porovnává pøedem známý poèet vajec v~tìchto snímcích s~poètem, který vypoèítá knihovna. Následnì je porovnán výsledný poèet vajec, který byl vypoèítán z~tìchto pìt snímkù.
+První test využívá pìt snímkù pøiložených ke zdrojovým kódùm testù. Nejdøíve porovnává pøedem známý poèet vajec v~tìchto snímcích s~poètem, který vypoèítá knihovna. Následnì je porovnán výsledný poèet vajec, který byl vypoèítán z~tìchto pìti snímkù.
 
 \begin{lstlisting}[caption={Testování softwarové knihovny EggDetector.}]
 public class PackagedDataTest {
@@ -76,11 +76,11 @@ Lze vidìt, že distribuce funguje. Zdrojové kódy externího projektu se nachází v~
 \section{Mìøení efektivity implementace}\label{sec:efektivita_knihovny}
 Pro urèení efektivity naší implementace využijeme manuálnì oznaèených \textbf{6178 snímkù} nástrojem Tagger. Porovnáme také výsledky pøi rùzných nastaveních \uv{thresholdu} knihovny (viz kapitola \ref{sec:impl_impl}).
 
-Zdrojový kód testu je vypsán v~pøíloze \ref{chap:test_efektivity}. Knihovnu otestujeme pìtkrát na stejných datech s~pìti rùznými nastaveními \uv{thresholdu}. V~testech se zamìøíme na dvì metriky. První metrikou je pomìr je procentuální úspìšnosti knihovny. Tu získáme následujícím zpùsobem:
+Zdrojový kód testu je vypsán v~pøíloze \ref{chap:test_efektivity}. Knihovnu otestujeme pìtkrát na stejných datech s~pìti rùznými nastaveními \uv{thresholdu}. V~testech se zamìøíme na dvì metriky. První metrikou je pomìr správnì vyhodnocených složek a celkového poètu složek, vyjádøený v procentech. Tu získáme následujícím zpùsobem:
 \begin{equation*}
 	\boxed{
 	\begin{gathered}
-		\textrm{úspìšnost} = \frac{\textrm{souèet správnì urèených poètù vajec}}{\textrm{celkový poèet videosekvencí}} * 100
+		\textrm{úspìšnost} = \frac{\textrm{poèet správnì vyhodnocených složek}}{\textrm{celkový poèet složek}} * 100 \%
     \end{gathered}
 }
 \end{equation*}
